@@ -57,7 +57,15 @@ function dayBg(events: CalendarEvent[]) {
   return "bg-[#f2f4f7]";
 }
 
-export function CalendarMonthGrid({ month, events }: { month: Date; events: CalendarEvent[] }) {
+export function CalendarMonthGrid({
+  month,
+  events,
+  onDaySelect,
+}: {
+  month: Date;
+  events: CalendarEvent[];
+  onDaySelect?: (dayIso: string) => void;
+}) {
   const cells = getMonthMatrix(month, events);
 
   return (
@@ -75,15 +83,17 @@ export function CalendarMonthGrid({ month, events }: { month: Date; events: Cale
 
       <div className="grid grid-cols-7 gap-1">
         {cells.map((cell) => (
-          <div
+          <button
             key={cell.key}
-            className={`min-h-[54px] rounded-lg border border-borderc p-1.5 ${dayBg(cell.events)} ${cell.inMonth ? "" : "opacity-45"}`}
+            type="button"
+            onClick={() => onDaySelect?.(cell.key)}
+            className={`min-h-[54px] rounded-lg border border-borderc p-1.5 text-left ${dayBg(cell.events)} ${cell.inMonth ? "" : "opacity-45"}`}
           >
             <p className="text-[11px] font-medium">{cell.date.getDate()}</p>
             {cell.events.length > 0 && (
               <p className="mt-1 text-[10px] text-texts">{cell.events.length} evento{cell.events.length > 1 ? "s" : ""}</p>
             )}
-          </div>
+          </button>
         ))}
       </div>
     </section>
