@@ -42,6 +42,7 @@ function buildEvent(day: string, entry: CelesteEntry): Omit<CalendarEvent, "id" 
   const isMine = entry.owner === "mine";
   const isHers = entry.owner === "hers";
   const title = isMine ? "Entrega (celeste)" : isHers ? "Bloque celeste" : "Evento celeste";
+  const hash = hashEntry(day, entry);
 
   return {
     user_id: getSingleUserId(),
@@ -57,7 +58,7 @@ function buildEvent(day: string, entry: CelesteEntry): Omit<CalendarEvent, "id" 
     external_updated_at: new Date().toISOString(),
     sync_status: "synced",
     event_type: isMine ? "delivery" : "event",
-    metadata: { owner: entry.owner, exception: !!entry.exception, note: entry.note || "" },
+    metadata: { owner: entry.owner, exception: !!entry.exception, note: entry.note || "", _hash: hash },
   };
 }
 
@@ -83,12 +84,17 @@ export async function syncCelesteCalendar(): Promise<CalendarSyncResult> {
 
     const { data: existing, error: existingErr } = await supabase
       .from("calendar_events")
-      .select("id, source_id, metadata, title, description, start_time, end_time")
+      .select("id, source_id, metadata")
       .eq("user_id", userId)
       .eq("source", "github")
       .eq("source_repo", REPO);
 
-    if (existingErr) throw existingErr;
+    if (existingErr) {
+      const msg = existingErr.message.includes("column")
+        ? "Faltan campos externos en calendar_events. Ejecuta supabase/calendar_external_fields.sql"
+        : existingErr.message;
+      throw new Error(msg);
+    }
 
     const bySourceId = new Map((existing || []).map((row) => [row.source_id as string, row]));
 
@@ -106,8 +112,8 @@ export async function syncCelesteCalendar(): Promise<CalendarSyncResult> {
         continue;
       }
 
-      const prevHash = JSON.stringify(prev.metadata || {});
-      const nextHash = hashEntry(day, entry);
+      const prevHash = String((prev.metadata as Record<string, unknown> | null)?._hash || "");
+      const nextHash = String(payload.metadata?._hash || "");
       if (prevHash === nextHash) {
         unchanged += 1;
         continue;
@@ -117,7 +123,6 @@ export async function syncCelesteCalendar(): Promise<CalendarSyncResult> {
         .from("calendar_events")
         .update({
           ...payload,
-          metadata: { ...(payload.metadata || {}), _hash: nextHash },
           external_updated_at: new Date().toISOString(),
           sync_status: "changed",
         } as never)
@@ -138,7 +143,7 @@ export async function syncCelesteCalendar(): Promise<CalendarSyncResult> {
   } catch (error) {
     const message = error instanceof Error ? error.message : "Error desconocido";
     setSyncError(message);
-    throw error;
+    throw new Error(message, { cause: error });
   } finally {
     setSaving(false);
   }

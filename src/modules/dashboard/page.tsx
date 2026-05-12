@@ -59,9 +59,9 @@ export default function DashboardPage() {
       </div>
 
       <WeeklyProgressCard
-        workoutsPct={43}
+        workoutsPct={data.fitnessState.adherencePct || 0}
         tasksPct={Math.min(100, data.tasks.filter((t) => t.status === "done").length * 10)}
-        sleepPct={78}
+        sleepPct={Math.round(((data.fitnessState.recovery.sleep || 0) / 10) * 100)}
       />
 
       <QuickActionsCard />

@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { PageTitle } from "../../components/layout/PageTitle";
 import { CrudList } from "../shared";
 import { db } from "../../lib/store";
@@ -6,6 +7,7 @@ import { CalendarViewToggle } from "../../components/calendar/CalendarViewToggle
 import { EventCard } from "../../components/calendar/EventCard";
 import { syncCelesteCalendar } from "../../services/githubCalendarSync";
 import { hydrateAllFromSupabase, pullCollection } from "../../lib/supabaseSync";
+import { CalendarMonthGrid } from "../../components/calendar/CalendarMonthGrid";
 
 function inNextDays(dateISO: string, days: number) {
   const now = new Date();
@@ -18,6 +20,7 @@ function inNextDays(dateISO: string, days: number) {
 export default function CalendarPage() {
   const [view, setView] = useState<"week" | "month" | "list">("week");
   const [status, setStatus] = useState<string>("");
+  const [monthCursor, setMonthCursor] = useState(new Date());
   const [, setTick] = useState(0);
   const events = db.list("events");
 
@@ -28,9 +31,14 @@ export default function CalendarPage() {
 
   const windowEvents = useMemo(() => {
     if (view === "week") return sorted.filter((e) => inNextDays(e.start_time, 7));
-    if (view === "month") return sorted.filter((e) => inNextDays(e.start_time, 31));
+    if (view === "month") {
+      return sorted.filter((e) => {
+        const d = new Date(e.start_time);
+        return d.getMonth() === monthCursor.getMonth() && d.getFullYear() === monthCursor.getFullYear();
+      });
+    }
     return sorted;
-  }, [sorted, view]);
+  }, [sorted, view, monthCursor]);
 
   const upcomingDeliveries = sorted.filter((e) => e.event_type === "delivery" && inNextDays(e.start_time, 14)).slice(0, 8);
 
@@ -42,13 +50,18 @@ export default function CalendarPage() {
       db.hydrateCollections(remote);
       setTick((x) => x + 1);
 
+      if (result.errors > 0) {
+        setStatus(`Sync parcial: ${result.errors} errores, +${result.inserted} nuevos, ${result.updated} actualizados`);
+        return;
+      }
+
       if (result.inserted === 0 && result.updated === 0) {
         setStatus(`Sin cambios (${result.unchanged} intactos)`);
       } else {
         setStatus(`Sincronizado: +${result.inserted} nuevos, ${result.updated} actualizados`);
       }
-    } catch {
-      setStatus("Error de sincronización");
+    } catch (error) {
+      setStatus(error instanceof Error ? `Error: ${error.message}` : "Error de sincronización");
     }
   };
 
@@ -72,13 +85,26 @@ export default function CalendarPage() {
         {status && <p className="text-xs text-texts">{status}</p>}
       </section>
 
-      <section className="card space-y-2">
-        <div className="mb-1 flex items-center justify-between">
-          <h3 className="text-sm font-semibold">Vista {view === "week" ? "semanal" : view === "month" ? "mensual" : "lista"}</h3>
-          <button className="btn-ghost" onClick={refreshFromSupabase}>Actualizar</button>
-        </div>
-        {windowEvents.length === 0 ? <p className="text-sm text-texts">Sin eventos en esta vista</p> : windowEvents.map((event) => <EventCard key={event.id} event={event} />)}
-      </section>
+      {view === "month" && (
+        <section className="card">
+          <div className="mb-3 flex items-center justify-between">
+            <button className="btn-ghost" onClick={() => setMonthCursor((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1))}><ChevronLeft className="h-4 w-4" /></button>
+            <p className="text-sm font-semibold">{monthCursor.toLocaleDateString("es-CL", { month: "long", year: "numeric" })}</p>
+            <button className="btn-ghost" onClick={() => setMonthCursor((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1))}><ChevronRight className="h-4 w-4" /></button>
+          </div>
+          <CalendarMonthGrid month={monthCursor} events={sorted} />
+        </section>
+      )}
+
+      {view !== "month" && (
+        <section className="card space-y-2">
+          <div className="mb-1 flex items-center justify-between">
+            <h3 className="text-sm font-semibold">Vista {view === "week" ? "semanal" : "lista"}</h3>
+            <button className="btn-ghost" onClick={refreshFromSupabase}>Actualizar</button>
+          </div>
+          {windowEvents.length === 0 ? <p className="text-sm text-texts">Sin eventos en esta vista</p> : windowEvents.map((event) => <EventCard key={event.id} event={event} />)}
+        </section>
+      )}
 
       <section className="card space-y-2">
         <h3 className="text-sm font-semibold">Próximas entregas</h3>
