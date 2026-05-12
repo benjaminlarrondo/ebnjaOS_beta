@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-bg text-textp font-sans;
+}
+
+.card {
+  @apply rounded-xl2 border border-borderc bg-surface p-4 shadow-sm;
+}
+
+.input {
+  @apply w-full rounded-xl border border-borderc bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20;
+}
+
+.btn-primary {
+  @apply rounded-xl bg-primary px-3 py-2 text-sm font-medium text-white hover:opacity-95;
+}
+
+.btn-ghost {
+  @apply rounded-xl border border-borderc bg-white px-3 py-2 text-sm text-texts;
+}
+
+@media (max-width: 1023px) {
+  .card {
+    @apply p-3.5;
+  }
+
+  .btn-primary,
+  .btn-ghost,
+  .input,
+  button,
+  a {
+    min-height: 42px;
+  }
+}
