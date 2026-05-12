@@ -131,3 +131,21 @@ npm run dev
 - `VITE_SINGLE_USER_ID`
 
 Nota: este modo es solo para uso personal MVP. Para multiusuario real, reactivar auth y políticas por `auth.uid()`.
+
+
+## Integración Calendar con celeste_calendar
+Fuente externa: `benjaminlarrondo/celeste_calendar`.
+
+### Sync manual
+En `/calendar`, botón `Sincronizar celeste_calendar`:
+- lee `archivo_base.json` vía GitHub raw
+- normaliza eventos externos
+- inserta/actualiza en `calendar_events`
+- evita duplicados con `source=github` + `source_id` (fecha)
+
+### SQL requerido
+Ejecuta también:
+- `supabase/calendar_external_fields.sql`
+
+### Automatización futura
+`src/services/syncScheduler.ts` deja lista la función `syncExternalCalendars()` para cron, worker o GitHub Actions.

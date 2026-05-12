@@ -12,6 +12,8 @@ import { SectionCard } from "../../components/cards/SectionCard";
 import { Modal } from "../../components/forms/Modal";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
+import { CalendarOverviewCard } from "../../components/calendar/CalendarOverviewCard";
+import { getLastCalendarSyncAt } from "../../services/githubCalendarSync";
 import { todaySession } from "../../data/fitnessPlan";
 import { db } from "../../lib/store";
 
@@ -38,6 +40,8 @@ export default function DashboardPage() {
       <TodayTasksCard tasks={todayTasks} />
 
       <UpcomingEventsCard events={data.events} />
+
+      <CalendarOverviewCard events={data.events} lastSyncAt={getLastCalendarSyncAt()} />
 
       <div className="grid gap-3 sm:grid-cols-2">
         <TodayWorkoutCard
