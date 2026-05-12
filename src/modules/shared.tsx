@@ -27,7 +27,7 @@ export function CrudList<T extends { id: string; title: string; description?: st
   const create = () => {
     if (!title.trim()) return;
     if (props.keyName === "tasks") db.create("tasks", { title, description, status: extra as "inbox" | "today" | "next" | "waiting" | "done" | "archived", priority: "medium", due_date: "", tags: [] });
-    else if (props.keyName === "events") db.create("events", { title, description, start_time: new Date().toISOString(), end_time: new Date(Date.now() + 3600000).toISOString(), source: "internal" });
+    else if (props.keyName === "events") db.create("events", { title, description, start_time: new Date().toISOString(), end_time: new Date(Date.now() + 3600000).toISOString(), source: "manual", sync_status: "synced", event_type: "event", metadata: {} });
     else if (props.keyName === "workouts") db.create("workouts", { title, date: new Date().toISOString().slice(0, 10), type: "strength", duration_minutes: 45, intensity: 7, notes: description });
     else if (props.keyName === "notes") db.create("notes", { title, content: description, type: "quick", tags: [], pinned: false });
     else if (props.keyName === "prompts") db.create("prompts", { title, description, content: description || title, category: "productividad", tags: [], favorite: false });
