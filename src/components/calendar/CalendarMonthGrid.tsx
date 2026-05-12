@@ -67,6 +67,7 @@ export function CalendarMonthGrid({
   onDaySelect?: (dayIso: string) => void;
 }) {
   const cells = getMonthMatrix(month, events);
+  const todayKey = new Date().toISOString().slice(0, 10);
 
   return (
     <section className="card">
@@ -87,7 +88,7 @@ export function CalendarMonthGrid({
             key={cell.key}
             type="button"
             onClick={() => onDaySelect?.(cell.key)}
-            className={`min-h-[54px] rounded-lg border border-borderc p-1.5 text-left ${dayBg(cell.events)} ${cell.inMonth ? "" : "opacity-45"}`}
+            className={`min-h-[54px] rounded-lg border p-1.5 text-left ${dayBg(cell.events)} ${cell.inMonth ? "" : "opacity-45"} ${cell.key === todayKey ? "border-black shadow-[0_0_0_1px_rgba(0,0,0,0.35)]" : "border-borderc"}`}
           >
             <p className="text-[11px] font-medium">{cell.date.getDate()}</p>
             {cell.events.length > 0 && (
