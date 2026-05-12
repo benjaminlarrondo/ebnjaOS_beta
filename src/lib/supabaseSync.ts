@@ -134,10 +134,13 @@ export async function pullCollection(key: SupaCollection) {
     .order("created_at", { ascending: false });
 
   if (error) {
+    setConnected(false);
     setSyncError(error.message);
     return null;
   }
 
+  setConnected(true);
+  setSyncError(null);
   return (data ?? []) as Record<string, unknown>[];
 }
 
@@ -147,7 +150,13 @@ export async function pushUpsertCollectionItem(key: SupaCollection, row: Record<
   const payload = normalizeForDb(key, row);
   setSaving(true);
   const { error } = await supabase.from(table).upsert(payload as never, { onConflict: "id" });
-  if (error) setSyncError(error.message);
+  if (error) {
+    setConnected(false);
+    setSyncError(error.message);
+  } else {
+    setConnected(true);
+    setSyncError(null);
+  }
   setSaving(false);
 }
 
@@ -156,7 +165,13 @@ export async function pushDeleteCollectionItem(key: SupaCollection, id: string) 
   const table = tableMap[key];
   setSaving(true);
   const { error } = await supabase.from(table).delete().eq("id", id).eq("user_id", SINGLE_USER_ID);
-  if (error) setSyncError(error.message);
+  if (error) {
+    setConnected(false);
+    setSyncError(error.message);
+  } else {
+    setConnected(true);
+    setSyncError(null);
+  }
   setSaving(false);
 }
 
