@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { PageTitle } from "../../components/layout/PageTitle";
 import { CrudList } from "../shared";
@@ -73,6 +73,10 @@ export default function CalendarPage() {
     }
   };
 
+  useEffect(() => {
+    void refreshFromSupabase();
+  }, []);
+
   return (
     <div className="space-y-4">
       <PageTitle title="Calendar" subtitle="Mensual, semanal y lista" />
@@ -111,7 +115,17 @@ export default function CalendarPage() {
         {upcomingDeliveries.length === 0 ? <p className="text-sm text-texts">No hay entregas próximas</p> : upcomingDeliveries.map((event) => <EventCard key={`delivery-${event.id}`} event={event} />)}
       </section>
 
-      <CrudList title="events" keyName="events" fields="event" />
+      <CrudList
+        title="events"
+        keyName="events"
+        fields="event"
+        onCreated={async () => {
+          await refreshFromSupabase();
+          await doSync();
+        }}
+        onUpdated={refreshFromSupabase}
+        onDeleted={refreshFromSupabase}
+      />
     </div>
   );
 }

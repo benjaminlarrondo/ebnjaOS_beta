@@ -1,6 +1,6 @@
 import { supabase } from "../lib/supabase";
 import { getSingleUserId } from "../lib/supabaseSync";
-import { setSaving, setSyncError } from "../lib/syncStatus";
+import { setConnected, setSaving, setSyncError } from "../lib/syncStatus";
 import type { CalendarEvent } from "../types/calendar";
 
 const REPO = "benjaminlarrondo/celeste_calendar";
@@ -138,10 +138,13 @@ export async function syncCelesteCalendar(): Promise<CalendarSyncResult> {
 
     const lastSyncAt = new Date().toISOString();
     localStorage.setItem(LOCAL_SYNC_KEY, lastSyncAt);
+    setConnected(true);
+    setSyncError(null);
 
     return { inserted, updated, unchanged, errors, lastSyncAt };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Error desconocido";
+    setConnected(false);
     setSyncError(message);
     throw new Error(message, { cause: error });
   } finally {

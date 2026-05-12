@@ -12,6 +12,9 @@ export function CrudList<T extends { id: string; title: string; description?: st
   title: string;
   keyName: "tasks" | "events" | "workouts" | "notes" | "prompts" | "resources" | "logs" | "projects";
   fields?: "basic" | "task" | "event" | "workout" | "note" | "prompt" | "resource" | "daily";
+  onCreated?: () => void | Promise<void>;
+  onUpdated?: () => void | Promise<void>;
+  onDeleted?: () => void | Promise<void>;
 }) {
   const [, setTick] = useState(0);
   const [title, setTitle] = useState("");
@@ -37,6 +40,7 @@ export function CrudList<T extends { id: string; title: string; description?: st
     setTitle("");
     setDescription("");
     setTick((x) => x + 1);
+    void props.onCreated?.();
   };
 
   const openEdit = (item: T) => {
@@ -53,6 +57,7 @@ export function CrudList<T extends { id: string; title: string; description?: st
     else db.update(props.keyName, editing.id, { title: editTitle, description: editDescription });
     setEditing(null);
     setTick((x) => x + 1);
+    void props.onUpdated?.();
   };
 
   return (
@@ -104,6 +109,7 @@ export function CrudList<T extends { id: string; title: string; description?: st
           db.remove(props.keyName, toDelete);
           setToDelete(null);
           setTick((x) => x + 1);
+          void props.onDeleted?.();
         }}
       />
 

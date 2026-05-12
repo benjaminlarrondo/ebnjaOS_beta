@@ -16,29 +16,222 @@ create table if not exists profiles (
 );
 
 create table if not exists projects (
-  id uuid primary key default gen_random_uuid(), user_id uuid not null, title text not null, description text default '', status text not null check (status in ('active','paused','completed','archived')), priority text not null check (priority in ('low','medium','high','critical')), start_date date, due_date date, tags text[] default '{}', created_at timestamptz default now(), updated_at timestamptz default now()
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  title text not null,
+  description text default '',
+  status text not null check (status in ('active','paused','completed','archived')),
+  priority text not null check (priority in ('low','medium','high','critical')),
+  start_date date,
+  due_date date,
+  tags text[] default '{}',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
 );
-create table if not exists tasks (
-  id uuid primary key default gen_random_uuid(), user_id uuid not null, title text not null, description text default '', status text not null check (status in ('inbox','today','next','waiting','done','archived')), priority text not null check (priority in ('low','medium','high','critical')), due_date timestamptz, project_id uuid references projects(id) on delete set null, calendar_event_id uuid, tags text[] default '{}', created_at timestamptz default now(), updated_at timestamptz default now()
-);
-create table if not exists calendar_events (
-  id uuid primary key default gen_random_uuid(), user_id uuid not null, title text not null, description text default '', start_time timestamptz not null, end_time timestamptz not null, location text default '', source text not null default 'internal', google_event_id text, created_at timestamptz default now(), updated_at timestamptz default now()
-);
-create table if not exists fitness_plans (id uuid primary key default gen_random_uuid(), user_id uuid not null, title text not null, description text default '', created_at timestamptz default now(), updated_at timestamptz default now());
-create table if not exists fitness_workouts (id uuid primary key default gen_random_uuid(), user_id uuid not null, title text not null, date date not null, type text not null check(type in ('strength','crossfit','cardio','mobility','recovery')), duration_minutes int not null default 0, intensity int not null default 5, notes text default '', created_at timestamptz default now(), updated_at timestamptz default now());
-create table if not exists fitness_exercises (id uuid primary key default gen_random_uuid(), user_id uuid not null, workout_id uuid not null references fitness_workouts(id) on delete cascade, name text not null, sets int, reps int, weight numeric, rest int, notes text default '', created_at timestamptz default now(), updated_at timestamptz default now());
-create table if not exists fitness_progress_logs (id uuid primary key default gen_random_uuid(), user_id uuid not null, date date not null, notes text default '', created_at timestamptz default now(), updated_at timestamptz default now());
-create table if not exists fitness_body_metrics (id uuid primary key default gen_random_uuid(), user_id uuid not null, date date not null, body_weight numeric, body_fat numeric, sleep_hours numeric, energy_level int, notes text default '', created_at timestamptz default now(), updated_at timestamptz default now());
-create table if not exists fitness_prs (id uuid primary key default gen_random_uuid(), user_id uuid not null, movement text not null, value numeric not null, unit text not null, date date not null, notes text default '', created_at timestamptz default now(), updated_at timestamptz default now());
-create table if not exists notes (id uuid primary key default gen_random_uuid(), user_id uuid not null, title text not null, content text not null, type text not null check(type in ('quick','idea','meeting','learning','reflection')), tags text[] default '{}', pinned boolean default false, created_at timestamptz default now(), updated_at timestamptz default now());
-create table if not exists prompts (id uuid primary key default gen_random_uuid(), user_id uuid not null, title text not null, description text default '', content text not null, category text not null, tags text[] default '{}', favorite boolean default false, created_at timestamptz default now(), updated_at timestamptz default now());
-create table if not exists resources (id uuid primary key default gen_random_uuid(), user_id uuid not null, title text not null, description text default '', url text, type text not null check(type in ('link','document','video','article','tool','reference')), tags text[] default '{}', source text default 'manual', created_at timestamptz default now(), updated_at timestamptz default now());
-create table if not exists daily_logs (id uuid primary key default gen_random_uuid(), user_id uuid not null, date date not null, focus text default '', wins text default '', pending text default '', energy_level int, workout_done boolean default false, notes text default '', created_at timestamptz default now(), updated_at timestamptz default now());
-create table if not exists tags (id uuid primary key default gen_random_uuid(), user_id uuid not null, name text not null, color text default '#6B7280', created_at timestamptz default now(), updated_at timestamptz default now());
-create table if not exists attachments (id uuid primary key default gen_random_uuid(), user_id uuid not null, entity_type text not null, entity_id uuid not null, file_path text not null, created_at timestamptz default now(), updated_at timestamptz default now());
-create table if not exists integrations (id uuid primary key default gen_random_uuid(), user_id uuid not null, provider text not null, status text not null default 'disconnected', config jsonb default '{}', created_at timestamptz default now(), updated_at timestamptz default now());
 
-alter table tasks add constraint tasks_calendar_fk foreign key (calendar_event_id) references calendar_events(id) on delete set null;
+create table if not exists calendar_events (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  title text not null,
+  description text default '',
+  start_time timestamptz not null,
+  end_time timestamptz not null,
+  location text default '',
+  source text not null default 'manual',
+  google_event_id text,
+  source_id text,
+  source_repo text,
+  source_url text,
+  external_updated_at timestamptz,
+  sync_status text default 'synced',
+  event_type text default 'event',
+  metadata jsonb default '{}'::jsonb,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists tasks (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  title text not null,
+  description text default '',
+  status text not null check (status in ('inbox','today','next','waiting','done','archived')),
+  priority text not null check (priority in ('low','medium','high','critical')),
+  due_date timestamptz,
+  project_id uuid references projects(id) on delete set null,
+  calendar_event_id uuid,
+  tags text[] default '{}',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists fitness_plans (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  title text not null,
+  description text default '',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists fitness_workouts (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  title text not null,
+  date date not null,
+  type text not null check(type in ('strength','crossfit','cardio','mobility','recovery')),
+  duration_minutes int not null default 0,
+  intensity int not null default 5,
+  notes text default '',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists fitness_exercises (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  workout_id uuid not null references fitness_workouts(id) on delete cascade,
+  name text not null,
+  sets int,
+  reps int,
+  weight numeric,
+  rest int,
+  notes text default '',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists fitness_progress_logs (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  date date not null,
+  notes text default '',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists fitness_body_metrics (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  date date not null,
+  body_weight numeric,
+  body_fat numeric,
+  sleep_hours numeric,
+  energy_level int,
+  notes text default '',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists fitness_prs (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  movement text not null,
+  value numeric not null,
+  unit text not null,
+  date date not null,
+  notes text default '',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists notes (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  title text not null,
+  content text not null,
+  type text not null check(type in ('quick','idea','meeting','learning','reflection')),
+  tags text[] default '{}',
+  pinned boolean default false,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists prompts (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  title text not null,
+  description text default '',
+  content text not null,
+  category text not null,
+  tags text[] default '{}',
+  favorite boolean default false,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists resources (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  title text not null,
+  description text default '',
+  url text,
+  type text not null check(type in ('link','document','video','article','tool','reference')),
+  tags text[] default '{}',
+  source text default 'manual',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists daily_logs (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  date date not null,
+  focus text default '',
+  wins text default '',
+  pending text default '',
+  energy_level int,
+  workout_done boolean default false,
+  notes text default '',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists tags (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  name text not null,
+  color text default '#6B7280',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists attachments (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  entity_type text not null,
+  entity_id uuid not null,
+  file_path text not null,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists integrations (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  provider text not null,
+  status text not null default 'disconnected',
+  config jsonb default '{}',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'tasks_calendar_fk'
+      and conrelid = 'public.tasks'::regclass
+  ) then
+    alter table public.tasks
+      add constraint tasks_calendar_fk
+      foreign key (calendar_event_id) references public.calendar_events(id) on delete set null;
+  end if;
+end $$;
+
+create index if not exists idx_calendar_events_source_source_id on calendar_events(source, source_id);
+create index if not exists idx_calendar_events_start_time on calendar_events(start_time);
 
 alter table profiles enable row level security;
 alter table projects enable row level security;
@@ -62,7 +255,11 @@ do $$
 declare
   t text;
 begin
-  for t in select unnest(array['profiles','projects','tasks','calendar_events','fitness_plans','fitness_workouts','fitness_exercises','fitness_progress_logs','fitness_body_metrics','fitness_prs','notes','prompts','resources','daily_logs','tags','attachments','integrations'])
+  for t in select unnest(array[
+    'profiles','projects','tasks','calendar_events','fitness_plans','fitness_workouts',
+    'fitness_exercises','fitness_progress_logs','fitness_body_metrics','fitness_prs',
+    'notes','prompts','resources','daily_logs','tags','attachments','integrations'
+  ])
   loop
     execute format('drop policy if exists %I_select_own on %I', t, t);
     execute format('create policy %I_select_own on %I for select using (auth.uid() = user_id)', t, t);
