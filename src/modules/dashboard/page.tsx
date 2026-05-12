@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import { Link } from "react-router-dom";
 import { PageTitle } from "../../components/layout/PageTitle";
 import { FocusCard } from "../../components/cards/FocusCard";
 import { TodayTasksCard } from "../../components/cards/TodayTasksCard";
@@ -16,6 +17,18 @@ import { CalendarOverviewCard } from "../../components/calendar/CalendarOverview
 import { getLastCalendarSyncAt } from "../../services/githubCalendarSync";
 import { todaySession } from "../../data/fitnessPlan";
 import { db } from "../../lib/store";
+
+const modules = [
+  ["/tasks", "Tareas"],
+  ["/calendar", "Calendario"],
+  ["/fitness", "Fitness"],
+  ["/notes", "Notas"],
+  ["/prompts", "Prompts"],
+  ["/resources", "Recursos"],
+  ["/daily-log", "Daily Log"],
+  ["/projects", "Proyectos"],
+  ["/settings", "Ajustes"],
+] as const;
 
 export default function DashboardPage() {
   const [, setTick] = useState(0);
@@ -37,11 +50,17 @@ export default function DashboardPage() {
         }}
       />
 
-      <TodayTasksCard tasks={todayTasks} />
+      <Link to="/tasks" className="block rounded-2xl transition-transform duration-150 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
+        <TodayTasksCard tasks={todayTasks} />
+      </Link>
 
-      <UpcomingEventsCard events={data.events} />
+      <Link to="/calendar" className="block rounded-2xl transition-transform duration-150 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
+        <UpcomingEventsCard events={data.events} />
+      </Link>
 
-      <CalendarOverviewCard events={data.events} lastSyncAt={getLastCalendarSyncAt()} />
+      <Link to="/calendar" className="block rounded-2xl transition-transform duration-150 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
+        <CalendarOverviewCard events={data.events} lastSyncAt={getLastCalendarSyncAt()} />
+      </Link>
 
       <div className="grid gap-3 sm:grid-cols-2">
         <TodayWorkoutCard
@@ -55,7 +74,9 @@ export default function DashboardPage() {
           cta="Ver entrenamiento"
           ctaTo="/fitness"
         />
-        <QuickNoteCard note={data.notes[0]} />
+        <Link to="/notes" className="block rounded-2xl transition-transform duration-150 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
+          <QuickNoteCard note={data.notes[0]} />
+        </Link>
       </div>
 
       <WeeklyProgressCard
@@ -65,6 +86,16 @@ export default function DashboardPage() {
       />
 
       <QuickActionsCard />
+
+      <SectionCard title="Módulos">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          {modules.map(([to, label]) => (
+            <Link key={to} to={to} className="btn-ghost text-center">
+              {label}
+            </Link>
+          ))}
+        </div>
+      </SectionCard>
 
       <SectionCard title="Últimos recursos guardados">
         <div className="space-y-1">

@@ -10,7 +10,7 @@ const links = [
 
 export function MobileBottomNav() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-20 grid grid-cols-5 border-t border-borderc bg-white/95 px-2 pt-2 pb-[calc(env(safe-area-inset-bottom)+8px)] backdrop-blur lg:hidden">
+    <nav className="sticky top-0 z-20 mb-3 grid grid-cols-5 rounded-xl border border-borderc bg-white/95 p-2 backdrop-blur lg:hidden">
       {links.map(([to, label]) => (
         <NavLink
           key={to}

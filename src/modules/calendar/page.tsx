@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { PageTitle } from "../../components/layout/PageTitle";
-import { CrudList } from "../shared";
 import { db } from "../../lib/store";
 import { IS_MOCK } from "../../lib/constants";
 import { CalendarViewToggle } from "../../components/calendar/CalendarViewToggle";
@@ -9,6 +8,9 @@ import { EventCard } from "../../components/calendar/EventCard";
 import { syncCelesteCalendar } from "../../services/githubCalendarSync";
 import { hydrateAllFromSupabase, pullCollection } from "../../lib/supabaseSync";
 import { CalendarMonthGrid } from "../../components/calendar/CalendarMonthGrid";
+import { Input } from "../../components/ui/input";
+import { Textarea } from "../../components/ui/textarea";
+import { Button } from "../../components/ui/button";
 
 function inNextDays(dateISO: string, days: number) {
   const now = new Date();
@@ -22,6 +24,18 @@ export default function CalendarPage() {
   const [view, setView] = useState<"week" | "month" | "list">("month");
   const [status, setStatus] = useState<string>("");
   const [monthCursor, setMonthCursor] = useState(new Date());
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [startAt, setStartAt] = useState(() => {
+    const now = new Date();
+    now.setMinutes(0, 0, 0);
+    return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  });
+  const [endAt, setEndAt] = useState(() => {
+    const end = new Date(Date.now() + 3600000);
+    end.setMinutes(0, 0, 0);
+    return new Date(end.getTime() - end.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  });
   const [, setTick] = useState(0);
   const events = db.list("events");
 
@@ -52,7 +66,9 @@ export default function CalendarPage() {
     return sorted;
   }, [sorted, view, monthCursor]);
 
-  const upcomingDeliveries = sorted.filter((e) => e.event_type === "delivery" && inNextDays(e.start_time, 14)).slice(0, 8);
+  const manualEvents = sorted
+    .filter((e) => e.source === "manual" && inNextDays(e.start_time, 30))
+    .slice(0, 12);
 
   const doSync = async () => {
     if (IS_MOCK) {
@@ -88,6 +104,48 @@ export default function CalendarPage() {
       db.hydrateCollections({ events: rows });
       setTick((x) => x + 1);
     }
+  };
+
+  const onDaySelect = (dayIso: string) => {
+    setView("month");
+    setStartAt(`${dayIso}T09:00`);
+    setEndAt(`${dayIso}T10:00`);
+    setStatus(`Fecha seleccionada: ${dayIso}`);
+  };
+
+  const createEvent = async () => {
+    if (!title.trim()) {
+      setStatus("Agrega un título para crear el evento.");
+      return;
+    }
+
+    if (!startAt || !endAt) {
+      setStatus("Selecciona inicio y fin del evento.");
+      return;
+    }
+
+    const start = new Date(startAt);
+    const end = new Date(endAt);
+    if (Number.isNaN(+start) || Number.isNaN(+end) || end <= start) {
+      setStatus("Rango de fecha/hora inválido.");
+      return;
+    }
+
+    db.create("events", {
+      title: title.trim(),
+      description: description.trim(),
+      start_time: start.toISOString(),
+      end_time: end.toISOString(),
+      source: "manual",
+      sync_status: "synced",
+      event_type: "event",
+      metadata: {},
+    });
+
+    setTitle("");
+    setDescription("");
+    setStatus("Evento creado.");
+    await refreshFromSupabase();
   };
 
   useEffect(() => {
@@ -127,7 +185,7 @@ export default function CalendarPage() {
             <p className="text-sm font-semibold">{monthCursor.toLocaleDateString("es-CL", { month: "long", year: "numeric" })}</p>
             <button className="btn-ghost" onClick={() => setMonthCursor((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1))}><ChevronRight className="h-4 w-4" /></button>
           </div>
-          <CalendarMonthGrid month={monthCursor} events={sorted} />
+          <CalendarMonthGrid month={monthCursor} events={sorted} onDaySelect={onDaySelect} />
         </section>
       )}
 
@@ -150,21 +208,27 @@ export default function CalendarPage() {
       )}
 
       <section className="card space-y-2">
-        <h3 className="text-sm font-semibold">Próximas entregas</h3>
-        {upcomingDeliveries.length === 0 ? <p className="text-sm text-texts">No hay entregas próximas</p> : upcomingDeliveries.map((event) => <EventCard key={`delivery-${event.id}`} event={event} />)}
+        <h3 className="text-sm font-semibold">Eventos</h3>
+        {manualEvents.length === 0 ? <p className="text-sm text-texts">No hay eventos manuales próximos</p> : manualEvents.map((event) => <EventCard key={`manual-${event.id}`} event={event} />)}
       </section>
 
-      <CrudList
-        title="events"
-        keyName="events"
-        fields="event"
-        onCreated={async () => {
-          await refreshFromSupabase();
-          await doSync();
-        }}
-        onUpdated={refreshFromSupabase}
-        onDeleted={refreshFromSupabase}
-      />
+      <section className="card space-y-3">
+        <h3 className="text-sm font-semibold">Nuevo</h3>
+        <div className="grid gap-2 md:grid-cols-2">
+          <Input placeholder="Título del evento" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <div className="grid grid-cols-2 gap-2">
+            <Input type="datetime-local" value={startAt} onChange={(e) => setStartAt(e.target.value)} />
+            <Input type="datetime-local" value={endAt} onChange={(e) => setEndAt(e.target.value)} />
+          </div>
+          <Textarea
+            placeholder="Descripción o detalle"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="md:col-span-2"
+          />
+        </div>
+        <Button type="button" onClick={createEvent}>Guardar evento</Button>
+      </section>
     </div>
   );
 }
