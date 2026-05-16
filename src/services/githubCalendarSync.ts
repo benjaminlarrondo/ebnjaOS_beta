@@ -4,8 +4,8 @@ import { setConnected, setSaving, setSyncError } from "../lib/syncStatus";
 import type { CalendarEvent } from "../types/calendar";
 
 const REPO = "benjaminlarrondo/celeste_calendar";
-const BASE_JSON_URL = `https://raw.githubusercontent.com/${REPO}/main/archivo_base.json`;
 const LOCAL_SYNC_KEY = "ebnjaos-calendar-last-sync";
+const GITHUB_API_REPO = `https://api.github.com/repos/${REPO}`;
 
 type CelesteEntry = {
   owner: string;
@@ -16,6 +16,12 @@ type CelesteEntry = {
 type CelesteFile = {
   year?: number;
   days?: Record<string, CelesteEntry>;
+};
+
+type GitHubContentResponse = {
+  sha?: string;
+  content?: string;
+  encoding?: string;
 };
 
 export type CalendarSyncResult = {
@@ -38,7 +44,7 @@ function hashEntry(day: string, entry: CelesteEntry) {
   return JSON.stringify({ day, owner: entry.owner, note: entry.note || "", exception: !!entry.exception });
 }
 
-function buildEvent(day: string, entry: CelesteEntry): Omit<CalendarEvent, "id" | "created_at" | "updated_at"> {
+function buildEvent(day: string, entry: CelesteEntry, sourceUrl: string): Omit<CalendarEvent, "id" | "created_at" | "updated_at"> {
   const isMine = entry.owner === "mine";
   const isHers = entry.owner === "hers";
   const title = isMine ? "Entrega (celeste)" : isHers ? "Bloque celeste" : "Evento celeste";
@@ -54,12 +60,75 @@ function buildEvent(day: string, entry: CelesteEntry): Omit<CalendarEvent, "id" 
     source: "github",
     source_id: day,
     source_repo: REPO,
-    source_url: BASE_JSON_URL,
+    source_url: sourceUrl,
     external_updated_at: new Date().toISOString(),
     sync_status: "synced",
     event_type: isMine ? "delivery" : "event",
     metadata: { owner: entry.owner, exception: !!entry.exception, note: entry.note || "", _hash: hash },
   };
+}
+
+function decodeBase64Utf8(input: string) {
+  const cleaned = input.replace(/\n/g, "");
+  return atob(cleaned);
+}
+
+async function getDefaultBranch() {
+  try {
+    const res = await fetch(`${GITHUB_API_REPO}?t=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) return "main";
+    const json = (await res.json()) as { default_branch?: string };
+    return json.default_branch || "main";
+  } catch {
+    return "main";
+  }
+}
+
+async function fetchFromContentsApi(branch: string) {
+  const url = `${GITHUB_API_REPO}/contents/archivo_base.json?ref=${encodeURIComponent(branch)}&t=${Date.now()}`;
+  const res = await fetch(url, {
+    cache: "no-store",
+    headers: { Accept: "application/vnd.github+json" },
+  });
+  if (!res.ok) throw new Error(`GitHub API contents fallo (${res.status})`);
+  const payload = (await res.json()) as GitHubContentResponse;
+  if (!payload.content || payload.encoding !== "base64") {
+    throw new Error("Respuesta inválida de GitHub contents");
+  }
+  const decoded = decodeBase64Utf8(payload.content);
+  const file = JSON.parse(decoded) as CelesteFile;
+  return {
+    file,
+    sourceUrl: `https://raw.githubusercontent.com/${REPO}/${branch}/archivo_base.json?sha=${payload.sha || "latest"}`,
+  };
+}
+
+async function fetchFromRaw(branch: string) {
+  const sourceUrl = `https://raw.githubusercontent.com/${REPO}/${branch}/archivo_base.json?t=${Date.now()}`;
+  const res = await fetch(sourceUrl, { cache: "no-store" });
+  if (!res.ok) throw new Error(`No se pudo leer archivo_base.json (${res.status})`);
+  const file = (await res.json()) as CelesteFile;
+  return { file, sourceUrl };
+}
+
+async function fetchLatestCelesteFile() {
+  const defaultBranch = await getDefaultBranch();
+  const branches = Array.from(new Set([defaultBranch, "main", "master"]));
+
+  for (const branch of branches) {
+    try {
+      return await fetchFromContentsApi(branch);
+    } catch {
+      // fallback below
+    }
+    try {
+      return await fetchFromRaw(branch);
+    } catch {
+      // try next branch
+    }
+  }
+
+  throw new Error("No se pudo leer archivo_base.json desde GitHub (contents/raw).");
 }
 
 export function getLastCalendarSyncAt() {
@@ -77,9 +146,7 @@ export async function syncCelesteCalendar(): Promise<CalendarSyncResult> {
   setSyncError(null);
 
   try {
-    const fileRes = await fetch(BASE_JSON_URL, { cache: "no-store" });
-    if (!fileRes.ok) throw new Error(`No se pudo leer archivo_base.json (${fileRes.status})`);
-    const file = (await fileRes.json()) as CelesteFile;
+    const { file, sourceUrl } = await fetchLatestCelesteFile();
     const days = file.days || {};
 
     const { data: existing, error: existingErr } = await supabase
@@ -99,7 +166,7 @@ export async function syncCelesteCalendar(): Promise<CalendarSyncResult> {
     const bySourceId = new Map((existing || []).map((row) => [row.source_id as string, row]));
 
     for (const [day, entry] of Object.entries(days)) {
-      const payload = buildEvent(day, entry);
+      const payload = buildEvent(day, entry, sourceUrl);
       const prev = bySourceId.get(day);
 
       if (!prev) {
