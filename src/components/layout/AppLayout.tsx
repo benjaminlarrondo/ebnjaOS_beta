@@ -3,6 +3,7 @@ import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import { MobileBottomNav } from "./MobileBottomNav";
 import { SyncIndicator } from "./SyncIndicator";
+import { GlobalQuickCapture } from "./GlobalQuickCapture";
 
 export function AppLayout() {
   return (
@@ -14,6 +15,7 @@ export function AppLayout() {
         <Outlet />
       </main>
       <SyncIndicator />
+      <GlobalQuickCapture />
     </div>
   );
 }

@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 
 const items = [
+  ["/search", "Buscar"],
+  ["/review", "Review"],
+  ["/goals", "Goals"],
+  ["/qa", "QA"],
   ["/tasks", "Tareas"],
   ["/calendar", "Calendario"],
   ["/fitness", "Fitness"],

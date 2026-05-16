@@ -84,14 +84,16 @@ export default function CalendarPage() {
       setTick((x) => x + 1);
 
       if (result.errors > 0) {
-        setStatus(`Sync parcial: ${result.errors} errores, +${result.inserted} nuevos, ${result.updated} actualizados`);
+        setStatus(
+          `Sync parcial: ${result.errors} errores, +${result.inserted} nuevos, ${result.updated} actualizados · fuente: ${result.sourcePath}${result.detectedDate ? ` (${result.detectedDate})` : ""}`,
+        );
         return;
       }
 
       if (result.inserted === 0 && result.updated === 0) {
-        setStatus(`Sin cambios (${result.unchanged} intactos)`);
+        setStatus(`Sin cambios (${result.unchanged} intactos) · fuente: ${result.sourcePath}${result.detectedDate ? ` (${result.detectedDate})` : ""}`);
       } else {
-        setStatus(`Sincronizado: +${result.inserted} nuevos, ${result.updated} actualizados`);
+        setStatus(`Sincronizado: +${result.inserted} nuevos, ${result.updated} actualizados · fuente: ${result.sourcePath}${result.detectedDate ? ` (${result.detectedDate})` : ""}`);
       }
     } catch (error) {
       setStatus(error instanceof Error ? `Error: ${error.message}` : "Error de sincronización");

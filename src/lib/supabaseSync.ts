@@ -9,6 +9,7 @@ import type { Task } from "../types/task";
 import { IS_MOCK } from "./constants";
 import { supabase } from "./supabase";
 import { setConnected, setSaving, setSyncError } from "./syncStatus";
+import { enqueueSyncFailure, listSyncQueue, removeSyncQueueItem } from "./syncQueue";
 
 export type SupaCollection = "tasks" | "events" | "workouts" | "notes" | "prompts" | "resources" | "logs" | "projects";
 
@@ -153,6 +154,7 @@ export async function pushUpsertCollectionItem(key: SupaCollection, row: Record<
   if (error) {
     setConnected(false);
     setSyncError(error.message);
+    enqueueSyncFailure({ op: "upsert", key, row, error: error.message });
   } else {
     setConnected(true);
     setSyncError(null);
@@ -168,11 +170,46 @@ export async function pushDeleteCollectionItem(key: SupaCollection, id: string) 
   if (error) {
     setConnected(false);
     setSyncError(error.message);
+    enqueueSyncFailure({ op: "delete", key, rowId: id, error: error.message });
   } else {
     setConnected(true);
     setSyncError(null);
   }
   setSaving(false);
+}
+
+export async function flushSyncQueue() {
+  if (!(await probeSupabaseConnection())) return { retried: 0, succeeded: 0, failed: listSyncQueue().length };
+  const items = listSyncQueue();
+  let succeeded = 0;
+  let failed = 0;
+
+  for (const item of items) {
+    const table = tableMap[item.key];
+    if (item.op === "upsert" && item.row) {
+      const payload = normalizeForDb(item.key, item.row);
+      const { error } = await supabase.from(table).upsert(payload as never, { onConflict: "id" });
+      if (error) {
+        failed += 1;
+      } else {
+        succeeded += 1;
+        removeSyncQueueItem(item.id);
+      }
+      continue;
+    }
+
+    if (item.op === "delete" && item.rowId) {
+      const { error } = await supabase.from(table).delete().eq("id", item.rowId).eq("user_id", SINGLE_USER_ID);
+      if (error) {
+        failed += 1;
+      } else {
+        succeeded += 1;
+        removeSyncQueueItem(item.id);
+      }
+    }
+  }
+
+  return { retried: items.length, succeeded, failed };
 }
 
 export async function hydrateAllFromSupabase() {

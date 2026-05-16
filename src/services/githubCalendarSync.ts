@@ -24,12 +24,18 @@ type GitHubContentResponse = {
   encoding?: string;
 };
 
+type GitHubTreeResponse = {
+  tree?: Array<{ path: string; type: string }>;
+};
+
 export type CalendarSyncResult = {
   inserted: number;
   updated: number;
   unchanged: number;
   errors: number;
   lastSyncAt: string;
+  sourcePath: string;
+  detectedDate: string | null;
 };
 
 function toIsoDayStart(day: string) {
@@ -103,6 +109,26 @@ async function fetchFromContentsApi(branch: string) {
   };
 }
 
+async function fetchFromContentsApiPath(branch: string, path: string) {
+  const url = `${GITHUB_API_REPO}/contents/${path}?ref=${encodeURIComponent(branch)}&t=${Date.now()}`;
+  const res = await fetch(url, {
+    cache: "no-store",
+    headers: { Accept: "application/vnd.github+json" },
+  });
+  if (!res.ok) throw new Error(`GitHub API contents fallo (${res.status})`);
+  const payload = (await res.json()) as GitHubContentResponse;
+  if (!payload.content || payload.encoding !== "base64") {
+    throw new Error("Respuesta inválida de GitHub contents");
+  }
+  const decoded = decodeBase64Utf8(payload.content);
+  const file = JSON.parse(decoded) as CelesteFile;
+  return {
+    file,
+    sourceUrl: `https://raw.githubusercontent.com/${REPO}/${branch}/${path}?sha=${payload.sha || "latest"}`,
+    path,
+  };
+}
+
 async function fetchFromRaw(branch: string) {
   const sourceUrl = `https://raw.githubusercontent.com/${REPO}/${branch}/archivo_base.json?t=${Date.now()}`;
   const res = await fetch(sourceUrl, { cache: "no-store" });
@@ -111,18 +137,80 @@ async function fetchFromRaw(branch: string) {
   return { file, sourceUrl };
 }
 
+function extractDateFromPath(path: string) {
+  const m = path.match(/(20\d{2}-\d{2}-\d{2})/);
+  if (!m) return null;
+  const d = new Date(`${m[1]}T00:00:00Z`);
+  return Number.isNaN(+d) ? null : +d;
+}
+
+function maxDayFromFile(file: CelesteFile) {
+  const keys = Object.keys(file.days || {});
+  if (keys.length === 0) return null;
+  let max = -Infinity;
+  for (const k of keys) {
+    const d = new Date(`${k}T00:00:00Z`);
+    if (!Number.isNaN(+d) && +d > max) max = +d;
+  }
+  return max === -Infinity ? null : max;
+}
+
+async function listJsonCandidates(branch: string) {
+  const url = `${GITHUB_API_REPO}/git/trees/${encodeURIComponent(branch)}?recursive=1&t=${Date.now()}`;
+  const res = await fetch(url, { cache: "no-store", headers: { Accept: "application/vnd.github+json" } });
+  if (!res.ok) return ["archivo_base.json"];
+  const payload = (await res.json()) as GitHubTreeResponse;
+  const tree = payload.tree || [];
+  const json = tree
+    .filter((n) => n.type === "blob" && n.path.endsWith(".json"))
+    .map((n) => n.path)
+    .filter((p) => !p.startsWith("."))
+    .sort((a, b) => {
+      const da = extractDateFromPath(a) || -Infinity;
+      const db = extractDateFromPath(b) || -Infinity;
+      return db - da;
+    });
+  const preferred = json.filter((p) => /archivo|celeste|calendar/i.test(p));
+  const merged = Array.from(new Set([...preferred, ...json, "archivo_base.json"]));
+  return merged.slice(0, 12);
+}
+
 async function fetchLatestCelesteFile() {
   const defaultBranch = await getDefaultBranch();
   const branches = Array.from(new Set([defaultBranch, "main", "master"]));
 
   for (const branch of branches) {
+    const candidates = await listJsonCandidates(branch);
+    let best:
+      | { file: CelesteFile; sourceUrl: string; path: string; score: number; detectedDate: string | null }
+      | null = null;
+
+    for (const path of candidates) {
+      try {
+        const parsed = await fetchFromContentsApiPath(branch, path);
+        const byDays = maxDayFromFile(parsed.file);
+        const byPath = extractDateFromPath(path);
+        const score = byDays || byPath || 0;
+        const detectedDate = byDays ? new Date(byDays).toISOString().slice(0, 10) : (byPath ? new Date(byPath).toISOString().slice(0, 10) : null);
+        if (!best || score > best.score) best = { ...parsed, score, detectedDate };
+      } catch {
+        // try next candidate
+      }
+    }
+
+    if (best) {
+      return { file: best.file, sourceUrl: best.sourceUrl, sourcePath: best.path, detectedDate: best.detectedDate };
+    }
+
     try {
-      return await fetchFromContentsApi(branch);
+      const fallback = await fetchFromContentsApi(branch);
+      return { ...fallback, sourcePath: "archivo_base.json", detectedDate: null };
     } catch {
       // fallback below
     }
     try {
-      return await fetchFromRaw(branch);
+      const fallbackRaw = await fetchFromRaw(branch);
+      return { ...fallbackRaw, sourcePath: "archivo_base.json", detectedDate: null };
     } catch {
       // try next branch
     }
@@ -146,7 +234,7 @@ export async function syncCelesteCalendar(): Promise<CalendarSyncResult> {
   setSyncError(null);
 
   try {
-    const { file, sourceUrl } = await fetchLatestCelesteFile();
+    const { file, sourceUrl, sourcePath, detectedDate } = await fetchLatestCelesteFile();
     const days = file.days || {};
 
     const { data: existing, error: existingErr } = await supabase
@@ -208,7 +296,7 @@ export async function syncCelesteCalendar(): Promise<CalendarSyncResult> {
     setConnected(true);
     setSyncError(null);
 
-    return { inserted, updated, unchanged, errors, lastSyncAt };
+    return { inserted, updated, unchanged, errors, lastSyncAt, sourcePath, detectedDate };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Error desconocido";
     setConnected(false);
