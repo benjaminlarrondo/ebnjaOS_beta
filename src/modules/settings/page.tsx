@@ -2,15 +2,19 @@ import { useEffect, useState } from "react";
 import { PageTitle } from "../../components/layout/PageTitle";
 import { getEnvDiagnostics, IS_MOCK } from "../../lib/constants";
 import { db } from "../../lib/store";
-import { probeSupabaseConnection } from "../../lib/supabaseSync";
+import { flushSyncQueue, probeSupabaseConnection } from "../../lib/supabaseSync";
 import { subscribeSyncStatus, type SyncState } from "../../lib/syncStatus";
+import { listSyncQueue } from "../../lib/syncQueue";
+import { listGoals } from "../../lib/goals";
 
 export default function SettingsPage() {
   const [message, setMessage] = useState("");
   const [checking, setChecking] = useState(false);
   const [checkResult, setCheckResult] = useState("");
+  const [queueResult, setQueueResult] = useState("");
   const [syncState, setSyncState] = useState<SyncState>({ connected: false, saving: false, lastSavedAt: null, error: null });
   const env = getEnvDiagnostics();
+  const queueItems = listSyncQueue();
 
   useEffect(() => subscribeSyncStatus(setSyncState), []);
 
@@ -26,6 +30,41 @@ export default function SettingsPage() {
     const ok = await probeSupabaseConnection();
     setCheckResult(ok ? "Conexión OK con Supabase." : "Fallo de conexión. Revisa variables/env o políticas RLS.");
     setChecking(false);
+  };
+
+  const handleRetryQueue = async () => {
+    const result = await flushSyncQueue();
+    setQueueResult(`Reintentados: ${result.retried} · OK: ${result.succeeded} · Fallidos: ${result.failed}`);
+  };
+
+  const handleBackupExport = () => {
+    const payload = {
+      exported_at: new Date().toISOString(),
+      db: db.load(),
+      goals: listGoals(),
+      review: localStorage.getItem("ebnjaos-weekly-review-v1"),
+      version: "v1",
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ebnjaos-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleBackupImport = async (file: File) => {
+    const text = await file.text();
+    const parsed = JSON.parse(text) as {
+      db?: ReturnType<typeof db.load>;
+      goals?: unknown;
+      review?: string | null;
+    };
+    if (parsed.db) db.save(parsed.db);
+    if (parsed.goals) localStorage.setItem("ebnjaos-goals-v1", JSON.stringify(parsed.goals));
+    if (typeof parsed.review === "string") localStorage.setItem("ebnjaos-weekly-review-v1", parsed.review);
+    setMessage("Backup restaurado. Recarga la app para ver todo actualizado.");
   };
 
   return (
@@ -57,6 +96,32 @@ export default function SettingsPage() {
           </button>
         </div>
         {checkResult && <p className="text-xs text-texts">{checkResult}</p>}
+      </section>
+
+      <section className="card space-y-2 text-sm">
+        <h3 className="text-sm font-semibold">Cola de sincronización</h3>
+        <p>Elementos pendientes: <strong>{queueItems.length}</strong></p>
+        <button className="btn-ghost" onClick={handleRetryQueue}>Reintentar cola</button>
+        {queueResult && <p className="text-xs text-texts">{queueResult}</p>}
+      </section>
+
+      <section className="card space-y-2 text-sm">
+        <h3 className="text-sm font-semibold">Backup y restauración</h3>
+        <div className="flex flex-wrap gap-2">
+          <button className="btn-ghost" onClick={handleBackupExport}>Exportar backup JSON</button>
+          <label className="btn-ghost cursor-pointer">
+            Importar backup
+            <input
+              type="file"
+              accept="application/json"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) void handleBackupImport(file);
+              }}
+            />
+          </label>
+        </div>
       </section>
 
       <section className="card space-y-3 text-sm">

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PageTitle } from "../../components/layout/PageTitle";
 import { FocusCard } from "../../components/cards/FocusCard";
@@ -17,8 +16,12 @@ import { CalendarOverviewCard } from "../../components/calendar/CalendarOverview
 import { getLastCalendarSyncAt } from "../../services/githubCalendarSync";
 import { todaySession } from "../../data/fitnessPlan";
 import { db } from "../../lib/store";
+import { listGoals } from "../../lib/goals";
 
 const modules = [
+  ["/search", "Buscar"],
+  ["/review", "Review"],
+  ["/goals", "Goals"],
   ["/tasks", "Tareas"],
   ["/calendar", "Calendario"],
   ["/fitness", "Fitness"],
@@ -37,10 +40,36 @@ export default function DashboardPage() {
 
   const data = db.load();
   const todayTasks = data.tasks.filter((t) => t.status === "today");
+  const nextEvent = [...data.events].sort((a, b) => +new Date(a.start_time) - +new Date(b.start_time))[0];
+  const goals = listGoals();
+  const activeGoals = goals.filter((g) => g.status === "active");
 
   return (
     <div className="space-y-4">
       <PageTitle title="Dashboard" subtitle="Centro de control personal" />
+
+      <SectionCard title="Daily Cockpit">
+        <div className="grid gap-2 text-sm sm:grid-cols-3">
+          <div className="rounded-xl border border-borderc p-2.5">
+            <p className="text-xs text-texts">Top prioridad hoy</p>
+            <p className="font-medium">{todayTasks[0]?.title || "Sin tareas today"}</p>
+          </div>
+          <div className="rounded-xl border border-borderc p-2.5">
+            <p className="text-xs text-texts">Próximo evento</p>
+            <p className="font-medium">{nextEvent ? nextEvent.title : "Sin eventos"}</p>
+          </div>
+          <div className="rounded-xl border border-borderc p-2.5">
+            <p className="text-xs text-texts">Entreno</p>
+            <p className="font-medium">{todaySession.name}</p>
+          </div>
+        </div>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <Link to="/tasks" className="btn-ghost">Abrir Tasks</Link>
+          <Link to="/calendar" className="btn-ghost">Abrir Calendar</Link>
+          <Link to="/fitness" className="btn-ghost">Abrir Fitness</Link>
+          <Link to="/review" className="btn-ghost">Revisión semanal</Link>
+        </div>
+      </SectionCard>
 
       <FocusCard
         focus={data.focus}
@@ -97,6 +126,28 @@ export default function DashboardPage() {
         </div>
       </SectionCard>
 
+      <SectionCard title="Objetivos activos">
+        {activeGoals.length === 0 ? (
+          <p className="text-sm text-texts">Sin objetivos activos. Crea uno en Goals.</p>
+        ) : (
+          <div className="space-y-2">
+            {activeGoals.slice(0, 3).map((g) => {
+              const pct = Math.min(100, Math.round((g.progress / Math.max(1, g.target)) * 100));
+              return (
+                <div key={g.id} className="rounded-xl border border-borderc p-2.5">
+                  <p className="text-sm font-medium">{g.title}</p>
+                  <p className="text-xs text-texts">{g.quarter} · {g.progress}/{g.target}</p>
+                  <div className="mt-1 h-2 rounded-full bg-[#edf0f4]">
+                    <div className="h-2 rounded-full bg-primary" style={{ width: `${pct}%` }} />
+                  </div>
+                </div>
+              );
+            })}
+            <Link to="/goals" className="btn-ghost inline-block">Ver Goals</Link>
+          </div>
+        )}
+      </SectionCard>
+
       <SectionCard title="Últimos recursos guardados">
         <div className="space-y-1">
           {data.resources.slice(0, 2).map((r) => (
@@ -112,10 +163,6 @@ export default function DashboardPage() {
           ))}
         </div>
       </SectionCard>
-
-      <button className="fixed bottom-20 right-4 z-30 grid h-12 w-12 place-items-center rounded-full bg-primary text-white shadow-lg lg:hidden" aria-label="Quick add">
-        <Plus className="h-5 w-5" />
-      </button>
 
       <Modal open={focusOpen}>
         <h3 className="mb-2 text-sm font-semibold">Editar foco del día</h3>

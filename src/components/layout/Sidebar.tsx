@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 const links = [
-  ["/", "Dashboard"], ["/tasks", "Tasks"], ["/calendar", "Calendar"], ["/fitness", "Fitness"], ["/notes", "Notes"], ["/prompts", "Prompts"], ["/resources", "Resources"], ["/daily-log", "Daily Log"], ["/projects", "Projects"], ["/settings", "Settings"]
+  ["/", "Dashboard"], ["/search", "Search"], ["/review", "Review"], ["/goals", "Goals"], ["/qa", "QA"], ["/tasks", "Tasks"], ["/calendar", "Calendar"], ["/fitness", "Fitness"], ["/notes", "Notes"], ["/prompts", "Prompts"], ["/resources", "Resources"], ["/daily-log", "Daily Log"], ["/projects", "Projects"], ["/settings", "Settings"]
 ] as const;
 
 export function Sidebar() {

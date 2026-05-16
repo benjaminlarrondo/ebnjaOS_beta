@@ -1,15 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import { AppLayout } from "../components/layout/AppLayout";
-import DashboardPage from "../modules/dashboard/page";
-import TasksPage from "../modules/tasks/page";
-import CalendarPage from "../modules/calendar/page";
-import FitnessPage from "../modules/fitness/page";
-import NotesPage from "../modules/notes/page";
-import PromptsPage from "../modules/prompts/page";
-import ResourcesPage from "../modules/resources/page";
-import DailyLogPage from "../modules/daily-log/page";
-import ProjectsPage from "../modules/projects/page";
-import SettingsPage from "../modules/settings/page";
 
 export const buildRouter = () =>
   createBrowserRouter(
@@ -18,16 +8,20 @@ export const buildRouter = () =>
         path: "/",
         element: <AppLayout />,
         children: [
-          { index: true, element: <DashboardPage /> },
-          { path: "tasks", element: <TasksPage /> },
-          { path: "calendar", element: <CalendarPage /> },
-          { path: "fitness", element: <FitnessPage /> },
-          { path: "notes", element: <NotesPage /> },
-          { path: "prompts", element: <PromptsPage /> },
-          { path: "resources", element: <ResourcesPage /> },
-          { path: "daily-log", element: <DailyLogPage /> },
-          { path: "projects", element: <ProjectsPage /> },
-          { path: "settings", element: <SettingsPage /> },
+          { index: true, lazy: async () => ({ Component: (await import("../modules/dashboard/page")).default }) },
+          { path: "tasks", lazy: async () => ({ Component: (await import("../modules/tasks/page")).default }) },
+          { path: "calendar", lazy: async () => ({ Component: (await import("../modules/calendar/page")).default }) },
+          { path: "fitness", lazy: async () => ({ Component: (await import("../modules/fitness/page")).default }) },
+          { path: "notes", lazy: async () => ({ Component: (await import("../modules/notes/page")).default }) },
+          { path: "prompts", lazy: async () => ({ Component: (await import("../modules/prompts/page")).default }) },
+          { path: "resources", lazy: async () => ({ Component: (await import("../modules/resources/page")).default }) },
+          { path: "daily-log", lazy: async () => ({ Component: (await import("../modules/daily-log/page")).default }) },
+          { path: "projects", lazy: async () => ({ Component: (await import("../modules/projects/page")).default }) },
+          { path: "search", lazy: async () => ({ Component: (await import("../modules/search/page")).default }) },
+          { path: "review", lazy: async () => ({ Component: (await import("../modules/review/page")).default }) },
+          { path: "goals", lazy: async () => ({ Component: (await import("../modules/goals/page")).default }) },
+          { path: "qa", lazy: async () => ({ Component: (await import("../modules/qa/page")).default }) },
+          { path: "settings", lazy: async () => ({ Component: (await import("../modules/settings/page")).default }) },
         ],
       },
     ],
