@@ -6,6 +6,7 @@ import type { CalendarEvent } from "../types/calendar";
 const REPO = "benjaminlarrondo/celeste_calendar";
 const LOCAL_SYNC_KEY = "ebnjaos-calendar-last-sync";
 const GITHUB_API_REPO = `https://api.github.com/repos/${REPO}`;
+const GH_PAGES_BASE = "https://benjaminlarrondo.github.io/celeste_calendar";
 
 type CelesteEntry = {
   owner: string;
@@ -26,6 +27,13 @@ type GitHubContentResponse = {
 
 type GitHubTreeResponse = {
   tree?: Array<{ path: string; type: string }>;
+};
+
+type GitHubContentListItem = {
+  name: string;
+  path: string;
+  type: string;
+  download_url?: string | null;
 };
 
 export type CalendarSyncResult = {
@@ -178,6 +186,34 @@ async function listJsonCandidates(branch: string) {
 async function fetchLatestCelesteFile() {
   const defaultBranch = await getDefaultBranch();
   const branches = Array.from(new Set([defaultBranch, "main", "master"]));
+
+  for (const branch of branches) {
+    try {
+      const url = `${GITHUB_API_REPO}/contents/data/versions?ref=${encodeURIComponent(branch)}&t=${Date.now()}`;
+      const res = await fetch(url, { cache: "no-store", headers: { Accept: "application/vnd.github+json" } });
+      if (res.ok) {
+        const list = (await res.json()) as GitHubContentListItem[];
+        const states = list
+          .filter((i) => i.type === "file" && /^state_\d{8}_\d{6}\.json$/i.test(i.name))
+          .sort((a, b) => b.name.localeCompare(a.name));
+
+        const newest = states[0];
+        if (newest) {
+          const parsed = await fetchFromContentsApiPath(branch, newest.path);
+          const m = newest.name.match(/^state_(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})\.json$/i);
+          const detectedDate = m ? `${m[1]}-${m[2]}-${m[3]}` : null;
+          return {
+            file: parsed.file,
+            sourceUrl: `${GH_PAGES_BASE}/${newest.path}`,
+            sourcePath: newest.path,
+            detectedDate,
+          };
+        }
+      }
+    } catch {
+      // fallback to broader scan below
+    }
+  }
 
   for (const branch of branches) {
     const candidates = await listJsonCandidates(branch);
