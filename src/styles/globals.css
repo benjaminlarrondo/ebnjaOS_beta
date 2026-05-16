@@ -33,9 +33,7 @@ body {
 
   .btn-primary,
   .btn-ghost,
-  .input,
-  button,
-  a {
+  .input {
     min-height: 42px;
   }
 }

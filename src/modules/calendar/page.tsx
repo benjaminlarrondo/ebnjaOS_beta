@@ -216,7 +216,7 @@ export default function CalendarPage() {
         <h3 className="text-sm font-semibold">Nuevo</h3>
         <div className="grid gap-2 md:grid-cols-2">
           <Input placeholder="Título del evento" value={title} onChange={(e) => setTitle(e.target.value)} />
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid gap-2 sm:grid-cols-2">
             <Input type="datetime-local" value={startAt} onChange={(e) => setStartAt(e.target.value)} />
             <Input type="datetime-local" value={endAt} onChange={(e) => setEndAt(e.target.value)} />
           </div>
