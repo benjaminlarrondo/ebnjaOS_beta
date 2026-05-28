@@ -1,0 +1,9 @@
+model = "gpt-5"
+
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+notify = true
+
+[projects."/Users/benjaminlarrondo/Documents/ebnjaOS_beta"]
+trust_level = "trusted"
