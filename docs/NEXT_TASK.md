@@ -2,80 +2,87 @@
 
 ## Objetivo
 
-Rediseñar el módulo Fitness / TRAINO para que sea más minimalista, funcional y parecido a la referencia visual generada, sin perder la lógica actual del proyecto.
+Transformar Home/Dashboard en el cockpit principal de benjaOS: visual, minimalista, ejecutivo y altamente escaneable.
 
-## Referencia visual
+## Dirección UX/UI
 
-Usar como dirección UX/UI:
-- dashboard fitness limpio
-- cards grandes y respiradas
-- fondo claro
-- bordes suaves
-- acento azul/violeta
-- jerarquía visual simple
-- menos formularios visibles de golpe
-- foco en resumen, progreso y acciones rápidas
+La Home debe sentirse como:
+- sistema operativo personal
+- dashboard ejecutivo calmado
+- Apple Health + Linear + WHOOP + Notion Calendar
+- modular
+- visual
+- mobile-first
+- premium
 
-## Estado actual a considerar
+## Problema actual
 
-El módulo actual ya tiene:
-- Semana actual
-- Plan y sesiones realizadas
-- Day tracker
-- Quick log
-- Tracking semanal
-- Tracking mensual
-- Progreso de cargas
-- Consistencia semanal
-- Recovery
-- Progreso de fuerza
-- Progresión 6 semanas
-- Plan base de entrenamiento
+El dashboard actual todavía se siente:
+- modular
+- funcional
+- tipo app de productividad
+
+Debe evolucionar hacia:
+- overview del día
+- estado personal
+- foco
+- métricas
+- quick insights
+- widgets vivos
 
 ## Instrucciones
 
 1. Revisar:
-   - src/modules/fitness/page.tsx
-   - src/components/fitness/*
-   - src/data/fitnessPlan.ts
-   - src/lib/store.ts
+   - src/modules/dashboard/page.tsx
+   - src/components/cards/*
+   - src/lib/navigation.ts
+   - AppLayout y layout actual
 
-2. Simplificar la vista principal:
-   - mantener arriba resumen ejecutivo
-   - mostrar 3 a 4 métricas clave
-   - priorizar: sesiones, peso, cargas, recovery
-   - mover formularios largos a secciones colapsables o secundarias
-   - reducir ruido visual
-   - mantener funcionalidad existente
+2. Rediseñar Dashboard/Home:
+   - Hero superior ejecutivo
+   - saludo/contexto del día
+   - widgets prioritarios
+   - métricas visuales
+   - quick actions minimalistas
+   - mejor jerarquía visual
 
-3. Mejorar UX:
-   - mobile-first
-   - cards limpias
-   - botones claros
-   - jerarquía tipo dashboard
-   - mantener labels en español
-   - no dejar información crítica escondida
+3. Priorizar:
+   - menos texto
+   - más estado visual
+   - cards grandes
+   - números protagonistas
+   - spacing generoso
+   - gráficos simples o placeholders visuales
+   - foco en escaneabilidad
 
-4. Restricciones:
-   - no borrar lógica existente
-   - no romper persistencia actual
+4. Dashboard recomendado:
+   - Hero principal
+   - Estado del día
+   - Fitness summary
+   - Calendar preview
+   - Focus / priorities
+   - Quick actions
+   - Insights o trends simples
+
+5. Restricciones:
+   - no romper módulos existentes
    - no instalar dependencias
-   - no cambiar rutas
-   - no modificar Supabase
+   - no cambiar lógica de negocio
+   - no romper navegación
    - cambios pequeños y verificables
 
-5. Validar:
+6. Validar:
    - npm run build
    - npm run lint
    - npm run typecheck
 
-6. Actualizar:
+7. Actualizar:
    - docs/STATUS.md
    - docs/CHANGELOG_AI.md
 
 ## Resultado esperado
 
-- Fitness queda más minimalista y usable.
-- La vista principal se parece más a un dashboard ejecutivo.
-- Las funciones actuales siguen disponibles.
-- La interfaz queda lista para iterar métricas, gráficos y registros.
+- Home se siente como el centro operativo de benjaOS.
+- Mucho más visual y premium.
+- Mejor lectura mobile-first.
+- Base correcta para widgets futuros e integraciones reales.

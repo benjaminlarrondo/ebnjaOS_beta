@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { PageTitle } from "../../components/layout/PageTitle";
 import { db } from "../../lib/store";
 
@@ -30,7 +30,7 @@ function saveChecklist(data: Record<string, Record<string, boolean>>) {
 }
 
 export default function ReviewPage() {
-  const [tick, setTick] = useState(0);
+  const [, setTick] = useState(0);
   const data = db.load();
   const wk = weekKey();
   const checks = loadChecklist();
@@ -43,15 +43,14 @@ export default function ReviewPage() {
     { id: "plan_next_week", label: "Definir foco de la próxima semana" },
   ];
 
-  const summary = useMemo(() => {
-    const weekStart = mondayOfWeek();
-    const done = data.tasks.filter((t) => t.status === "done" && new Date(t.updated_at || t.created_at) >= weekStart).length;
-    const created = data.tasks.filter((t) => new Date(t.created_at) >= weekStart).length;
-    const events = data.events.filter((e) => new Date(e.start_time) >= weekStart).length;
-    const workouts = data.workouts.filter((w) => new Date(`${w.date}T00:00:00`) >= weekStart).length;
-    const notes = data.notes.filter((n) => new Date(n.created_at) >= weekStart).length;
-    return { done, created, events, workouts, notes };
-  }, [data, tick]);
+  const weekStart = mondayOfWeek();
+  const summary = {
+    done: data.tasks.filter((t) => t.status === "done" && new Date(t.updated_at || t.created_at) >= weekStart).length,
+    created: data.tasks.filter((t) => new Date(t.created_at) >= weekStart).length,
+    events: data.events.filter((e) => new Date(e.start_time) >= weekStart).length,
+    workouts: data.workouts.filter((w) => new Date(`${w.date}T00:00:00`) >= weekStart).length,
+    notes: data.notes.filter((n) => new Date(n.created_at) >= weekStart).length,
+  };
 
   const toggle = (id: string) => {
     const next = loadChecklist();

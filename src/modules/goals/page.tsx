@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { PageTitle } from "../../components/layout/PageTitle";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -13,15 +13,14 @@ export default function GoalsPage() {
   const [area, setArea] = useState<GoalArea>("work");
   const [target, setTarget] = useState("10");
   const [quarter, setQuarter] = useState("2026-Q2");
-  const [tick, setTick] = useState(0);
+  const [, setTick] = useState(0);
   const goals = listGoals();
 
-  const totals = useMemo(() => {
-    const active = goals.filter((g) => g.status === "active").length;
-    const done = goals.filter((g) => g.status === "done").length;
-    const pct = goals.length === 0 ? 0 : Math.round(goals.reduce((acc, g) => acc + Math.min(100, Math.round((g.progress / Math.max(1, g.target)) * 100)), 0) / goals.length);
-    return { active, done, pct };
-  }, [goals, tick]);
+  const totals = {
+    active: goals.filter((g) => g.status === "active").length,
+    done: goals.filter((g) => g.status === "done").length,
+    pct: goals.length === 0 ? 0 : Math.round(goals.reduce((acc, g) => acc + Math.min(100, Math.round((g.progress / Math.max(1, g.target)) * 100)), 0) / goals.length),
+  };
 
   const add = () => {
     const n = Number(target);
