@@ -1,5 +1,24 @@
 # CHANGELOG_AI.md
 
+## 2026-05-27 23:35 -04
+
+### Ejecutado
+- Se leyeron `AGENTS.md`, `docs/PROJECT_BRIEF.md` y `docs/NEXT_TASK.md`.
+- Se simplifico visualmente `src/modules/fitness/page.tsx`.
+- Se creo un resumen ejecutivo superior con rutina sugerida, estado semanal, progreso, peso, cargas y recovery.
+- Se movio la planificacion semanal a una seccion colapsable.
+- Se movio el tracking semanal pesado a una seccion colapsable.
+- Se mantuvo la logica actual de registros, pesos, semana, recovery, tracking mensual y plan base.
+
+### Validacion
+- `npm run build`: OK.
+- `npm run lint`: OK con 2 warnings preexistentes.
+- `npm run typecheck`: OK.
+
+### Riesgos pendientes
+- No se realizo prueba visual en navegador.
+- Recovery puede verse en `0/10` si no hay datos cargados.
+
 ## 2026-05-27 23:09 -04
 
 ### Ejecutado

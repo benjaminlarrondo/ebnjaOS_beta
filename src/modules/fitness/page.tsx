@@ -84,6 +84,8 @@ export default function FitnessPage() {
   const [value, setValue] = useState("");
   const [weightInputs, setWeightInputs] = useState<Record<string, string>>({});
   const [pendingCompletion, setPendingCompletion] = useState<PendingCompletion | null>(null);
+  const [weekPlannerOpen, setWeekPlannerOpen] = useState(false);
+  const [weeklyTrackingOpen, setWeeklyTrackingOpen] = useState(false);
   const [monthlyOpen, setMonthlyOpen] = useState(false);
   const [, setTick] = useState(0);
   const [status, setStatus] = useState("");
@@ -406,84 +408,49 @@ export default function FitnessPage() {
     fatigue: { label: "Fatiga", value: state.recovery.fatigue, status: toStatus(10 - state.recovery.fatigue) },
     mobility: { label: "Movilidad", value: state.recovery.mobility, status: toStatus(state.recovery.mobility) },
   };
+  const latestLoadAvg = monthlyWeightProgress[monthlyWeightProgress.length - 1]?.avg ?? 0;
+  const recoveryAvg = Math.round(
+    (state.recovery.sleep + state.recovery.energy + Math.max(0, 10 - state.recovery.fatigue) + state.recovery.mobility) / 4,
+  );
 
   return (
     <div className="space-y-4">
-      <PageTitle title="TRAINO" subtitle="Plan hibrido flexible, sin dias fijos" />
-
-      <section className="card">
-        <div className="mb-3 flex items-center justify-between gap-2">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-primary">Semana actual</p>
-            <h3 className="text-sm font-semibold">Plan y sesiones realizadas</h3>
-          </div>
-          <CalendarDays className="h-4 w-4 text-texts" />
-        </div>
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-7">
-          {weekDays.map((day) => {
-            const entry = getScheduleEntry(day.date);
-            const availableSessions = entry.mode === "Gym" ? gymSessions : entry.mode === "Casa" ? homeSessions : [];
-            return (
-              <div key={day.date} className={`rounded-lg border p-2.5 ${entry.completed ? "border-primary/40 bg-primary/5" : "border-borderc"}`}>
-                <div className="mb-2 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold">{day.label}</p>
-                    <p className="text-[11px] text-texts">{day.day}</p>
-                  </div>
-                  <button
-                    type="button"
-                    className={`rounded-full px-2 py-1 text-[10px] ${entry.completed ? "bg-primary text-white" : "bg-bg text-texts"}`}
-                    onClick={() => {
-                      if (!entry.sessionId) {
-                        setStatus("Selecciona una rutina antes de marcar completado.");
-                        return;
-                      }
-                      updateWeekDay(day.date, { completed: true });
-                    }}
-                  >
-                    {entry.completed ? "Hecho" : "Completar"}
-                  </button>
-                </div>
-                <Select
-                  className="mb-2 text-xs"
-                  value={entry.mode}
-                  onChange={(e) => updateWeekDay(day.date, { mode: e.target.value as TrainingMode, sessionId: "", completed: false })}
-                >
-                  <option value="Descanso">Descanso</option>
-                  <option value="Gym">Gym</option>
-                  <option value="Casa">Home</option>
-                </Select>
-                <Select
-                  className="text-xs"
-                  value={entry.sessionId}
-                  disabled={entry.mode === "Descanso"}
-                  onChange={(e) => updateWeekDay(day.date, { sessionId: e.target.value, completed: false })}
-                >
-                  <option value="">Rutina</option>
-                  {availableSessions.map((session) => (
-                    <option key={session.id} value={session.id}>{session.name}</option>
-                  ))}
-                </Select>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+      <PageTitle title="TRAINO" subtitle="Resumen semanal y seguimiento flexible" />
 
       <section className="card border-primary/25 bg-white">
-        <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="mb-4 flex items-start justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-primary">Day tracker</p>
-            <h3 className="mt-1 text-base font-semibold">{suggestedSession ? suggestedSession.name : "Descanso"}</h3>
+            <p className="text-xs font-semibold uppercase tracking-wide text-primary">Resumen ejecutivo</p>
+            <h3 className="mt-1 text-xl font-semibold">{suggestedSession ? suggestedSession.name : "Descanso"}</h3>
             <p className="text-xs text-texts">{suggestedSession ? suggestedSession.focus : "Recuperacion activa o pausa total"}</p>
           </div>
-          <button type="button" className="btn-ghost flex items-center gap-1 text-xs" onClick={resetWeek}>
-            <RotateCcw className="h-3.5 w-3.5" />
-            Reset
-          </button>
+          <span className="rounded-full bg-[#eef1f6] px-2.5 py-1 text-[11px] font-medium text-primary">{weekStatus}</span>
         </div>
 
-        <div className="grid gap-2 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
+          <div className="rounded-lg bg-bg p-2.5">
+            <p className="text-xs text-texts">Sesiones</p>
+            <p className="text-lg font-semibold">{completedThisWeek}/{WEEK_TARGET}</p>
+          </div>
+          <div className="rounded-lg bg-bg p-2.5">
+            <p className="text-xs text-texts">Peso</p>
+            <p className="text-lg font-semibold">{state.weeklyTracking.weight || state.bodyWeightKg || 0} kg</p>
+          </div>
+          <div className="rounded-lg bg-bg p-2.5">
+            <p className="text-xs text-texts">Cargas</p>
+            <p className="text-lg font-semibold">{latestLoadAvg} kg</p>
+          </div>
+          <div className="rounded-lg bg-bg p-2.5">
+            <p className="text-xs text-texts">Recovery</p>
+            <p className="text-lg font-semibold">{recoveryAvg}/10</p>
+          </div>
+        </div>
+
+        <div className="mt-3 h-2 overflow-hidden rounded-full bg-bg">
+          <div className="h-full rounded-full bg-primary" style={{ width: `${adherencePct}%` }} />
+        </div>
+
+        <div className="mt-4 grid gap-2 sm:grid-cols-3">
           <label className="text-xs text-texts sm:col-span-1">
             Hoy
             <Select className="mt-1" value={trainingMode} onChange={(e) => setTrainingMode(e.target.value as TrainingMode)}>
@@ -502,29 +469,6 @@ export default function FitnessPage() {
           </div>
         </div>
 
-        <div className="mt-3 grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
-          <div className="rounded-lg bg-bg p-2.5">
-            <p className="text-xs text-texts">Semana</p>
-            <p className="font-semibold">{weekStatus}</p>
-          </div>
-          <div className="rounded-lg bg-bg p-2.5">
-            <p className="text-xs text-texts">Progreso</p>
-            <p className="font-semibold">{completedThisWeek}/{WEEK_TARGET}</p>
-          </div>
-          <div className="rounded-lg bg-bg p-2.5">
-            <p className="text-xs text-texts">Gym / Home</p>
-            <p className="font-semibold">{gymCompleted}/{TYPE_TARGET} · {homeCompleted}/{TYPE_TARGET}</p>
-          </div>
-          <div className="rounded-lg bg-bg p-2.5">
-            <p className="text-xs text-texts">Ultima sesion</p>
-            <p className="truncate font-semibold">{state.lastSessionDate || "Sin registro"}</p>
-          </div>
-        </div>
-
-        <div className="mt-3 h-2 overflow-hidden rounded-full bg-bg">
-          <div className="h-full rounded-full bg-primary" style={{ width: `${adherencePct}%` }} />
-        </div>
-
         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
           <button type="button" onClick={markWorkoutDone} className="btn-primary flex items-center justify-center gap-2 text-xs">
             <Check className="h-4 w-4" />
@@ -536,8 +480,82 @@ export default function FitnessPage() {
           </button>
           <button type="button" onClick={() => openQuickLog("weight")} className="btn-ghost text-xs">Peso</button>
           <button type="button" onClick={() => openQuickLog("notes")} className="btn-ghost text-xs">Notas</button>
+          <button type="button" className="btn-ghost flex items-center justify-center gap-1 text-xs sm:col-span-4" onClick={resetWeek}>
+            <RotateCcw className="h-3.5 w-3.5" />
+            Reset semana
+          </button>
         </div>
         {status && <p className="mt-2 text-xs text-texts">{status}</p>}
+      </section>
+
+      <section className="card">
+        <button
+          type="button"
+          onClick={() => setWeekPlannerOpen((v) => !v)}
+          className="flex w-full items-center justify-between text-left"
+          aria-expanded={weekPlannerOpen}
+          aria-controls="week-planner-panel"
+        >
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-primary">Semana actual</p>
+            <h3 className="text-sm font-semibold">Plan y sesiones realizadas</h3>
+          </div>
+          <div className="flex items-center gap-2 text-texts">
+            <CalendarDays className="h-4 w-4" />
+            <ChevronDown className={`h-4 w-4 transition-transform ${weekPlannerOpen ? "rotate-180" : "rotate-0"}`} />
+          </div>
+        </button>
+        {weekPlannerOpen && (
+          <div id="week-planner-panel" className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-7">
+            {weekDays.map((day) => {
+              const entry = getScheduleEntry(day.date);
+              const availableSessions = entry.mode === "Gym" ? gymSessions : entry.mode === "Casa" ? homeSessions : [];
+              return (
+                <div key={day.date} className={`rounded-lg border p-2.5 ${entry.completed ? "border-primary/40 bg-primary/5" : "border-borderc"}`}>
+                  <div className="mb-2 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-semibold">{day.label}</p>
+                      <p className="text-[11px] text-texts">{day.day}</p>
+                    </div>
+                    <button
+                      type="button"
+                      className={`rounded-full px-2 py-1 text-[10px] ${entry.completed ? "bg-primary text-white" : "bg-bg text-texts"}`}
+                      onClick={() => {
+                        if (!entry.sessionId) {
+                          setStatus("Selecciona una rutina antes de marcar completado.");
+                          return;
+                        }
+                        updateWeekDay(day.date, { completed: true });
+                      }}
+                    >
+                      {entry.completed ? "Hecho" : "Completar"}
+                    </button>
+                  </div>
+                  <Select
+                    className="mb-2 text-xs"
+                    value={entry.mode}
+                    onChange={(e) => updateWeekDay(day.date, { mode: e.target.value as TrainingMode, sessionId: "", completed: false })}
+                  >
+                    <option value="Descanso">Descanso</option>
+                    <option value="Gym">Gym</option>
+                    <option value="Casa">Home</option>
+                  </Select>
+                  <Select
+                    className="text-xs"
+                    value={entry.sessionId}
+                    disabled={entry.mode === "Descanso"}
+                    onChange={(e) => updateWeekDay(day.date, { sessionId: e.target.value, completed: false })}
+                  >
+                    <option value="">Rutina</option>
+                    {availableSessions.map((session) => (
+                      <option key={session.id} value={session.id}>{session.name}</option>
+                    ))}
+                  </Select>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       <section className="card">
@@ -579,51 +597,68 @@ export default function FitnessPage() {
 
       <QuickLogCard onAction={openQuickLog} />
 
-      <SectionCard title="Tracking semanal">
-        <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
-          {[
-            ["weight", "Peso", "kg"],
-            ["waist", "Cintura", "cm"],
-            ["chest", "Pecho", "cm"],
-            ["arm", "Brazo", "cm"],
-            ["leg", "Pierna", "cm"],
-            ["sleepAvg", "Sueno", "h"],
-            ["energy", "Energia", "/10"],
-            ["protein", "Proteina", "g"],
-          ].map(([key, label, unit]) => (
-            <label key={key} className="text-xs text-texts">
-              {label}
-              <Input
-                className="mt-1"
-                type="number"
-                inputMode="decimal"
-                value={String(state.weeklyTracking[key as keyof typeof state.weeklyTracking] || "")}
-                onChange={(e) => updateWeeklyMetric(key as keyof typeof state.weeklyTracking, e.target.value)}
-                placeholder={unit}
-              />
-            </label>
-          ))}
-        </div>
-        <div className="mt-3 grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
-          <div className="rounded-lg border border-borderc p-2.5"><p className="text-xs text-texts">Gym cumplido</p><p className="font-semibold">{gymCompleted}/{TYPE_TARGET}</p></div>
-          <div className="rounded-lg border border-borderc p-2.5"><p className="text-xs text-texts">Home cumplido</p><p className="font-semibold">{homeCompleted}/{TYPE_TARGET}</p></div>
-          <div className="rounded-lg border border-borderc p-2.5"><p className="text-xs text-texts">Sesiones</p><p className="font-semibold">{completedThisWeek}/{WEEK_TARGET}</p></div>
-          <div className="rounded-lg border border-borderc p-2.5"><p className="text-xs text-texts">Adherencia</p><p className="font-semibold">{adherencePct}%</p></div>
-        </div>
-        <Textarea
-          className="mt-3"
-          value={state.weeklyTracking.notes}
-          onChange={(e) => updateWeeklyMetric("notes", e.target.value)}
-          placeholder="Notas de la semana"
-        />
-        <div className="mt-3 flex items-center justify-between gap-2">
-          <p className="text-xs text-texts">Semana {state.weeklyTracking.week || currentWeek}</p>
-          <Select className="max-w-36" value={state.resetMode} onChange={(e) => db.setFitnessState({ resetMode: e.target.value as "manual" | "auto" }) && setTick((x) => x + 1)}>
-            <option value="manual">Reset manual</option>
-            <option value="auto">Reset auto</option>
-          </Select>
-        </div>
-      </SectionCard>
+      <section className="card">
+        <button
+          type="button"
+          onClick={() => setWeeklyTrackingOpen((v) => !v)}
+          className="flex w-full items-center justify-between text-left"
+          aria-expanded={weeklyTrackingOpen}
+          aria-controls="weekly-tracking-panel"
+        >
+          <div>
+            <h3 className="text-sm font-semibold">Tracking semanal</h3>
+            <p className="mt-1 text-xs text-texts">Medidas, energia, proteina y notas</p>
+          </div>
+          <ChevronDown className={`h-4 w-4 text-texts transition-transform ${weeklyTrackingOpen ? "rotate-180" : "rotate-0"}`} />
+        </button>
+        {weeklyTrackingOpen && (
+          <div id="weekly-tracking-panel" className="mt-3">
+            <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
+              {[
+                ["weight", "Peso", "kg"],
+                ["waist", "Cintura", "cm"],
+                ["chest", "Pecho", "cm"],
+                ["arm", "Brazo", "cm"],
+                ["leg", "Pierna", "cm"],
+                ["sleepAvg", "Sueno", "h"],
+                ["energy", "Energia", "/10"],
+                ["protein", "Proteina", "g"],
+              ].map(([key, label, unit]) => (
+                <label key={key} className="text-xs text-texts">
+                  {label}
+                  <Input
+                    className="mt-1"
+                    type="number"
+                    inputMode="decimal"
+                    value={String(state.weeklyTracking[key as keyof typeof state.weeklyTracking] || "")}
+                    onChange={(e) => updateWeeklyMetric(key as keyof typeof state.weeklyTracking, e.target.value)}
+                    placeholder={unit}
+                  />
+                </label>
+              ))}
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
+              <div className="rounded-lg border border-borderc p-2.5"><p className="text-xs text-texts">Gym cumplido</p><p className="font-semibold">{gymCompleted}/{TYPE_TARGET}</p></div>
+              <div className="rounded-lg border border-borderc p-2.5"><p className="text-xs text-texts">Home cumplido</p><p className="font-semibold">{homeCompleted}/{TYPE_TARGET}</p></div>
+              <div className="rounded-lg border border-borderc p-2.5"><p className="text-xs text-texts">Sesiones</p><p className="font-semibold">{completedThisWeek}/{WEEK_TARGET}</p></div>
+              <div className="rounded-lg border border-borderc p-2.5"><p className="text-xs text-texts">Adherencia</p><p className="font-semibold">{adherencePct}%</p></div>
+            </div>
+            <Textarea
+              className="mt-3"
+              value={state.weeklyTracking.notes}
+              onChange={(e) => updateWeeklyMetric("notes", e.target.value)}
+              placeholder="Notas de la semana"
+            />
+            <div className="mt-3 flex items-center justify-between gap-2">
+              <p className="text-xs text-texts">Semana {state.weeklyTracking.week || currentWeek}</p>
+              <Select className="max-w-36" value={state.resetMode} onChange={(e) => db.setFitnessState({ resetMode: e.target.value as "manual" | "auto" }) && setTick((x) => x + 1)}>
+                <option value="manual">Reset manual</option>
+                <option value="auto">Reset auto</option>
+              </Select>
+            </div>
+          </div>
+        )}
+      </section>
 
       <section className="card">
         <button
