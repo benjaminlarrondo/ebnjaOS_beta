@@ -18,6 +18,50 @@ type FitnessState = {
   weeklyVolume: number;
   sleepAvg: number;
   adherencePct: number;
+  nextGymIndex: number;
+  nextHomeIndex: number;
+  lastSessionDate: string;
+  lastSessionName: string;
+  weekKey: string;
+  resetMode: "manual" | "auto";
+  gymCompleted: number;
+  homeCompleted: number;
+  weeklySchedule: Array<{
+    date: string;
+    mode: "Gym" | "Casa" | "Descanso";
+    sessionId: string;
+    completed: boolean;
+  }>;
+  exerciseWeightLogs: Array<{
+    id: string;
+    date: string;
+    week: string;
+    month: string;
+    sessionId: string;
+    sessionName: string;
+    location: "Gym" | "Casa";
+    exercises: Array<{
+      name: string;
+      prescription: string;
+      weightKg: number;
+    }>;
+  }>;
+  weeklyTracking: {
+    week: string;
+    weight: number;
+    waist: number;
+    chest: number;
+    arm: number;
+    leg: number;
+    sleepAvg: number;
+    energy: number;
+    protein: number;
+    gymCompleted: number;
+    homeCompleted: number;
+    totalSessions: number;
+    notes: string;
+    adherencePct: number;
+  };
   recovery: {
     sleep: number;
     energy: number;
@@ -44,13 +88,39 @@ const KEY = "ebnjaos-db-v1";
 
 const defaultFitnessState: FitnessState = {
   sessionsCompleted: 0,
-  sessionsPending: 7,
+  sessionsPending: 6,
   weeklyStreak: 0,
   bodyWeightKg: 0,
   prsThisCycle: 0,
   weeklyVolume: 0,
   sleepAvg: 0,
   adherencePct: 0,
+  nextGymIndex: 0,
+  nextHomeIndex: 0,
+  lastSessionDate: "",
+  lastSessionName: "",
+  weekKey: "",
+  resetMode: "manual",
+  gymCompleted: 0,
+  homeCompleted: 0,
+  weeklySchedule: [],
+  exerciseWeightLogs: [],
+  weeklyTracking: {
+    week: "",
+    weight: 0,
+    waist: 0,
+    chest: 0,
+    arm: 0,
+    leg: 0,
+    sleepAvg: 0,
+    energy: 0,
+    protein: 0,
+    gymCompleted: 0,
+    homeCompleted: 0,
+    totalSessions: 0,
+    notes: "",
+    adherencePct: 0,
+  },
   recovery: {
     sleep: 0,
     energy: 0,
@@ -67,6 +137,21 @@ function load(): DB {
   const raw = localStorage.getItem(KEY);
   if (!raw) return defaultDb();
   const parsed = JSON.parse(raw) as Partial<DB>;
+  const fitnessState = {
+    ...defaultFitnessState,
+    ...parsed.fitnessState,
+    recovery: {
+      ...defaultFitnessState.recovery,
+      ...parsed.fitnessState?.recovery,
+    },
+    weeklyTracking: {
+      ...defaultFitnessState.weeklyTracking,
+      ...parsed.fitnessState?.weeklyTracking,
+    },
+    weeklySchedule: parsed.fitnessState?.weeklySchedule ?? [],
+    exerciseWeightLogs: parsed.fitnessState?.exerciseWeightLogs ?? [],
+  };
+
   return {
     focus: parsed.focus ?? seed.focus,
     tasks: parsed.tasks ?? seed.tasks,
@@ -77,7 +162,7 @@ function load(): DB {
     resources: parsed.resources ?? seed.resources,
     logs: parsed.logs ?? seed.logs,
     projects: parsed.projects ?? [],
-    fitnessState: parsed.fitnessState ?? defaultFitnessState,
+    fitnessState,
   };
 }
 
@@ -111,7 +196,14 @@ export const db = {
   getFitnessState: () => load().fitnessState,
   setFitnessState: (next: Partial<FitnessState>) => {
     const d = load();
-    d.fitnessState = { ...d.fitnessState, ...next };
+    d.fitnessState = {
+      ...d.fitnessState,
+      ...next,
+      recovery: next.recovery ? { ...d.fitnessState.recovery, ...next.recovery } : d.fitnessState.recovery,
+      weeklyTracking: next.weeklyTracking
+        ? { ...d.fitnessState.weeklyTracking, ...next.weeklyTracking }
+        : d.fitnessState.weeklyTracking,
+    };
     save(d);
     return d.fitnessState;
   },
