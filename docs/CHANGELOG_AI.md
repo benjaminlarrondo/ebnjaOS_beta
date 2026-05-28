@@ -1,5 +1,24 @@
 # CHANGELOG_AI.md
 
+## 2026-05-27 22:54 -04
+
+### Ejecutado
+- Se leyeron `AGENTS.md`, `docs/PROJECT_BRIEF.md` y `docs/NEXT_TASK.md`.
+- Se implemento mejora inicial UX mobile-first de navegacion y dashboard.
+- Se redujo la navegacion mobile a 5 accesos principales.
+- Se normalizaron labels en espanol en sidebar y dashboard.
+- Se simplifico el cockpit del dashboard removiendo accesos duplicados.
+- Se mantuvieron rutas existentes y no se modifico logica de datos.
+
+### Validacion
+- `npm run build`: OK.
+- `npm run lint`: OK con 2 warnings preexistentes.
+- `npm run typecheck`: OK.
+
+### Riesgos pendientes
+- `Mas` apunta a `settings`; falta convertirlo en hub claro de modulos secundarios.
+- Persisten warnings de lint preexistentes en `goals` y `review`.
+
 ## 2026-05-27 22:47 -04
 
 ### Ejecutado
