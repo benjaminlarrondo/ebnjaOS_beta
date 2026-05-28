@@ -1,5 +1,34 @@
 # CHANGELOG_AI.md
 
+## 2026-05-28 19:17 -04
+
+### Ejecutado
+- Se leyeron `AGENTS.md`, `docs/PROJECT_BRIEF.md` y `docs/NEXT_TASK.md`.
+- Se creo la carpeta `src/components/dashboard/`.
+- Se extrajo la Home en widgets reutilizables:
+  - `HeroWidget`
+  - `DayStatusWidget`
+  - `FitnessWidget`
+  - `CalendarWidget`
+  - `FocusWidget`
+  - `InsightsWidget`
+  - `QuickActionsWidget`
+- Se dejo `src/modules/dashboard/page.tsx` como ensamblador de datos y widgets.
+- Se mantuvo apariencia visual, mobile-first, rutas, navegacion, store y persistencia.
+
+### Dependencias removidas del dashboard
+- `Link`, iconos de `lucide-react`, `Modal`, `Button` e `Input` dejaron de vivir en `page.tsx`.
+- La UI y sus interacciones locales pasaron a widgets independientes.
+
+### Validacion
+- `npm run build`: OK.
+- `npm run lint`: OK, sin warnings.
+- `npm run typecheck`: OK.
+
+### Riesgos pendientes
+- No se hizo QA visual en navegador.
+- Helpers visuales repetidos podrian centralizarse si se reutilizan fuera de Home.
+
 ## 2026-05-28 19:07 -04
 
 ### Ejecutado
