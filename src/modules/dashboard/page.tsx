@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  Activity,
   ArrowUpRight,
   CalendarDays,
   CheckCircle2,
@@ -38,11 +37,38 @@ function ProgressLine({ value, tone = "primary" }: { value: number; tone?: "prim
   );
 }
 
-function MetricPill({ label, value }: { label: string; value: string | number }) {
+function StatusMetric({ label, value, hint }: { label: string; value: string | number; hint?: string }) {
   return (
-    <div className="rounded-2xl border border-white/60 bg-white/70 p-3 shadow-sm">
+    <div className="rounded-2xl border border-borderc bg-white p-3 shadow-sm">
       <p className="text-[11px] font-medium text-texts">{label}</p>
-      <p className="mt-2 text-2xl font-semibold leading-none text-textp">{value}</p>
+      <p className="mt-2 text-2xl font-semibold leading-none text-textp sm:text-3xl">{value}</p>
+      {hint && <p className="mt-2 text-[11px] text-texts">{hint}</p>}
+    </div>
+  );
+}
+
+function ScoreRing({ value, label }: { value: number; label: string }) {
+  return (
+    <div
+      className="grid h-28 w-28 shrink-0 place-items-center rounded-full"
+      style={{ background: `conic-gradient(var(--color-primary) ${clampPct(value) * 3.6}deg, var(--color-surface-2) 0deg)` }}
+    >
+      <div className="grid h-[88px] w-[88px] place-items-center rounded-full bg-white text-center shadow-sm">
+        <p className="text-2xl font-semibold leading-none text-textp">{clampPct(value)}%</p>
+        <p className="mt-1 text-[10px] font-medium text-texts">{label}</p>
+      </div>
+    </div>
+  );
+}
+
+function InsightRow({ label, value, tone }: { label: string; value: number; tone: "primary" | "accent" | "warning" }) {
+  return (
+    <div className="rounded-2xl bg-surface2 p-3">
+      <div className="mb-2 flex items-center justify-between text-xs">
+        <span className="font-medium text-textp">{label}</span>
+        <span className="text-texts">{clampPct(value)}%</span>
+      </div>
+      <ProgressLine value={value} tone={tone} />
     </div>
   );
 }
@@ -75,6 +101,8 @@ export default function DashboardPage() {
   const sleepPct = clampPct(((fitness.recovery.sleep || fitness.sleepAvg || 0) / 10) * 100);
   const energyPct = clampPct(((fitness.recovery.energy || 0) / 10) * 100);
   const recoveryScore = clampPct((sleepPct + energyPct) / 2);
+  const focusScore = clampPct(todayTasks.length === 0 ? 100 : Math.max(20, 100 - todayTasks.length * 18));
+  const dayScore = clampPct((fitnessPct + recoveryScore + focusScore) / 3);
   const focusPreview = data.focus || "Define el foco central del dia";
   const topPriority = todayTasks[0]?.title || activeGoals[0]?.title || "Dia despejado";
   const lastSyncAt = getLastCalendarSyncAt();
@@ -84,29 +112,34 @@ export default function DashboardPage() {
   return (
     <div className="space-y-5 pb-4">
       <section className="overflow-hidden rounded-[28px] border border-borderc bg-surface p-5 shadow-md sm:p-6">
-        <div className="flex items-start justify-between gap-4">
+        <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
-            <p className="eyebrow">{todayLabel}</p>
-            <h1 className="mt-2 text-3xl font-semibold leading-tight text-textp sm:text-4xl">Cockpit del dia</h1>
-            <p className="mt-3 max-w-xl text-sm leading-6 text-texts">{focusPreview}</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="eyebrow">{todayLabel}</p>
+              <span className="rounded-full bg-surface2 px-2.5 py-1 text-[11px] font-medium text-texts">Centro operativo</span>
+            </div>
+            <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-none text-textp sm:text-5xl">Cockpit del dia</h1>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-texts">{focusPreview}</p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <Link to="/tasks" className="btn-primary">Abrir foco</Link>
+              <Link to="/calendar" className="btn-ghost">Agenda</Link>
+              <Link to="/fitness" className="btn-ghost">Entreno</Link>
+            </div>
           </div>
-          <div className="hidden rounded-full border border-borderc bg-surface2 p-3 text-primary sm:grid sm:place-items-center">
-            <Activity className="h-5 w-5" />
+          <div className="flex items-center justify-between gap-4 rounded-[24px] bg-surface2 p-4 lg:w-72">
+            <ScoreRing value={dayScore} label="dia" />
+            <div className="min-w-0">
+              <p className="text-xs font-medium text-texts">Estado</p>
+              <p className="mt-2 text-xl font-semibold leading-tight text-textp">{dayScore >= 70 ? "En control" : "Priorizar energia"}</p>
+              <p className="mt-2 text-xs leading-5 text-texts">{todayTasks.length} focos · {todayEvents.length} eventos · {fitness.sessionsCompleted}/6 fitness</p>
+            </div>
           </div>
         </div>
 
         <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
-          <MetricPill label="Foco" value={todayTasks.length} />
-          <MetricPill label="Agenda" value={todayEvents.length} />
-          <MetricPill label="Fitness" value={`${fitness.sessionsCompleted}/6`} />
-        </div>
-
-        <div className="mt-5 rounded-2xl bg-surface2 p-3">
-          <div className="mb-2 flex items-center justify-between text-xs">
-            <span className="font-medium text-textp">Estado semanal</span>
-            <span className="text-texts">{fitnessPct}%</span>
-          </div>
-          <ProgressLine value={fitnessPct} />
+          <StatusMetric label="Foco" value={todayTasks.length} hint={topPriority} />
+          <StatusMetric label="Agenda" value={todayEvents.length} hint={nextEvent?.title || "Libre"} />
+          <StatusMetric label="Fitness" value={`${fitness.sessionsCompleted}/6`} hint={todaySession.name} />
         </div>
       </section>
 
@@ -230,19 +263,10 @@ export default function DashboardPage() {
             </div>
             <Flame className="h-5 w-5 text-primary" />
           </div>
-          <div className="space-y-4">
-            <div>
-              <div className="mb-2 flex justify-between text-xs text-texts"><span>Fitness</span><span>{fitnessPct}%</span></div>
-              <ProgressLine value={fitnessPct} tone="accent" />
-            </div>
-            <div>
-              <div className="mb-2 flex justify-between text-xs text-texts"><span>Recovery</span><span>{recoveryScore}%</span></div>
-              <ProgressLine value={recoveryScore} />
-            </div>
-            <div>
-              <div className="mb-2 flex justify-between text-xs text-texts"><span>Objetivos activos</span><span>{activeGoals.length}</span></div>
-              <ProgressLine value={Math.min(100, activeGoals.length * 20)} tone="warning" />
-            </div>
+          <div className="space-y-3">
+            <InsightRow label="Fitness" value={fitnessPct} tone="accent" />
+            <InsightRow label="Recovery" value={recoveryScore} tone="primary" />
+            <InsightRow label="Objetivos" value={Math.min(100, activeGoals.length * 20)} tone="warning" />
           </div>
         </section>
       </div>

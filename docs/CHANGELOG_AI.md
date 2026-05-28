@@ -1,5 +1,26 @@
 # CHANGELOG_AI.md
 
+## 2026-05-28 19:07 -04
+
+### Ejecutado
+- Se leyeron `AGENTS.md`, `docs/PROJECT_BRIEF.md` y `docs/NEXT_TASK.md`.
+- Se revisaron Dashboard, cards, navegacion y layout actual.
+- Se reforzo `src/modules/dashboard/page.tsx` como cockpit ejecutivo personal.
+- Se agrego score visual del dia con anillo de progreso.
+- Se convirtieron las metricas del hero en cards con contexto operativo.
+- Se agregaron CTAs directos en el hero para foco, agenda y entreno.
+- Se simplifico el bloque de insights con filas visuales reutilizables.
+- No se modifico logica de negocio, rutas, navegacion, persistencia ni dependencias.
+
+### Validacion
+- `npm run build`: OK.
+- `npm run lint`: OK, sin warnings.
+- `npm run typecheck`: OK.
+
+### Riesgos pendientes
+- No se hizo QA visual en navegador.
+- El score del dia es una metrica derivada simple hasta conectar integraciones reales.
+
 ## 2026-05-28 18:44 -04
 
 ### Ejecutado
