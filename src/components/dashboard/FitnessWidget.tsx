@@ -1,5 +1,7 @@
 import { Dumbbell } from "lucide-react";
-import { Link } from "react-router-dom";
+import { WidgetCard } from "./WidgetCard";
+import { WidgetHeader } from "./WidgetHeader";
+import { WidgetMetric } from "./WidgetMetric";
 
 function ProgressLine({ value }: { value: number }) {
   return (
@@ -25,28 +27,19 @@ export function FitnessWidget({
   fitnessPct: number;
 }) {
   return (
-    <Link to="/fitness" className="card block transition active:scale-[0.99]">
-      <div className="mb-5 flex items-start justify-between gap-3">
-        <div>
-          <p className="eyebrow">Fitness</p>
-          <h2 className="mt-2 text-2xl font-semibold leading-tight text-textp">{sessionName}</h2>
-          <p className="mt-1 text-sm text-texts">{sessionFocus}</p>
-        </div>
-        <span className="rounded-full bg-surface2 p-3 text-primary"><Dumbbell className="h-5 w-5" /></span>
-      </div>
+    <WidgetCard to="/fitness">
+      <WidgetHeader
+        eyebrow="Fitness"
+        title={sessionName}
+        subtitle={sessionFocus}
+        size="lg"
+        className="mb-5"
+        icon={<span className="rounded-full bg-surface2 p-3 text-primary"><Dumbbell className="h-5 w-5" /></span>}
+      />
       <div className="grid grid-cols-3 gap-2">
-        <div>
-          <p className="metric-value">{sessionsCompleted}</p>
-          <p className="mt-1 text-xs text-texts">sesiones</p>
-        </div>
-        <div>
-          <p className="metric-value">{gymCompleted}</p>
-          <p className="mt-1 text-xs text-texts">gym</p>
-        </div>
-        <div>
-          <p className="metric-value">{homeCompleted}</p>
-          <p className="mt-1 text-xs text-texts">home</p>
-        </div>
+        <WidgetMetric label="sesiones" value={sessionsCompleted} labelPosition="bottom" />
+        <WidgetMetric label="gym" value={gymCompleted} labelPosition="bottom" />
+        <WidgetMetric label="home" value={homeCompleted} labelPosition="bottom" />
       </div>
       <div className="mt-5">
         <div className="mb-2 flex justify-between text-xs text-texts">
@@ -55,6 +48,6 @@ export function FitnessWidget({
         </div>
         <ProgressLine value={fitnessPct} />
       </div>
-    </Link>
+    </WidgetCard>
   );
 }

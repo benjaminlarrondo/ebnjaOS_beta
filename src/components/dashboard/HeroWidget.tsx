@@ -1,17 +1,9 @@
-import { Link } from "react-router-dom";
+import { WidgetAction } from "./WidgetAction";
+import { WidgetCard } from "./WidgetCard";
+import { WidgetMetric } from "./WidgetMetric";
 
 function clampPct(value: number) {
   return Math.min(100, Math.max(0, Math.round(value)));
-}
-
-function StatusMetric({ label, value, hint }: { label: string; value: string | number; hint?: string }) {
-  return (
-    <div className="rounded-2xl border border-borderc bg-white p-3 shadow-sm">
-      <p className="text-[11px] font-medium text-texts">{label}</p>
-      <p className="mt-2 text-2xl font-semibold leading-none text-textp sm:text-3xl">{value}</p>
-      {hint && <p className="mt-2 text-[11px] text-texts">{hint}</p>}
-    </div>
-  );
 }
 
 function ScoreRing({ value, label }: { value: number; label: string }) {
@@ -50,7 +42,7 @@ export function HeroWidget({
   todaySessionName: string;
 }) {
   return (
-    <section className="overflow-hidden rounded-[28px] border border-borderc bg-surface p-5 shadow-md sm:p-6">
+    <WidgetCard className="overflow-hidden sm:p-6">
       <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
           <div className="flex flex-wrap items-center gap-2">
@@ -60,9 +52,9 @@ export function HeroWidget({
           <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-none text-textp sm:text-5xl">Cockpit del dia</h1>
           <p className="mt-4 max-w-xl text-sm leading-6 text-texts">{focusPreview}</p>
           <div className="mt-5 flex flex-wrap gap-2">
-            <Link to="/tasks" className="btn-primary">Abrir foco</Link>
-            <Link to="/calendar" className="btn-ghost">Agenda</Link>
-            <Link to="/fitness" className="btn-ghost">Entreno</Link>
+            <WidgetAction to="/tasks" variant="primary">Abrir foco</WidgetAction>
+            <WidgetAction to="/calendar">Agenda</WidgetAction>
+            <WidgetAction to="/fitness">Entreno</WidgetAction>
           </div>
         </div>
         <div className="flex items-center justify-between gap-4 rounded-[24px] bg-surface2 p-4 lg:w-72">
@@ -76,10 +68,10 @@ export function HeroWidget({
       </div>
 
       <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
-        <StatusMetric label="Foco" value={todayTasksCount} hint={topPriority} />
-        <StatusMetric label="Agenda" value={todayEventsCount} hint={nextEventTitle || "Libre"} />
-        <StatusMetric label="Fitness" value={`${fitnessSessionsCompleted}/6`} hint={todaySessionName} />
+        <WidgetMetric label="Foco" value={todayTasksCount} hint={topPriority} boxed size="lg" />
+        <WidgetMetric label="Agenda" value={todayEventsCount} hint={nextEventTitle || "Libre"} boxed size="lg" />
+        <WidgetMetric label="Fitness" value={`${fitnessSessionsCompleted}/6`} hint={todaySessionName} boxed size="lg" />
       </div>
-    </section>
+    </WidgetCard>
   );
 }

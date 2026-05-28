@@ -1,5 +1,31 @@
 # CHANGELOG_AI.md
 
+## 2026-05-28 19:37 -04
+
+### Ejecutado
+- Se leyeron `AGENTS.md`, `docs/PROJECT_BRIEF.md` y `docs/NEXT_TASK.md`.
+- Se revisaron los widgets actuales del dashboard.
+- Se crearon componentes base reutilizables:
+  - `WidgetCard`
+  - `WidgetHeader`
+  - `WidgetMetric`
+  - `WidgetAction`
+- Se refactorizaron `HeroWidget`, `DayStatusWidget`, `FitnessWidget`, `CalendarWidget`, `FocusWidget`, `InsightsWidget` y `QuickActionsWidget`.
+- Se mantuvo apariencia, UX, mobile-first, navegacion y logica actual.
+
+### Duplicacion reducida
+- Contenedores, encabezados, metricas y acciones usan componentes comunes.
+- `page.tsx` no fue modificado en esta iteracion; sigue ensamblando widgets.
+
+### Validacion
+- `npm run build`: OK.
+- `npm run lint`: OK, sin warnings.
+- `npm run typecheck`: OK.
+
+### Riesgos pendientes
+- No se hizo QA visual en navegador.
+- Algunos helpers visuales especificos siguen locales hasta que haya reutilizacion real.
+
 ## 2026-05-28 19:17 -04
 
 ### Ejecutado
