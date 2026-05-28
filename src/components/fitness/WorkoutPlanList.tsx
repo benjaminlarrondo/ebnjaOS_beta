@@ -14,7 +14,7 @@ function getInitialOpenState() {
   }
 }
 
-export function WorkoutPlanList({ sessions }: { sessions: WorkoutSession[] }) {
+export function WorkoutPlanList({ sessions, highlightedId }: { sessions: WorkoutSession[]; highlightedId?: string }) {
   const [open, setOpen] = useState(getInitialOpenState);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export function WorkoutPlanList({ sessions }: { sessions: WorkoutSession[] }) {
       {open && (
         <div id="workout-plan-panel" className="mt-3 space-y-3">
           {sessions.map((session) => (
-            <WorkoutSessionCard key={session.id} session={session} />
+            <WorkoutSessionCard key={session.id} session={session} highlighted={session.id === highlightedId} />
           ))}
         </div>
       )}
