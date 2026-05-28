@@ -4,17 +4,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: "#F7F8FA",
-        surface: "#FFFFFF",
-        textp: "#1F2937",
-        texts: "#6B7280",
-        primary: "#5B6C8F",
-        accent: "#7FB77E",
-        borderc: "#E5E7EB",
-        warning: "#F4C95D",
-        danger: "#E57373"
-      },
-      borderRadius: { xl2: "18px" }
+        bg: "var(--color-bg)",
+        surface: "var(--color-surface)",
+        surface2: "var(--color-surface-2)",
+        textp: "var(--color-text-primary)",
+        texts: "var(--color-text-secondary)",
+        primary: "var(--color-primary)",
+        primary2: "var(--color-primary-2)",
+        accent: "var(--color-accent)",
+        borderc: "var(--color-border)",
+        warning: "var(--color-warning)",
+        danger: "var(--color-danger)"
+      }
     }
   },
   plugins: []

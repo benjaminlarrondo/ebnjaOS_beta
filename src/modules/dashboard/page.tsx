@@ -1,23 +1,51 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { PageTitle } from "../../components/layout/PageTitle";
-import { FocusCard } from "../../components/cards/FocusCard";
-import { TodayTasksCard } from "../../components/cards/TodayTasksCard";
-import { UpcomingEventsCard } from "../../components/cards/UpcomingEventsCard";
-import { TodayWorkoutCard } from "../../components/cards/TodayWorkoutCard";
-import { QuickNoteCard } from "../../components/cards/QuickNoteCard";
-import { WeeklyProgressCard } from "../../components/cards/WeeklyProgressCard";
-import { QuickActionsCard } from "../../components/cards/QuickActionsCard";
-import { SectionCard } from "../../components/cards/SectionCard";
+import {
+  Activity,
+  ArrowUpRight,
+  CalendarDays,
+  CheckCircle2,
+  Dumbbell,
+  Flame,
+  Moon,
+  Target,
+} from "lucide-react";
 import { Modal } from "../../components/forms/Modal";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
-import { CalendarOverviewCard } from "../../components/calendar/CalendarOverviewCard";
 import { getLastCalendarSyncAt } from "../../services/githubCalendarSync";
 import { todaySession } from "../../data/fitnessPlan";
 import { db } from "../../lib/store";
 import { listGoals } from "../../lib/goals";
-import { dashboardModules } from "../../lib/navigation";
+import { dashboardModules, quickActionModules } from "../../lib/navigation";
+
+function clampPct(value: number) {
+  return Math.min(100, Math.max(0, Math.round(value)));
+}
+
+function compactTime(iso?: string) {
+  if (!iso) return "Libre";
+  return new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+function ProgressLine({ value, tone = "primary" }: { value: number; tone?: "primary" | "accent" | "warning" }) {
+  const color = tone === "accent" ? "bg-accent" : tone === "warning" ? "bg-warning" : "bg-primary";
+
+  return (
+    <div className="h-2 rounded-full bg-surface2">
+      <div className={`h-2 rounded-full ${color}`} style={{ width: `${clampPct(value)}%` }} />
+    </div>
+  );
+}
+
+function MetricPill({ label, value }: { label: string; value: string | number }) {
+  return (
+    <div className="rounded-2xl border border-white/60 bg-white/70 p-3 shadow-sm">
+      <p className="text-[11px] font-medium text-texts">{label}</p>
+      <p className="mt-2 text-2xl font-semibold leading-none text-textp">{value}</p>
+    </div>
+  );
+}
 
 export default function DashboardPage() {
   const [, setTick] = useState(0);
@@ -25,127 +53,239 @@ export default function DashboardPage() {
   const [focusDraft, setFocusDraft] = useState("");
 
   const data = db.load();
+  const now = new Date();
+  const todayKey = now.toDateString();
+  const todayLabel = now.toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "short" });
   const todayTasks = data.tasks.filter((t) => t.status === "today");
+  const doneTasks = data.tasks.filter((t) => t.status === "done").length;
   const nextEvent = [...data.events].sort((a, b) => +new Date(a.start_time) - +new Date(b.start_time))[0];
+  const todayEvents = data.events
+    .filter((event) => new Date(event.start_time).toDateString() === todayKey)
+    .sort((a, b) => +new Date(a.start_time) - +new Date(b.start_time));
+  const nextWeekEvents = data.events.filter((event) => {
+    const date = new Date(event.start_time);
+    const end = new Date();
+    end.setDate(now.getDate() + 7);
+    return date >= now && date <= end;
+  });
   const goals = listGoals();
   const activeGoals = goals.filter((g) => g.status === "active");
+  const fitness = data.fitnessState;
+  const fitnessPct = clampPct(fitness.adherencePct || (fitness.sessionsCompleted / 6) * 100);
+  const sleepPct = clampPct(((fitness.recovery.sleep || fitness.sleepAvg || 0) / 10) * 100);
+  const energyPct = clampPct(((fitness.recovery.energy || 0) / 10) * 100);
+  const recoveryScore = clampPct((sleepPct + energyPct) / 2);
+  const focusPreview = data.focus || "Define el foco central del dia";
+  const topPriority = todayTasks[0]?.title || activeGoals[0]?.title || "Dia despejado";
+  const lastSyncAt = getLastCalendarSyncAt();
+  const primaryActions = quickActionModules.slice(0, 4);
+  const secondaryModules = dashboardModules.filter((module) => !primaryActions.some((action) => action.id === module.id)).slice(0, 6);
 
   return (
-    <div className="space-y-4">
-      <PageTitle title="Inicio" subtitle="Centro de control personal" />
-
-      <SectionCard title="Hoy">
-        <div className="grid gap-2 text-sm sm:grid-cols-3">
-          <div className="rounded-xl border border-borderc p-2.5">
-            <p className="text-xs text-texts">Top prioridad hoy</p>
-            <p className="font-medium">{todayTasks[0]?.title || "Sin tareas para hoy"}</p>
+    <div className="space-y-5 pb-4">
+      <section className="overflow-hidden rounded-[28px] border border-borderc bg-surface p-5 shadow-md sm:p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="eyebrow">{todayLabel}</p>
+            <h1 className="mt-2 text-3xl font-semibold leading-tight text-textp sm:text-4xl">Cockpit del dia</h1>
+            <p className="mt-3 max-w-xl text-sm leading-6 text-texts">{focusPreview}</p>
           </div>
-          <div className="rounded-xl border border-borderc p-2.5">
-            <p className="text-xs text-texts">Próximo evento</p>
-            <p className="font-medium">{nextEvent ? nextEvent.title : "Sin eventos"}</p>
-          </div>
-          <div className="rounded-xl border border-borderc p-2.5">
-            <p className="text-xs text-texts">Entreno</p>
-            <p className="font-medium">{todaySession.name}</p>
+          <div className="hidden rounded-full border border-borderc bg-surface2 p-3 text-primary sm:grid sm:place-items-center">
+            <Activity className="h-5 w-5" />
           </div>
         </div>
-      </SectionCard>
 
-      <FocusCard
-        focus={data.focus}
-        onEdit={() => {
-          setFocusDraft(data.focus);
-          setFocusOpen(true);
-        }}
-      />
+        <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+          <MetricPill label="Foco" value={todayTasks.length} />
+          <MetricPill label="Agenda" value={todayEvents.length} />
+          <MetricPill label="Fitness" value={`${fitness.sessionsCompleted}/6`} />
+        </div>
 
-      <Link to="/tasks" className="block rounded-2xl transition-transform duration-150 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
-        <TodayTasksCard tasks={todayTasks} />
-      </Link>
+        <div className="mt-5 rounded-2xl bg-surface2 p-3">
+          <div className="mb-2 flex items-center justify-between text-xs">
+            <span className="font-medium text-textp">Estado semanal</span>
+            <span className="text-texts">{fitnessPct}%</span>
+          </div>
+          <ProgressLine value={fitnessPct} />
+        </div>
+      </section>
 
-      <Link to="/calendar" className="block rounded-2xl transition-transform duration-150 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
-        <UpcomingEventsCard events={data.events} />
-      </Link>
+      <section className="grid gap-3 sm:grid-cols-3">
+        <div className="card">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="rounded-full bg-surface2 p-2 text-primary"><Target className="h-4 w-4" /></span>
+            <span className="text-xs text-texts">{doneTasks} done</span>
+          </div>
+          <p className="text-xs font-medium text-texts">Prioridad</p>
+          <p className="mt-2 text-lg font-semibold leading-snug text-textp">{topPriority}</p>
+        </div>
+        <div className="card">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="rounded-full bg-surface2 p-2 text-primary"><CalendarDays className="h-4 w-4" /></span>
+            <span className="text-xs text-texts">{compactTime(nextEvent?.start_time)}</span>
+          </div>
+          <p className="text-xs font-medium text-texts">Proximo bloque</p>
+          <p className="mt-2 text-lg font-semibold leading-snug text-textp">{nextEvent?.title || "Sin eventos"}</p>
+        </div>
+        <div className="card">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="rounded-full bg-surface2 p-2 text-primary"><Moon className="h-4 w-4" /></span>
+            <span className="text-xs text-texts">{recoveryScore}%</span>
+          </div>
+          <p className="text-xs font-medium text-texts">Recovery</p>
+          <p className="mt-2 text-lg font-semibold leading-snug text-textp">{recoveryScore >= 70 ? "Listo para empujar" : "Cuidar energia"}</p>
+        </div>
+      </section>
 
-      <Link to="/calendar" className="block rounded-2xl transition-transform duration-150 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
-        <CalendarOverviewCard events={data.events} lastSyncAt={getLastCalendarSyncAt()} />
-      </Link>
+      <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+        <Link to="/fitness" className="card block transition active:scale-[0.99]">
+          <div className="mb-5 flex items-start justify-between gap-3">
+            <div>
+              <p className="eyebrow">Fitness</p>
+              <h2 className="mt-2 text-2xl font-semibold leading-tight text-textp">{todaySession.name}</h2>
+              <p className="mt-1 text-sm text-texts">{todaySession.focus}</p>
+            </div>
+            <span className="rounded-full bg-surface2 p-3 text-primary"><Dumbbell className="h-5 w-5" /></span>
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            <div>
+              <p className="metric-value">{fitness.sessionsCompleted}</p>
+              <p className="mt-1 text-xs text-texts">sesiones</p>
+            </div>
+            <div>
+              <p className="metric-value">{fitness.gymCompleted}</p>
+              <p className="mt-1 text-xs text-texts">gym</p>
+            </div>
+            <div>
+              <p className="metric-value">{fitness.homeCompleted}</p>
+              <p className="mt-1 text-xs text-texts">home</p>
+            </div>
+          </div>
+          <div className="mt-5">
+            <div className="mb-2 flex justify-between text-xs text-texts">
+              <span>Semana</span>
+              <span>{fitness.sessionsCompleted}/6</span>
+            </div>
+            <ProgressLine value={fitnessPct} tone="accent" />
+          </div>
+        </Link>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <TodayWorkoutCard
-          workout={{
-            name: todaySession.name,
-            location: todaySession.location,
-            focus: todaySession.focus,
-            durationMin: todaySession.durationMin,
-            exercises: todaySession.exercises.map((e) => e.name),
-          }}
-          cta="Ver entrenamiento"
-          ctaTo="/fitness"
-        />
-        <Link to="/notes" className="block rounded-2xl transition-transform duration-150 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
-          <QuickNoteCard note={data.notes[0]} />
+        <Link to="/calendar" className="card block transition active:scale-[0.99]">
+          <div className="mb-5 flex items-start justify-between gap-3">
+            <div>
+              <p className="eyebrow">Calendario</p>
+              <h2 className="mt-2 text-2xl font-semibold leading-tight text-textp">{todayEvents.length} hoy</h2>
+              <p className="mt-1 text-sm text-texts">{nextWeekEvents.length} eventos en 7 dias</p>
+            </div>
+            <span className="rounded-full bg-surface2 p-3 text-primary"><CalendarDays className="h-5 w-5" /></span>
+          </div>
+          <div className="space-y-3">
+            {(todayEvents.length ? todayEvents : nextEvent ? [nextEvent] : []).slice(0, 3).map((event) => (
+              <div key={event.id} className="flex items-center gap-3 rounded-2xl bg-surface2 p-3">
+                <span className="text-xs font-semibold text-primary">{compactTime(event.start_time)}</span>
+                <p className="min-w-0 truncate text-sm font-medium text-textp">{event.title}</p>
+              </div>
+            ))}
+            {!nextEvent && <p className="rounded-2xl bg-surface2 p-3 text-sm text-texts">Agenda libre.</p>}
+          </div>
+          <p className="mt-4 text-xs text-texts">Sync {lastSyncAt ? compactTime(lastSyncAt) : "pendiente"}</p>
         </Link>
       </div>
 
-      <WeeklyProgressCard
-        workoutsPct={data.fitnessState.adherencePct || 0}
-        tasksPct={Math.min(100, data.tasks.filter((t) => t.status === "done").length * 10)}
-        sleepPct={Math.round(((data.fitnessState.recovery.sleep || 0) / 10) * 100)}
-      />
+      <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+        <section className="card">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div>
+              <p className="eyebrow">Focus</p>
+              <h2 className="mt-1 text-xl font-semibold text-textp">Prioridades</h2>
+            </div>
+            <button
+              type="button"
+              className="btn-ghost px-3 py-1.5 text-xs"
+              onClick={() => {
+                setFocusDraft(data.focus);
+                setFocusOpen(true);
+              }}
+            >
+              Editar
+            </button>
+          </div>
+          <p className="text-sm leading-6 text-textp">{focusPreview}</p>
+          <div className="mt-4 space-y-2">
+            {todayTasks.slice(0, 3).map((task) => (
+              <Link key={task.id} to="/tasks" className="flex items-center justify-between gap-3 rounded-2xl bg-surface2 p-3">
+                <span className="min-w-0 truncate text-sm font-medium text-textp">{task.title}</span>
+                <span className="h-2 w-2 shrink-0 rounded-full bg-primary" />
+              </Link>
+            ))}
+            {todayTasks.length === 0 && <p className="rounded-2xl bg-surface2 p-3 text-sm text-texts">Sin tareas fijadas para hoy.</p>}
+          </div>
+        </section>
 
-      <QuickActionsCard />
+        <section className="card">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <p className="eyebrow">Insights</p>
+              <h2 className="mt-1 text-xl font-semibold text-textp">Pulso semanal</h2>
+            </div>
+            <Flame className="h-5 w-5 text-primary" />
+          </div>
+          <div className="space-y-4">
+            <div>
+              <div className="mb-2 flex justify-between text-xs text-texts"><span>Fitness</span><span>{fitnessPct}%</span></div>
+              <ProgressLine value={fitnessPct} tone="accent" />
+            </div>
+            <div>
+              <div className="mb-2 flex justify-between text-xs text-texts"><span>Recovery</span><span>{recoveryScore}%</span></div>
+              <ProgressLine value={recoveryScore} />
+            </div>
+            <div>
+              <div className="mb-2 flex justify-between text-xs text-texts"><span>Objetivos activos</span><span>{activeGoals.length}</span></div>
+              <ProgressLine value={Math.min(100, activeGoals.length * 20)} tone="warning" />
+            </div>
+          </div>
+        </section>
+      </div>
 
-      <SectionCard title="Mas modulos">
+      <section className="card">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <p className="eyebrow">Acciones</p>
+            <h2 className="mt-1 text-xl font-semibold text-textp">Movimiento rapido</h2>
+          </div>
+          <CheckCircle2 className="h-5 w-5 text-primary" />
+        </div>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {primaryActions.map((module) => {
+            const Icon = module.icon;
+            return (
+              <Link key={module.id} to={module.path} className="rounded-2xl border border-borderc bg-white p-3 text-sm font-medium text-textp shadow-sm transition active:scale-[0.99]">
+                <Icon className="mb-3 h-4 w-4 text-primary" />
+                {module.label}
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="card">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-textp">Sistema</h2>
+          <Link to="/settings" className="flex items-center gap-1 text-xs font-medium text-primary">
+            Mas <ArrowUpRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {dashboardModules.map((module) => (
+          {secondaryModules.map((module) => (
             <Link key={module.id} to={module.path} className="btn-ghost text-center">
               {module.label}
             </Link>
           ))}
         </div>
-      </SectionCard>
-
-      <SectionCard title="Objetivos activos">
-        {activeGoals.length === 0 ? (
-          <p className="text-sm text-texts">Sin objetivos activos. Crea uno en Objetivos.</p>
-        ) : (
-          <div className="space-y-2">
-            {activeGoals.slice(0, 3).map((g) => {
-              const pct = Math.min(100, Math.round((g.progress / Math.max(1, g.target)) * 100));
-              return (
-                <div key={g.id} className="rounded-xl border border-borderc p-2.5">
-                  <p className="text-sm font-medium">{g.title}</p>
-                  <p className="text-xs text-texts">{g.quarter} · {g.progress}/{g.target}</p>
-                  <div className="mt-1 h-2 rounded-full bg-[#edf0f4]">
-                    <div className="h-2 rounded-full bg-primary" style={{ width: `${pct}%` }} />
-                  </div>
-                </div>
-              );
-            })}
-            <Link to="/goals" className="btn-ghost inline-block">Ver objetivos</Link>
-          </div>
-        )}
-      </SectionCard>
-
-      <SectionCard title="Últimos recursos guardados">
-        <div className="space-y-1">
-          {data.resources.slice(0, 2).map((r) => (
-            <p key={r.id} className="text-sm">{r.title}</p>
-          ))}
-        </div>
-      </SectionCard>
-
-      <SectionCard title="Últimos prompts usados">
-        <div className="space-y-1">
-          {data.prompts.slice(0, 2).map((p) => (
-            <p key={p.id} className="text-sm">{p.title}</p>
-          ))}
-        </div>
-      </SectionCard>
+      </section>
 
       <Modal open={focusOpen}>
-        <h3 className="mb-2 text-sm font-semibold">Editar foco del día</h3>
+        <h3 className="mb-2 text-sm font-semibold">Editar foco del dia</h3>
         <Input value={focusDraft} maxLength={120} onChange={(e) => setFocusDraft(e.target.value)} placeholder="Define tu foco" />
         <p className="mt-1 text-xs text-texts">{focusDraft.length}/120</p>
         <div className="mt-3 flex justify-end gap-2">

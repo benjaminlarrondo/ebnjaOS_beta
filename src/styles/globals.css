@@ -4,31 +4,50 @@
 
 :root {
   color-scheme: light;
+  --color-bg: #f6f7fb;
+  --color-surface: #ffffff;
+  --color-surface-2: #f0f3f8;
+  --color-text-primary: #172033;
+  --color-text-secondary: #6f7787;
+  --color-primary: #5967d8;
+  --color-primary-2: #7b61ff;
+  --color-accent: #6fb58f;
+  --color-border: #e6e9f0;
+  --color-warning: #f4c95d;
+  --color-danger: #e57373;
 }
 
 body {
-  @apply bg-bg text-textp font-sans;
+  @apply bg-bg text-textp font-sans antialiased;
 }
 
 .card {
-  @apply rounded-xl2 border border-borderc bg-surface p-4 shadow-sm;
+  @apply rounded-[28px] border border-borderc bg-surface p-5 shadow-md;
 }
 
 .input {
-  @apply w-full rounded-xl border border-borderc bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20;
+  @apply w-full rounded-2xl border border-borderc bg-white px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary;
 }
 
 .btn-primary {
-  @apply rounded-xl bg-primary px-3 py-2 text-sm font-medium text-white hover:opacity-95;
+  @apply rounded-2xl bg-primary px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:opacity-95;
 }
 
 .btn-ghost {
-  @apply rounded-xl border border-borderc bg-white px-3 py-2 text-sm text-texts;
+  @apply rounded-2xl border border-borderc bg-white px-3 py-2 text-sm text-texts transition hover:border-primary hover:text-textp;
+}
+
+.metric-value {
+  @apply text-2xl font-semibold leading-none text-textp;
+}
+
+.eyebrow {
+  @apply text-xs font-semibold uppercase text-primary;
 }
 
 @media (max-width: 1023px) {
   .card {
-    @apply p-3.5;
+    @apply p-4;
   }
 
   .btn-primary,
