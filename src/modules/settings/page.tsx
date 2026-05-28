@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { PageTitle } from "../../components/layout/PageTitle";
 import { getEnvDiagnostics, IS_MOCK } from "../../lib/constants";
 import { db } from "../../lib/store";
@@ -6,6 +7,7 @@ import { flushSyncQueue, probeSupabaseConnection } from "../../lib/supabaseSync"
 import { subscribeSyncStatus, type SyncState } from "../../lib/syncStatus";
 import { listSyncQueue } from "../../lib/syncQueue";
 import { listGoals } from "../../lib/goals";
+import { moreHubModules } from "../../lib/navigation";
 
 export default function SettingsPage() {
   const [message, setMessage] = useState("");
@@ -69,7 +71,18 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-4">
-      <PageTitle title="Settings" subtitle="Perfil, Supabase e integraciones" />
+      <PageTitle title="Mas" subtitle="Modulos secundarios, ajustes e integraciones" />
+
+      <section className="card">
+        <h3 className="mb-3 text-sm font-semibold">Modulos secundarios</h3>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          {moreHubModules.map((module) => (
+            <Link key={module.id} to={module.path} className="btn-ghost text-center">
+              {module.label}
+            </Link>
+          ))}
+        </div>
+      </section>
 
       <section className="card space-y-2 text-sm">
         <p>Estado Supabase: <strong>{IS_MOCK ? "Mock mode" : "Conectado"}</strong></p>

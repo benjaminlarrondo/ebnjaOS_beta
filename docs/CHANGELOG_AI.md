@@ -1,5 +1,23 @@
 # CHANGELOG_AI.md
 
+## 2026-05-27 23:04 -04
+
+### Ejecutado
+- Se leyeron `AGENTS.md`, `docs/PROJECT_BRIEF.md` y `docs/NEXT_TASK.md`.
+- Se agrego `moreHubModules` en `src/lib/navigation.ts`.
+- Se convirtio Settings en hub "Mas" agregando una seccion de modulos secundarios.
+- El hub consume la fuente central de navegacion y mantiene rutas existentes.
+- No se modifico logica de negocio ni se instalaron dependencias.
+
+### Validacion
+- `npm run build`: OK.
+- `npm run lint`: OK con 2 warnings preexistentes.
+- `npm run typecheck`: OK.
+
+### Riesgos pendientes
+- Settings combina hub de navegacion y ajustes tecnicos.
+- Los iconos definidos en la fuente central aun no se renderizan para preservar el estilo actual.
+
 ## 2026-05-27 23:00 -04
 
 ### Ejecutado

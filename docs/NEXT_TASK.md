@@ -1,45 +1,37 @@
 # NEXT_TASK.md
 
 ## Objetivo
-
-Centralizar definicion de modulos y navegacion en una unica fuente reutilizable para evitar duplicacion futura entre sidebar, mobile nav, dashboard y quick actions.
+Convertir "Más" en un hub real de módulos secundarios usando la fuente central `src/lib/navigation.ts`.
 
 ## Instrucciones
-
 1. Revisar:
-   - MobileBottomNav
-   - Sidebar
-   - dashboard/page.tsx
-   - QuickActionsCard
-   - estructura actual de rutas
+   - `src/lib/navigation.ts`
+   - `src/components/layout/MobileBottomNav.tsx`
+   - `src/modules/settings/page.tsx`
+   - rutas disponibles
 
-2. Crear una definicion central reutilizable:
-   - labels
-   - iconos
-   - rutas
-   - categoria principal/secundaria
-   - visibilidad mobile
-
-3. Refactorizar componentes para consumir esa definicion compartida.
-
-4. Restricciones:
-   - no cambiar logica de negocio
-   - no instalar dependencias
+2. Implementar:
+   - sección clara de módulos secundarios en Settings o vista equivalente
+   - consumir `appModules` o lista derivada desde `navigation.ts`
+   - mantener estilo visual actual
    - no romper rutas existentes
-   - mantener apariencia visual actual
 
-5. Validar:
-   - npm run build
-   - npm run lint
-   - npm run typecheck
+3. Restricciones:
+   - no cambiar lógica de negocio
+   - no instalar dependencias
+   - no borrar rutas
+   - cambios pequeños y verificables
 
-6. Actualizar:
-   - docs/STATUS.md
-   - docs/CHANGELOG_AI.md
+4. Validar:
+   - `npm run build`
+   - `npm run lint`
+   - `npm run typecheck`
+
+5. Actualizar:
+   - `docs/STATUS.md`
+   - `docs/CHANGELOG_AI.md`
 
 ## Resultado esperado
-
-- Navegacion centralizada.
-- Menos duplicacion.
-- Facil agregar modulos futuros.
-- Base correcta para escalar ebnjaOS.
+- "Más" deja de ser solo ajustes.
+- Módulos secundarios quedan visibles.
+- Navegación escala desde fuente central.

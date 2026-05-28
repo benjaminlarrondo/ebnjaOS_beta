@@ -193,3 +193,6 @@ export const mobileNavModules: AppModule[] = appModules.filter((module) => modul
 export const sidebarModules: AppModule[] = appModules.filter((module) => module.showInSidebar);
 export const quickActionModules: AppModule[] = appModules.filter((module) => module.showInQuickActions);
 export const dashboardModules: AppModule[] = appModules.filter((module) => module.showInDashboardModules);
+export const moreHubModules: AppModule[] = appModules.filter(
+  (module) => module.category === "secundario" && module.id !== "settings",
+);
