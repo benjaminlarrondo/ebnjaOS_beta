@@ -31,6 +31,7 @@ Crear `.env` desde `.env.example`:
 ```env
 VITE_SUPABASE_URL=
 VITE_SUPABASE_ANON_KEY=
+VITE_SINGLE_USER_ID=
 ```
 
 ## Ejecución local
@@ -45,23 +46,23 @@ npm run preview
 ```
 
 ## Deploy en GitHub Pages
-### Opción A: Script con gh-pages
-```bash
-npm run deploy
-```
-
-### Opción B: GitHub Actions
-Workflow incluido en `.github/workflows/deploy-gh-pages.yml`.
+El deploy se realiza con GitHub Actions usando el workflow incluido en `.github/workflows/deploy.yml`.
 
 Configurar en GitHub:
 1. `Settings > Pages`
 2. `Build and deployment`: seleccionar `GitHub Actions`
+3. Configurar secrets o variables:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+   - `VITE_SINGLE_USER_ID`
+
+El workflow ejecuta `npm ci` y `npm run build`, luego publica `dist` en GitHub Pages.
 
 ## Configuración de base path
 `vite.config.ts` usa base de producción para este repo:
 - `/ebnjaOS_beta/`
 
-Si renombras el repo, actualiza `repoName` en `vite.config.ts`.
+Si renombras el repo, actualiza el valor `base` en `vite.config.ts`.
 
 ## Supabase
 - Cliente: `src/lib/supabase.ts`
