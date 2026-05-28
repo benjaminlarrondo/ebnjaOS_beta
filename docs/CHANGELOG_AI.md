@@ -1,5 +1,22 @@
 # CHANGELOG_AI.md
 
+## 2026-05-27 23:09 -04
+
+### Ejecutado
+- Se leyeron `AGENTS.md`, `docs/PROJECT_BRIEF.md` y `docs/NEXT_TASK.md`.
+- Se reordeno `src/modules/settings/page.tsx` para que "Mas" priorice modulos secundarios.
+- Se agruparon las secciones en: Modulos secundarios, Estado/sincronizacion, Backup y Mantenimiento/diagnostico.
+- No se modifico logica de negocio ni se instalaron dependencias.
+
+### Validacion
+- `npm run build`: OK.
+- `npm run lint`: OK con 2 warnings preexistentes.
+- `npm run typecheck`: OK.
+
+### Riesgos pendientes
+- La vista no fue revisada visualmente en navegador.
+- Persisten warnings de lint preexistentes en `goals` y `review`.
+
 ## 2026-05-27 23:04 -04
 
 ### Ejecutado
