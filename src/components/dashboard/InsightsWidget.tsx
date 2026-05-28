@@ -1,4 +1,6 @@
 import { Flame } from "lucide-react";
+import { WidgetCard } from "./WidgetCard";
+import { WidgetHeader } from "./WidgetHeader";
 
 function clampPct(value: number) {
   return Math.min(100, Math.max(0, Math.round(value)));
@@ -36,19 +38,17 @@ export function InsightsWidget({
   activeGoalsCount: number;
 }) {
   return (
-    <section className="card">
-      <div className="mb-4 flex items-center justify-between">
-        <div>
-          <p className="eyebrow">Insights</p>
-          <h2 className="mt-1 text-xl font-semibold text-textp">Pulso semanal</h2>
-        </div>
-        <Flame className="h-5 w-5 text-primary" />
-      </div>
+    <WidgetCard>
+      <WidgetHeader
+        eyebrow="Insights"
+        title="Pulso semanal"
+        icon={<Flame className="h-5 w-5 text-primary" />}
+      />
       <div className="space-y-3">
         <InsightRow label="Fitness" value={fitnessPct} tone="accent" />
         <InsightRow label="Recovery" value={recoveryScore} tone="primary" />
         <InsightRow label="Objetivos" value={Math.min(100, activeGoalsCount * 20)} tone="warning" />
       </div>
-    </section>
+    </WidgetCard>
   );
 }

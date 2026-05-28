@@ -4,6 +4,9 @@ import { Modal } from "../forms/Modal";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import type { Task } from "../../types/task";
+import { WidgetAction } from "./WidgetAction";
+import { WidgetCard } from "./WidgetCard";
+import { WidgetHeader } from "./WidgetHeader";
 
 export function FocusWidget({
   focus,
@@ -18,23 +21,22 @@ export function FocusWidget({
   const [focusDraft, setFocusDraft] = useState("");
 
   return (
-    <section className="card">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <div>
-          <p className="eyebrow">Focus</p>
-          <h2 className="mt-1 text-xl font-semibold text-textp">Prioridades</h2>
-        </div>
-        <button
-          type="button"
-          className="btn-ghost px-3 py-1.5 text-xs"
-          onClick={() => {
+    <WidgetCard>
+      <WidgetHeader
+        eyebrow="Focus"
+        title="Prioridades"
+        action={
+          <WidgetAction
+            className="px-3 py-1.5 text-xs"
+            onClick={() => {
             setFocusDraft(focus);
             setFocusOpen(true);
-          }}
-        >
-          Editar
-        </button>
-      </div>
+            }}
+          >
+            Editar
+          </WidgetAction>
+        }
+      />
       <p className="text-sm leading-6 text-textp">{focus}</p>
       <div className="mt-4 space-y-2">
         {tasks.slice(0, 3).map((task) => (
@@ -58,6 +60,6 @@ export function FocusWidget({
           }}>Guardar</Button>
         </div>
       </Modal>
-    </section>
+    </WidgetCard>
   );
 }

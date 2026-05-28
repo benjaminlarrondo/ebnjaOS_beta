@@ -2,46 +2,48 @@
 
 ## Objetivo
 
-Refactorizar Home para usar un sistema de widgets reutilizables.
+Crear un sistema visual común para widgets del dashboard y eliminar inconsistencias visuales.
 
 ## Instrucciones
 
 1. Revisar:
-   - src/modules/dashboard/page.tsx
+   - src/components/dashboard/*
    - src/components/cards/*
-   - estructura actual del dashboard
+   - estilos globales
 
-2. Extraer widgets:
-   - HeroWidget
-   - DayStatusWidget
-   - FitnessWidget
-   - CalendarWidget
-   - FocusWidget
-   - InsightsWidget
-   - QuickActionsWidget
+2. Crear componentes reutilizables:
+   - WidgetCard
+   - WidgetHeader
+   - WidgetMetric
+   - WidgetAction
 
-3. Crear carpeta:
-
-src/components/dashboard/
+3. Refactorizar widgets actuales para usar esos componentes.
 
 4. Mantener:
    - apariencia actual
    - navegación actual
-   - lógica existente
+   - lógica actual
 
-5. No instalar dependencias.
+5. Priorizar:
+   - consistencia visual
+   - spacing uniforme
+   - títulos uniformes
+   - métricas uniformes
+   - acciones uniformes
 
-6. Validar:
+6. No instalar dependencias.
+
+7. Validar:
    - npm run build
    - npm run lint
    - npm run typecheck
 
-7. Actualizar:
+8. Actualizar:
    - docs/STATUS.md
    - docs/CHANGELOG_AI.md
 
 ## Resultado esperado
 
-- Dashboard modular.
-- Widgets independientes.
-- Base preparada para futuras integraciones.
+- Todos los widgets comparten el mismo lenguaje visual.
+- Menos duplicación.
+- Base preparada para futuros widgets.
