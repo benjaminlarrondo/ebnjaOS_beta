@@ -1,8 +1,6 @@
 import { NavLink } from "react-router-dom";
-const links = [
-  ["/", "Inicio"], ["/search", "Buscar"], ["/review", "Revision"], ["/goals", "Objetivos"], ["/qa", "QA"], ["/tasks", "Tareas"], ["/calendar", "Calendario"], ["/fitness", "Fitness"], ["/notes", "Notas"], ["/prompts", "Prompts"], ["/resources", "Recursos"], ["/daily-log", "Registro diario"], ["/projects", "Proyectos"], ["/settings", "Ajustes"]
-] as const;
+import { sidebarModules } from "../../lib/navigation";
 
 export function Sidebar() {
-  return <aside className="hidden h-screen w-64 border-r border-borderc bg-[#f2f4f8] p-4 lg:block"><p className="mb-4 text-xl font-bold">ebnjaOS</p><nav className="space-y-1">{links.map(([to, label]) => <NavLink key={to} to={to} className={({isActive}) => `block rounded-xl px-3 py-2 text-sm ${isActive ? "bg-white text-primary" : "text-texts hover:bg-white/80"}`}>{label}</NavLink>)}</nav></aside>;
+  return <aside className="hidden h-screen w-64 border-r border-borderc bg-[#f2f4f8] p-4 lg:block"><p className="mb-4 text-xl font-bold">ebnjaOS</p><nav className="space-y-1">{sidebarModules.map((module) => <NavLink key={module.id} to={module.path} className={({isActive}) => `block rounded-xl px-3 py-2 text-sm ${isActive ? "bg-white text-primary" : "text-texts hover:bg-white/80"}`}>{module.label}</NavLink>)}</nav></aside>;
 }

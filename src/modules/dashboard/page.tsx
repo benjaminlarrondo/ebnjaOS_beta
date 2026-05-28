@@ -17,21 +17,7 @@ import { getLastCalendarSyncAt } from "../../services/githubCalendarSync";
 import { todaySession } from "../../data/fitnessPlan";
 import { db } from "../../lib/store";
 import { listGoals } from "../../lib/goals";
-
-const modules = [
-  ["/search", "Buscar"],
-  ["/review", "Revision"],
-  ["/goals", "Objetivos"],
-  ["/tasks", "Tareas"],
-  ["/calendar", "Calendario"],
-  ["/fitness", "Fitness"],
-  ["/notes", "Notas"],
-  ["/prompts", "Prompts"],
-  ["/resources", "Recursos"],
-  ["/daily-log", "Registro diario"],
-  ["/projects", "Proyectos"],
-  ["/settings", "Ajustes"],
-] as const;
+import { dashboardModules } from "../../lib/navigation";
 
 export default function DashboardPage() {
   const [, setTick] = useState(0);
@@ -112,9 +98,9 @@ export default function DashboardPage() {
 
       <SectionCard title="Mas modulos">
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {modules.map(([to, label]) => (
-            <Link key={to} to={to} className="btn-ghost text-center">
-              {label}
+          {dashboardModules.map((module) => (
+            <Link key={module.id} to={module.path} className="btn-ghost text-center">
+              {module.label}
             </Link>
           ))}
         </div>

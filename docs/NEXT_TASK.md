@@ -2,42 +2,44 @@
 
 ## Objetivo
 
-Implementar una mejora inicial de UX mobile-first unificando navegación principal y simplificando el dashboard sin modificar lógica de negocio.
+Centralizar definicion de modulos y navegacion en una unica fuente reutilizable para evitar duplicacion futura entre sidebar, mobile nav, dashboard y quick actions.
 
 ## Instrucciones
 
 1. Revisar:
-   - MobileNav
    - MobileBottomNav
    - Sidebar
    - dashboard/page.tsx
    - QuickActionsCard
+   - estructura actual de rutas
 
-2. Objetivos UX:
-   - reducir duplicación
-   - mejorar jerarquía mobile
-   - unificar labels ES
-   - priorizar 4-5 accesos mobile
-   - agregar acceso claro a "Más" o módulos secundarios
+2. Crear una definicion central reutilizable:
+   - labels
+   - iconos
+   - rutas
+   - categoria principal/secundaria
+   - visibilidad mobile
 
-3. Restricciones:
-   - no cambiar lógica de datos
+3. Refactorizar componentes para consumir esa definicion compartida.
+
+4. Restricciones:
+   - no cambiar logica de negocio
    - no instalar dependencias
    - no romper rutas existentes
-   - mantener estilo visual actual
+   - mantener apariencia visual actual
 
-4. Validar:
+5. Validar:
    - npm run build
    - npm run lint
    - npm run typecheck
 
-5. Actualizar:
+6. Actualizar:
    - docs/STATUS.md
    - docs/CHANGELOG_AI.md
 
 ## Resultado esperado
 
-- Navegación mobile más clara.
-- Dashboard menos redundante.
-- Labels consistentes.
-- Mejor descubribilidad de módulos.
+- Navegacion centralizada.
+- Menos duplicacion.
+- Facil agregar modulos futuros.
+- Base correcta para escalar ebnjaOS.
