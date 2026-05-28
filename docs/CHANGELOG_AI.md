@@ -1,5 +1,23 @@
 # CHANGELOG_AI.md
 
+## 2026-05-27 23:00 -04
+
+### Ejecutado
+- Se leyeron `AGENTS.md`, `docs/PROJECT_BRIEF.md` y `docs/NEXT_TASK.md`.
+- Se creo `src/lib/navigation.ts` como fuente central de modulos/navegacion.
+- Se centralizaron labels, rutas, iconos, categoria, visibilidad mobile/sidebar/dashboard y quick actions.
+- Se refactorizaron `MobileBottomNav`, `Sidebar`, `QuickActionsCard` y `dashboard/page.tsx` para consumir la fuente compartida.
+- No se modifico logica de negocio ni se eliminaron rutas existentes.
+
+### Validacion
+- `npm run build`: OK.
+- `npm run lint`: OK con 2 warnings preexistentes.
+- `npm run typecheck`: OK.
+
+### Riesgos pendientes
+- Los iconos centralizados todavia no se renderizan para preservar la apariencia actual.
+- `Mas` continua apuntando a `settings`; falta convertirlo en hub de modulos secundarios.
+
 ## 2026-05-27 22:54 -04
 
 ### Ejecutado
