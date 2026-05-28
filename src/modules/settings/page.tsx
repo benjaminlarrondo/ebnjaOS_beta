@@ -85,6 +85,7 @@ export default function SettingsPage() {
       </section>
 
       <section className="card space-y-2 text-sm">
+        <h3 className="text-sm font-semibold">Estado / sincronizacion</h3>
         <p>Estado Supabase: <strong>{IS_MOCK ? "Mock mode" : "Conectado"}</strong></p>
         <p>Estado de red app: <strong>{syncState.connected ? "Conexión activa" : "Sin conexión"}</strong></p>
         {syncState.error && <p className="text-xs text-danger">Último error: {syncState.error}</p>}
@@ -93,26 +94,9 @@ export default function SettingsPage() {
         </p>
         <p>Google Calendar: preparado para fase 2 (sin OAuth activo).</p>
         <p>Preferencias visuales: paleta sobria activa.</p>
-      </section>
-
-      <section className="card space-y-2 text-sm">
-        <h3 className="text-sm font-semibold">Diagnóstico de entorno</h3>
-        <p>VITE_SUPABASE_URL: <strong>{env.hasUrl ? "Definida" : "Falta"}</strong> · {env.urlPreview}</p>
-        <p>VITE_SUPABASE_ANON_KEY: <strong>{env.hasAnonKey ? "Definida" : "Falta"}</strong> · largo {env.anonKeyLength}</p>
-        <p>VITE_SINGLE_USER_ID: <strong>{env.singleUserId}</strong></p>
-        <p>
-          Validación runtime: <strong>{env.urlLooksReal && env.anonLooksReal ? "Variables reales detectadas" : "Variables incompletas o placeholder"}</strong>
-        </p>
-        <div className="flex flex-wrap gap-2">
-          <button className="btn-ghost" onClick={handleProbeConnection} disabled={checking}>
-            {checking ? "Probando..." : "Probar conexión"}
-          </button>
+        <div className="border-t border-borderc pt-2">
+          <h4 className="text-xs font-semibold text-texts">Cola de sincronizacion</h4>
         </div>
-        {checkResult && <p className="text-xs text-texts">{checkResult}</p>}
-      </section>
-
-      <section className="card space-y-2 text-sm">
-        <h3 className="text-sm font-semibold">Cola de sincronización</h3>
         <p>Elementos pendientes: <strong>{queueItems.length}</strong></p>
         <button className="btn-ghost" onClick={handleRetryQueue}>Reintentar cola</button>
         {queueResult && <p className="text-xs text-texts">{queueResult}</p>}
@@ -138,10 +122,28 @@ export default function SettingsPage() {
       </section>
 
       <section className="card space-y-3 text-sm">
-        <h3 className="text-sm font-semibold">Mantenimiento</h3>
+        <h3 className="text-sm font-semibold">Mantenimiento / diagnostico</h3>
+        <div className="space-y-2">
+          <h4 className="text-xs font-semibold text-texts">Diagnostico de entorno</h4>
+          <p>VITE_SUPABASE_URL: <strong>{env.hasUrl ? "Definida" : "Falta"}</strong> · {env.urlPreview}</p>
+          <p>VITE_SUPABASE_ANON_KEY: <strong>{env.hasAnonKey ? "Definida" : "Falta"}</strong> · largo {env.anonKeyLength}</p>
+          <p>VITE_SINGLE_USER_ID: <strong>{env.singleUserId}</strong></p>
+          <p>
+            Validación runtime: <strong>{env.urlLooksReal && env.anonLooksReal ? "Variables reales detectadas" : "Variables incompletas o placeholder"}</strong>
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <button className="btn-ghost" onClick={handleProbeConnection} disabled={checking}>
+              {checking ? "Probando..." : "Probar conexión"}
+            </button>
+          </div>
+          {checkResult && <p className="text-xs text-texts">{checkResult}</p>}
+        </div>
+        <div className="space-y-2 border-t border-borderc pt-3">
+          <h4 className="text-xs font-semibold text-texts">Mantenimiento</h4>
         <p className="text-texts">Si quieres comenzar nuevamente, puedes reiniciar las métricas del módulo Fitness.</p>
         <button className="btn-ghost" onClick={handleResetFitness}>Resetear Fitness</button>
         {message && <p className="text-xs text-accent">{message}</p>}
+        </div>
       </section>
     </div>
   );
