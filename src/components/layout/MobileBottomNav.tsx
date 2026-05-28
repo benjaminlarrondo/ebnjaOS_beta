@@ -2,9 +2,6 @@ import { NavLink } from "react-router-dom";
 
 const links = [
   ["/", "Inicio"],
-  ["/search", "Buscar"],
-  ["/review", "Review"],
-  ["/qa", "QA"],
   ["/tasks", "Tareas"],
   ["/calendar", "Calendario"],
   ["/fitness", "Fitness"],

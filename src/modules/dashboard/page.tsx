@@ -20,15 +20,15 @@ import { listGoals } from "../../lib/goals";
 
 const modules = [
   ["/search", "Buscar"],
-  ["/review", "Review"],
-  ["/goals", "Goals"],
+  ["/review", "Revision"],
+  ["/goals", "Objetivos"],
   ["/tasks", "Tareas"],
   ["/calendar", "Calendario"],
   ["/fitness", "Fitness"],
   ["/notes", "Notas"],
   ["/prompts", "Prompts"],
   ["/resources", "Recursos"],
-  ["/daily-log", "Daily Log"],
+  ["/daily-log", "Registro diario"],
   ["/projects", "Proyectos"],
   ["/settings", "Ajustes"],
 ] as const;
@@ -46,13 +46,13 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-4">
-      <PageTitle title="Dashboard" subtitle="Centro de control personal" />
+      <PageTitle title="Inicio" subtitle="Centro de control personal" />
 
-      <SectionCard title="Daily Cockpit">
+      <SectionCard title="Hoy">
         <div className="grid gap-2 text-sm sm:grid-cols-3">
           <div className="rounded-xl border border-borderc p-2.5">
             <p className="text-xs text-texts">Top prioridad hoy</p>
-            <p className="font-medium">{todayTasks[0]?.title || "Sin tareas today"}</p>
+            <p className="font-medium">{todayTasks[0]?.title || "Sin tareas para hoy"}</p>
           </div>
           <div className="rounded-xl border border-borderc p-2.5">
             <p className="text-xs text-texts">Próximo evento</p>
@@ -62,12 +62,6 @@ export default function DashboardPage() {
             <p className="text-xs text-texts">Entreno</p>
             <p className="font-medium">{todaySession.name}</p>
           </div>
-        </div>
-        <div className="mt-2 flex flex-wrap gap-2">
-          <Link to="/tasks" className="btn-ghost">Abrir Tasks</Link>
-          <Link to="/calendar" className="btn-ghost">Abrir Calendar</Link>
-          <Link to="/fitness" className="btn-ghost">Abrir Fitness</Link>
-          <Link to="/review" className="btn-ghost">Revisión semanal</Link>
         </div>
       </SectionCard>
 
@@ -116,7 +110,7 @@ export default function DashboardPage() {
 
       <QuickActionsCard />
 
-      <SectionCard title="Módulos">
+      <SectionCard title="Mas modulos">
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {modules.map(([to, label]) => (
             <Link key={to} to={to} className="btn-ghost text-center">
@@ -128,7 +122,7 @@ export default function DashboardPage() {
 
       <SectionCard title="Objetivos activos">
         {activeGoals.length === 0 ? (
-          <p className="text-sm text-texts">Sin objetivos activos. Crea uno en Goals.</p>
+          <p className="text-sm text-texts">Sin objetivos activos. Crea uno en Objetivos.</p>
         ) : (
           <div className="space-y-2">
             {activeGoals.slice(0, 3).map((g) => {
@@ -143,7 +137,7 @@ export default function DashboardPage() {
                 </div>
               );
             })}
-            <Link to="/goals" className="btn-ghost inline-block">Ver Goals</Link>
+            <Link to="/goals" className="btn-ghost inline-block">Ver objetivos</Link>
           </div>
         )}
       </SectionCard>

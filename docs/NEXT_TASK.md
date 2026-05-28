@@ -1,31 +1,43 @@
 # NEXT_TASK.md
 
 ## Objetivo
-Auditar navegación mobile-first y dashboard principal sin cambiar lógica de negocio.
+
+Implementar una mejora inicial de UX mobile-first unificando navegación principal y simplificando el dashboard sin modificar lógica de negocio.
 
 ## Instrucciones
+
 1. Revisar:
-   - navegación principal
-   - dashboard/home
-   - layout mobile-first
-   - accesibilidad básica
-   - consistencia visual
-   - rutas/módulos disponibles
+   - MobileNav
+   - MobileBottomNav
+   - Sidebar
+   - dashboard/page.tsx
+   - QuickActionsCard
 
-2. NO modificar todavía la app salvo correcciones menores justificadas.
+2. Objetivos UX:
+   - reducir duplicación
+   - mejorar jerarquía mobile
+   - unificar labels ES
+   - priorizar 4-5 accesos mobile
+   - agregar acceso claro a "Más" o módulos secundarios
 
-3. Actualizar:
-   - docs/STATUS.md
-   - docs/CHANGELOG_AI.md
+3. Restricciones:
+   - no cambiar lógica de datos
+   - no instalar dependencias
+   - no romper rutas existentes
+   - mantener estilo visual actual
 
-4. Ejecutar:
+4. Validar:
    - npm run build
    - npm run lint
    - npm run typecheck
 
+5. Actualizar:
+   - docs/STATUS.md
+   - docs/CHANGELOG_AI.md
+
 ## Resultado esperado
-STATUS.md debe indicar:
-- problemas UX detectados
-- oportunidades de mejora
-- archivos relevantes
-- siguiente tarea recomendada
+
+- Navegación mobile más clara.
+- Dashboard menos redundante.
+- Labels consistentes.
+- Mejor descubribilidad de módulos.
