@@ -10,7 +10,7 @@ export function RecoveryCard({ metrics }: { metrics: Record<string, { label: str
       <h3 className="mb-3 text-sm font-semibold">Recovery</h3>
       <div className="grid grid-cols-2 gap-2">
         {Object.values(metrics).map((metric) => (
-          <div key={metric.label} className="rounded-xl border border-borderc p-2.5">
+          <div key={metric.label} className="inner-card">
             <p className="text-xs text-texts">{metric.label}</p>
             <div className="mt-1 flex items-center justify-between">
               <p className="text-sm font-semibold">{metric.value}</p>

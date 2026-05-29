@@ -84,7 +84,7 @@ export default function SettingsPage() {
         </div>
       </section>
 
-      <section className="card space-y-2 text-sm">
+      <section className="card space-y-3 text-sm">
         <h3 className="text-sm font-semibold">Estado / sincronizacion</h3>
         <p>Estado Supabase: <strong>{IS_MOCK ? "Mock mode" : "Conectado"}</strong></p>
         <p>Estado de red app: <strong>{syncState.connected ? "Conexión activa" : "Sin conexión"}</strong></p>
@@ -102,7 +102,7 @@ export default function SettingsPage() {
         {queueResult && <p className="text-xs text-texts">{queueResult}</p>}
       </section>
 
-      <section className="card space-y-2 text-sm">
+      <section className="card space-y-3 text-sm">
         <h3 className="text-sm font-semibold">Backup y restauración</h3>
         <div className="flex flex-wrap gap-2">
           <button className="btn-ghost" onClick={handleBackupExport}>Exportar backup JSON</button>
@@ -140,9 +140,9 @@ export default function SettingsPage() {
         </div>
         <div className="space-y-2 border-t border-borderc pt-3">
           <h4 className="text-xs font-semibold text-texts">Mantenimiento</h4>
-        <p className="text-texts">Si quieres comenzar nuevamente, puedes reiniciar las métricas del módulo Fitness.</p>
-        <button className="btn-ghost" onClick={handleResetFitness}>Resetear Fitness</button>
-        {message && <p className="text-xs text-accent">{message}</p>}
+          <p className="text-texts">Si quieres comenzar nuevamente, puedes reiniciar las métricas del módulo Fitness.</p>
+          <button className="btn-ghost" onClick={handleResetFitness}>Resetear Fitness</button>
+          {message && <p className="text-xs text-accent">{message}</p>}
         </div>
       </section>
     </div>

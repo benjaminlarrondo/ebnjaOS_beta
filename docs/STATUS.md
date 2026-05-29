@@ -1,57 +1,89 @@
 # STATUS.md
 
 ## Fecha
-2026-05-28 19:37 -04
+2026-05-28 19:49 -04
 
 ## Tarea ejecutada
-Creacion de un sistema visual comun para widgets del dashboard y refactor de widgets actuales para consumir componentes base reutilizables.
+Auditoria UX/UI completa de benjaOS antes del cierre de Fase 1, con ajustes visuales menores de consistencia en cards internas, metricas y spacing.
+
+## Archivos revisados
+- `src/modules/dashboard/page.tsx`
+- `src/components/dashboard/*`
+- `src/modules/fitness/page.tsx`
+- `src/components/fitness/*`
+- `src/modules/goals/page.tsx`
+- `src/modules/review/page.tsx`
+- `src/modules/settings/page.tsx`
+- `src/components/layout/MobileBottomNav.tsx`
+- `src/components/layout/Sidebar.tsx`
+- `src/components/layout/Header.tsx`
+- `src/components/layout/AppLayout.tsx`
+- `src/styles/globals.css`
 
 ## Archivos modificados
-- `src/components/dashboard/WidgetCard.tsx`
-- `src/components/dashboard/WidgetHeader.tsx`
-- `src/components/dashboard/WidgetMetric.tsx`
-- `src/components/dashboard/WidgetAction.tsx`
-- `src/components/dashboard/HeroWidget.tsx`
-- `src/components/dashboard/DayStatusWidget.tsx`
-- `src/components/dashboard/FitnessWidget.tsx`
-- `src/components/dashboard/CalendarWidget.tsx`
-- `src/components/dashboard/FocusWidget.tsx`
-- `src/components/dashboard/InsightsWidget.tsx`
-- `src/components/dashboard/QuickActionsWidget.tsx`
+- `src/styles/globals.css`
+- `src/modules/fitness/page.tsx`
+- `src/modules/goals/page.tsx`
+- `src/modules/review/page.tsx`
+- `src/modules/settings/page.tsx`
+- `src/components/fitness/RecoveryCard.tsx`
+- `src/components/fitness/StrengthProgressCard.tsx`
+- `src/components/fitness/ExerciseRow.tsx`
 - `docs/STATUS.md`
 - `docs/CHANGELOG_AI.md`
 
-## Componentes base creados
-- `WidgetCard`: contenedor base para widgets, con soporte opcional de navegacion.
-- `WidgetHeader`: encabezado comun con eyebrow, titulo, subtitulo, icono o accion.
-- `WidgetMetric`: metrica reutilizable con variantes boxed/plain y label arriba/abajo.
-- `WidgetAction`: accion comun para links y botones, con variantes primary, ghost, tile y plain.
+## Ajustes realizados
+- Se agregaron clases visuales comunes `inner-card` y `surface-tile`.
+- Se normalizaron radios y padding de tarjetas internas en Fitness, Goals y Review.
+- Se elevaron metricas de Goals y Review usando `metric-value`.
+- Se aumento spacing interno en formularios/secciones simples de Goals, Review y Settings.
+- Se corrigio indentacion visual en el bloque de mantenimiento de Settings.
 
-## Widgets refactorizados
-- `HeroWidget`
-- `DayStatusWidget`
-- `FitnessWidget`
-- `CalendarWidget`
-- `FocusWidget`
-- `InsightsWidget`
-- `QuickActionsWidget`
+## Hallazgos críticos
+- No se detectaron bloqueos criticos de UX/UI que impidan cerrar Fase 1.
+- Dashboard ya funciona como cockpit modular y mantiene jerarquia clara.
+- Build, lint y typecheck quedan limpios.
 
-## Duplicacion eliminada
-- Contenedores `card` repetidos pasaron a `WidgetCard`.
-- Headers con eyebrow/titulo/icono pasaron a `WidgetHeader`.
-- Metricas de hero, estado y fitness pasaron a `WidgetMetric`.
-- CTAs, botones y tiles de acciones pasaron a `WidgetAction`.
+## Hallazgos medios
+- Fitness sigue siendo la vista mas densa; aunque tiene secciones colapsables, contiene muchas acciones y tablas en una sola pantalla.
+- Goals y Review conservaban tarjetas internas mas compactas que el nuevo sistema visual.
+- Settings aun se siente mas tecnico que ejecutivo, aunque esta ordenado en bloques.
+- Mobile navigation usa scroll horizontal superior; es funcional, pero puede sentirse menos nativo que una bottom nav fija.
+- Sidebar aun muestra una lista larga sin agrupacion visual por categoria.
 
-## Resultado visual esperado
-- Misma apariencia actual del cockpit.
-- Mas consistencia en spacing, titulos, metricas y acciones.
-- Base mas escalable para futuros widgets sin repetir estructura visual.
+## Quick wins
+- Crear componentes base equivalentes a `inner-card` para modulos no-dashboard si empieza a repetirse.
+- Aplicar titulos/eyebrows consistentes a Goals, Review y Settings.
+- Reducir densidad de Fitness moviendo tracking secundario a accordions aun mas compactos.
+- Agregar estados vacios mas visuales en Goals/Review/Settings.
+
+## Mejoras recomendadas para Fase 2
+- Hacer QA visual real en mobile y desktop con capturas.
+- Definir una guia corta de componentes: page header, card, inner card, metric, action, section header.
+- Convertir Fitness en sub-widgets reutilizables siguiendo el patron del Dashboard.
+- Replantear mobile navigation como bottom nav persistente si se confirma que el uso principal es iPhone.
+- Agrupar Sidebar por Principal/Secundario/Sistema cuando crezca la cantidad de modulos.
+- Conectar el cockpit a integraciones reales de Calendar/Health/recovery antes de agregar mas superficie visual.
+
+## Checklist de cierre de Fase 1
+- [x] Dashboard modularizado en widgets.
+- [x] Sistema visual comun inicial para widgets.
+- [x] Navegacion centralizada.
+- [x] Vista "Mas" organizada como hub.
+- [x] TRAINO mantiene tracking semanal/mensual y plan flexible.
+- [x] ESLint limpio.
+- [x] Build estable.
+- [x] Typecheck estable.
+- [ ] QA visual en navegador/mobile pendiente.
+- [ ] Guia de design system pendiente.
 
 ## Comandos ejecutados
 - `sed -n '1,260p' AGENTS.md` — OK.
 - `sed -n '1,260p' docs/PROJECT_BRIEF.md` — OK.
-- `sed -n '1,340p' docs/NEXT_TASK.md` — OK.
-- `find src/components/dashboard -maxdepth 1 -type f -print | sort | xargs -n 1 sed -n '1,260p'` — OK.
+- `sed -n '1,360p' docs/NEXT_TASK.md` — OK.
+- `rg --files src/modules src/components | sort` — OK.
+- `sed -n ...` sobre Dashboard, Fitness, Goals, Review, Settings, layout y estilos — OK.
+- `rg "rounded-(lg|xl)" src/modules src/components` — OK, usado para detectar inconsistencias.
 - `npm run build` — OK.
 - `npm run lint` — OK, sin warnings.
 - `npm run typecheck` — OK.
@@ -64,8 +96,8 @@ Creacion de un sistema visual comun para widgets del dashboard y refactor de wid
 
 ## Errores o riesgos
 - No se hizo QA visual en navegador.
-- `ProgressLine`, `ScoreRing` e `InsightRow` siguen locales porque aun son patrones especificos; podrian extraerse si otro widget los necesita.
+- Los ajustes fueron verificados por codigo y CLI, no por captura visual.
 - `docs/NEXT_TASK.md` figura modificado previamente en el worktree y no fue alterado en esta tarea.
 
 ## Próximo paso sugerido
-- Crear una pequena guia de uso de widgets dashboard si se agregan nuevos widgets en la proxima iteracion.
+- Cerrar Fase 1 despues de una revision visual manual en iPhone, y abrir Fase 2 con foco en QA visual + design system documentado.

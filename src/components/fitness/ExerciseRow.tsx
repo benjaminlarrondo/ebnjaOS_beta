@@ -2,7 +2,7 @@ import type { Exercise } from "../../data/fitnessPlan";
 
 export function ExerciseRow({ exercise }: { exercise: Exercise }) {
   return (
-    <div className="grid grid-cols-[1fr_auto_auto] items-start gap-2 rounded-lg border border-borderc p-2.5">
+    <div className="grid grid-cols-[1fr_auto_auto] items-start gap-2 inner-card">
       <div className="min-w-0">
         <p className="break-words text-sm font-medium leading-snug">{exercise.name}</p>
         {exercise.effort && <p className="mt-0.5 text-[11px] text-texts">{exercise.effort}</p>}

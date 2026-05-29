@@ -4,7 +4,7 @@ export function StrengthProgressCard({ rows }: { rows: Array<{ movement: string;
       <h3 className="mb-3 text-sm font-semibold">Progreso de fuerza</h3>
       <div className="space-y-2">
         {rows.map((row) => (
-          <div key={row.movement} className="flex items-center justify-between rounded-xl border border-borderc p-2.5">
+          <div key={row.movement} className="flex items-center justify-between inner-card">
             <p className="text-sm">{row.movement}</p>
             <div className="text-right">
               <p className="text-sm font-medium">{row.value}</p>

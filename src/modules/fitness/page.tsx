@@ -428,19 +428,19 @@ export default function FitnessPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
-          <div className="rounded-lg bg-bg p-2.5">
+          <div className="surface-tile">
             <p className="text-xs text-texts">Sesiones</p>
             <p className="text-lg font-semibold">{completedThisWeek}/{WEEK_TARGET}</p>
           </div>
-          <div className="rounded-lg bg-bg p-2.5">
+          <div className="surface-tile">
             <p className="text-xs text-texts">Peso</p>
             <p className="text-lg font-semibold">{state.weeklyTracking.weight || state.bodyWeightKg || 0} kg</p>
           </div>
-          <div className="rounded-lg bg-bg p-2.5">
+          <div className="surface-tile">
             <p className="text-xs text-texts">Cargas</p>
             <p className="text-lg font-semibold">{latestLoadAvg} kg</p>
           </div>
-          <div className="rounded-lg bg-bg p-2.5">
+          <div className="surface-tile">
             <p className="text-xs text-texts">Recovery</p>
             <p className="text-lg font-semibold">{recoveryAvg}/10</p>
           </div>
@@ -459,11 +459,11 @@ export default function FitnessPage() {
               <option value="Descanso">Descanso</option>
             </Select>
           </label>
-          <div className="rounded-lg border border-borderc p-2.5">
+          <div className="inner-card">
             <p className="flex items-center gap-1 text-xs text-texts"><Dumbbell className="h-3.5 w-3.5" /> Proximo GYM</p>
             <p className="text-sm font-semibold">{nextGym.name}</p>
           </div>
-          <div className="rounded-lg border border-borderc p-2.5">
+          <div className="inner-card">
             <p className="flex items-center gap-1 text-xs text-texts"><Home className="h-3.5 w-3.5" /> Proximo HOME</p>
             <p className="text-sm font-semibold">{nextHome.name}</p>
           </div>
@@ -511,7 +511,7 @@ export default function FitnessPage() {
               const entry = getScheduleEntry(day.date);
               const availableSessions = entry.mode === "Gym" ? gymSessions : entry.mode === "Casa" ? homeSessions : [];
               return (
-                <div key={day.date} className={`rounded-lg border p-2.5 ${entry.completed ? "border-primary/40 bg-primary/5" : "border-borderc"}`}>
+                <div key={day.date} className={`rounded-2xl border p-3 ${entry.completed ? "border-primary/40 bg-primary/5" : "border-borderc"}`}>
                   <div className="mb-2 flex items-center justify-between">
                     <div>
                       <p className="text-xs font-semibold">{day.label}</p>
@@ -638,10 +638,10 @@ export default function FitnessPage() {
               ))}
             </div>
             <div className="mt-3 grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
-              <div className="rounded-lg border border-borderc p-2.5"><p className="text-xs text-texts">Gym cumplido</p><p className="font-semibold">{gymCompleted}/{TYPE_TARGET}</p></div>
-              <div className="rounded-lg border border-borderc p-2.5"><p className="text-xs text-texts">Home cumplido</p><p className="font-semibold">{homeCompleted}/{TYPE_TARGET}</p></div>
-              <div className="rounded-lg border border-borderc p-2.5"><p className="text-xs text-texts">Sesiones</p><p className="font-semibold">{completedThisWeek}/{WEEK_TARGET}</p></div>
-              <div className="rounded-lg border border-borderc p-2.5"><p className="text-xs text-texts">Adherencia</p><p className="font-semibold">{adherencePct}%</p></div>
+              <div className="inner-card"><p className="text-xs text-texts">Gym cumplido</p><p className="font-semibold">{gymCompleted}/{TYPE_TARGET}</p></div>
+              <div className="inner-card"><p className="text-xs text-texts">Home cumplido</p><p className="font-semibold">{homeCompleted}/{TYPE_TARGET}</p></div>
+              <div className="inner-card"><p className="text-xs text-texts">Sesiones</p><p className="font-semibold">{completedThisWeek}/{WEEK_TARGET}</p></div>
+              <div className="inner-card"><p className="text-xs text-texts">Adherencia</p><p className="font-semibold">{adherencePct}%</p></div>
             </div>
             <Textarea
               className="mt-3"
@@ -677,7 +677,7 @@ export default function FitnessPage() {
         {monthlyOpen && (
           <div id="monthly-tracking-panel" className="mt-3 grid grid-cols-2 gap-2 text-sm sm:grid-cols-3 lg:grid-cols-4">
             {monthTracking.map((m) => (
-              <div key={m.month} className="rounded-lg border border-borderc p-2.5">
+              <div key={m.month} className="inner-card">
                 <p className="text-xs text-texts">{m.month}</p>
                 <p className="font-semibold">{m.completed} entrenos</p>
                 <p className="text-xs text-texts">Mejor streak: {m.streak} dias</p>
@@ -707,7 +707,7 @@ export default function FitnessPage() {
           <div className="max-h-[65vh] space-y-2 overflow-y-auto pr-1">
             <p className="text-xs text-texts">Fecha: {pendingCompletion.date}. Ingresa el peso usado por ejercicio; deja 0 o vacio si fue peso corporal.</p>
             {pendingCompletion.session.exercises.map((exercise) => (
-              <label key={exercise.name} className="grid grid-cols-[1fr_5.5rem] items-center gap-2 rounded-lg border border-borderc p-2.5 text-xs">
+              <label key={exercise.name} className="grid grid-cols-[1fr_5.5rem] items-center gap-2 inner-card text-xs">
                 <span>
                   <span className="block font-medium text-textp">{exercise.name}</span>
                   <span className="text-texts">{exercise.prescription}</span>

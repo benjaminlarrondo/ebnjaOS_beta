@@ -65,12 +65,12 @@ export default function ReviewPage() {
     <div className="space-y-4">
       <PageTitle title="Review" subtitle="Revisión semanal guiada y memoria automática" />
 
-      <section className="card space-y-2">
+      <section className="card space-y-3">
         <h3 className="text-sm font-semibold">Checklist semanal</h3>
         <p className="text-xs text-texts">Semana de {wk} · {checkedCount}/{checklistItems.length} completado</p>
         <div className="space-y-2">
           {checklistItems.map((item) => (
-            <label key={item.id} className="flex items-center gap-2 rounded-lg border border-borderc p-2 text-sm">
+            <label key={item.id} className="flex items-center gap-2 rounded-2xl border border-borderc bg-white p-3 text-sm">
               <input type="checkbox" checked={!!current[item.id]} onChange={() => toggle(item.id)} />
               <span>{item.label}</span>
             </label>
@@ -78,14 +78,14 @@ export default function ReviewPage() {
         </div>
       </section>
 
-      <section className="card space-y-2">
+      <section className="card space-y-3">
         <h3 className="text-sm font-semibold">Resumen automático de la semana</h3>
         <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-5">
-          <div className="rounded-xl border border-borderc p-2.5"><p className="text-xs text-texts">Tasks done</p><p className="font-semibold">{summary.done}</p></div>
-          <div className="rounded-xl border border-borderc p-2.5"><p className="text-xs text-texts">Tasks creadas</p><p className="font-semibold">{summary.created}</p></div>
-          <div className="rounded-xl border border-borderc p-2.5"><p className="text-xs text-texts">Eventos</p><p className="font-semibold">{summary.events}</p></div>
-          <div className="rounded-xl border border-borderc p-2.5"><p className="text-xs text-texts">Entrenos</p><p className="font-semibold">{summary.workouts}</p></div>
-          <div className="rounded-xl border border-borderc p-2.5"><p className="text-xs text-texts">Notas</p><p className="font-semibold">{summary.notes}</p></div>
+          <div className="inner-card"><p className="text-xs text-texts">Tasks done</p><p className="metric-value mt-2">{summary.done}</p></div>
+          <div className="inner-card"><p className="text-xs text-texts">Tasks creadas</p><p className="metric-value mt-2">{summary.created}</p></div>
+          <div className="inner-card"><p className="text-xs text-texts">Eventos</p><p className="metric-value mt-2">{summary.events}</p></div>
+          <div className="inner-card"><p className="text-xs text-texts">Entrenos</p><p className="metric-value mt-2">{summary.workouts}</p></div>
+          <div className="inner-card"><p className="text-xs text-texts">Notas</p><p className="metric-value mt-2">{summary.notes}</p></div>
         </div>
       </section>
     </div>
