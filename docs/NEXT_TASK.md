@@ -2,48 +2,48 @@
 
 ## Objetivo
 
-Crear un sistema visual común para widgets del dashboard y eliminar inconsistencias visuales.
+Realizar una auditoría visual completa de benjaOS para detectar inconsistencias UX/UI antes de cerrar Fase 1.
 
 ## Instrucciones
 
 1. Revisar:
-   - src/components/dashboard/*
-   - src/components/cards/*
-   - estilos globales
+   - Dashboard
+   - Fitness
+   - Goals
+   - Review
+   - Settings
+   - Navegación móvil
+   - Sidebar
 
-2. Crear componentes reutilizables:
-   - WidgetCard
-   - WidgetHeader
-   - WidgetMetric
-   - WidgetAction
+2. Detectar:
+   - inconsistencias de spacing
+   - tamaños de cards
+   - títulos
+   - métricas
+   - acciones
+   - responsive
+   - jerarquía visual
 
-3. Refactorizar widgets actuales para usar esos componentes.
+3. Generar:
+   - lista priorizada de hallazgos
+   - quick wins
+   - mejoras recomendadas
 
-4. Mantener:
-   - apariencia actual
-   - navegación actual
-   - lógica actual
+4. No modificar lógica.
 
-5. Priorizar:
-   - consistencia visual
-   - spacing uniforme
-   - títulos uniformes
-   - métricas uniformes
-   - acciones uniformes
+5. Realizar solamente ajustes visuales menores si son evidentes y seguros.
 
-6. No instalar dependencias.
-
-7. Validar:
+6. Validar:
    - npm run build
    - npm run lint
    - npm run typecheck
 
-8. Actualizar:
+7. Actualizar:
    - docs/STATUS.md
    - docs/CHANGELOG_AI.md
 
 ## Resultado esperado
 
-- Todos los widgets comparten el mismo lenguaje visual.
-- Menos duplicación.
-- Base preparada para futuros widgets.
+- Lista clara de problemas UX.
+- Lista clara de quick wins.
+- Checklist de cierre de Fase 1.

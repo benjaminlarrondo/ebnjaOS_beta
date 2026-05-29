@@ -34,7 +34,7 @@ export default function GoalsPage() {
     <div className="space-y-4">
       <PageTitle title="Goals" subtitle="Objetivos trimestrales y progreso" />
 
-      <section className="card space-y-2">
+      <section className="card space-y-3">
         <h3 className="text-sm font-semibold">Nuevo objetivo</h3>
         <Input placeholder="Título del objetivo" value={title} onChange={(e) => setTitle(e.target.value)} />
         <div className="grid gap-2 sm:grid-cols-3">
@@ -49,19 +49,19 @@ export default function GoalsPage() {
 
       <section className="card">
         <div className="grid grid-cols-3 gap-2 text-sm">
-          <div className="rounded-xl border border-borderc p-2.5"><p className="text-xs text-texts">Activos</p><p className="font-semibold">{totals.active}</p></div>
-          <div className="rounded-xl border border-borderc p-2.5"><p className="text-xs text-texts">Completados</p><p className="font-semibold">{totals.done}</p></div>
-          <div className="rounded-xl border border-borderc p-2.5"><p className="text-xs text-texts">Avance medio</p><p className="font-semibold">{totals.pct}%</p></div>
+          <div className="inner-card"><p className="text-xs text-texts">Activos</p><p className="metric-value mt-2">{totals.active}</p></div>
+          <div className="inner-card"><p className="text-xs text-texts">Completados</p><p className="metric-value mt-2">{totals.done}</p></div>
+          <div className="inner-card"><p className="text-xs text-texts">Avance medio</p><p className="metric-value mt-2">{totals.pct}%</p></div>
         </div>
       </section>
 
-      <section className="card space-y-2">
+      <section className="card space-y-3">
         <h3 className="text-sm font-semibold">Objetivos</h3>
         {goals.length === 0 && <p className="text-sm text-texts">Sin objetivos todavía.</p>}
         {goals.map((g) => {
           const pct = Math.min(100, Math.round((g.progress / Math.max(1, g.target)) * 100));
           return (
-            <article key={g.id} className="rounded-xl border border-borderc p-3">
+            <article key={g.id} className="inner-card">
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <p className="text-sm font-medium">{g.title}</p>
