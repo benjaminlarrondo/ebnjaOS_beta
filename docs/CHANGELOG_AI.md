@@ -132,3 +132,28 @@
 - `npm run build`: OK
 - `npm run lint`: OK
 - `npm run typecheck`: OK
+
+## 2026-05-30 19:12
+
+### Background sync and non-blocking boot
+- Eliminada pantalla de arranque bloqueante en `src/app/App.tsx`.
+- Nuevo flujo de boot:
+  1) render inmediato de UI
+  2) sincronización en background vía `startBackgroundSync()`
+- Nuevo motor de sync desacoplado en `src/services/sync/`:
+  - `syncManager.ts`
+  - `supabaseSync.ts`
+  - `calendarSync.ts`
+  - `githubSync.ts`
+- Nuevo hook reutilizable: `src/hooks/useSyncStatus.ts`.
+- `PlatformStatusBadge` actualizado para estados no bloqueantes:
+  - `🟡 SINCRONIZANDO`
+  - `🟢 ACTUALIZADO`
+  - `🔴 ERROR`
+- Auditoría técnica documentada en `docs/BOOT_AUDIT.md`.
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+- `preview` smoke-check: sin pantalla "Cargando ebnjaOS..."

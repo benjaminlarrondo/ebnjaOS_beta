@@ -1,23 +1,20 @@
 # STATUS.md
 
 ## Fecha
-2026-05-30 14:00
+2026-05-30 19:12
 
 ## Tarea ejecutada
-Sprint 2.1A — Tracking Engine MVP: módulo Tracking funcional (Hoy, Semana, Salud, Focus), persistencia localStorage, score diario, checklist interactivo, heatmap semanal y card compacta en Dashboard.
+Background sync and non-blocking boot: eliminación de pantalla de arranque bloqueante y migración a sincronización en segundo plano con estado global visible en header.
 
 ## Archivos modificados
-- src/lib/tracking.ts
-- src/hooks/useTrackingEngine.ts
-- src/modules/tracking/page.tsx
-- src/components/tracking/TrackingHealthCard.tsx
-- src/components/tracking/TrackingGrowthCard.tsx
-- src/components/tracking/TrackingWeeklyScore.tsx
-- src/components/tracking/TrackingHeatmap.tsx
-- src/components/tracking/TrackingTrendChart.tsx
-- src/components/dashboard/TrackingTodayWidget.tsx
-- src/modules/dashboard/page.tsx
-- docs/TRACKING_IMPLEMENTATION.md
+- src/app/App.tsx
+- src/components/system/PlatformStatusBadge.tsx
+- src/hooks/useSyncStatus.ts
+- src/services/sync/syncManager.ts
+- src/services/sync/supabaseSync.ts
+- src/services/sync/calendarSync.ts
+- src/services/sync/githubSync.ts
+- docs/BOOT_AUDIT.md
 - docs/STATUS.md
 - docs/CHANGELOG_AI.md
 
@@ -25,16 +22,16 @@ Sprint 2.1A — Tracking Engine MVP: módulo Tracking funcional (Hoy, Semana, Sa
 - npm run build - OK
 - npm run lint - OK
 - npm run typecheck - OK
+- npm run preview + smoke boot check - OK
 
 ## Validación
 - Build: OK
 - Lint: OK
 - Typecheck: OK
-- Tests: N/A
+- Boot UI: render inmediato sin pantalla bloqueante
 
 ## Errores o riesgos
-- Persistencia local sin sincronización remota.
-- Score semanal/mensual avanzado queda para siguiente fase.
+- Si servicios remotos fallan, el estado puede quedar en `🔴 ERROR` pero la UI permanece operativa (comportamiento esperado).
 
 ## Próximo paso sugerido
-- Implementar Tracking Engine 2.1B con agregados históricos, objetivos personalizados y sincronización opcional.
+- Completar `docs/BACKGROUND_SYNC_ARCHITECTURE.md` con diagrama de secuencia y matriz de fallback por servicio.
