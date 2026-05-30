@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { PageTitle } from "../../components/layout/PageTitle";
-import { getEnvDiagnostics, IS_MOCK } from "../../lib/constants";
+import { getEnvDiagnostics } from "../../lib/constants";
 import { db } from "../../lib/store";
 import { flushSyncQueue, probeSupabaseConnection } from "../../lib/supabaseSync";
 import { subscribeSyncStatus, type SyncState } from "../../lib/syncStatus";
 import { listSyncQueue } from "../../lib/syncQueue";
 import { listGoals } from "../../lib/goals";
 import { moreHubModules } from "../../lib/navigation";
+import { SystemStatus } from "../../components/system/SystemStatus";
+
+const hubGroups = [
+  { title: "Operar", ids: ["review", "goals", "projects"] },
+  { title: "Capturar", ids: ["notes", "daily-log", "prompts"] },
+  { title: "Consultar", ids: ["search", "resources", "qa"] },
+];
 
 export default function SettingsPage() {
   const [message, setMessage] = useState("");
@@ -70,31 +77,43 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="page-shell">
       <PageTitle title="Mas" subtitle="Modulos secundarios, ajustes e integraciones" />
 
-      <section className="card">
-        <h3 className="mb-3 text-sm font-semibold">Modulos secundarios</h3>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {moreHubModules.map((module) => (
-            <Link key={module.id} to={module.path} className="btn-ghost text-center">
-              {module.label}
-            </Link>
-          ))}
+      <section className="card accent-panel space-y-4">
+        <div>
+          <p className="eyebrow">Centro de operaciones</p>
+          <h3 className="mt-1 heading-lg font-semibold text-textp">Mas</h3>
+          <p className="mt-1 text-sm text-texts">Módulos secundarios agrupados por intención.</p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {hubGroups.map((group) => {
+            const modules = moreHubModules.filter((module) => group.ids.includes(module.id));
+            return (
+              <div key={group.title} className="metric-card">
+                <p className="caption font-semibold text-primary">{group.title}</p>
+                <div className="mt-3 grid gap-2">
+                  {modules.map((module) => (
+                    <Link key={module.id} to={module.path} className="btn-ghost flex items-center justify-between text-left">
+                      <span>{module.label}</span>
+                      <module.icon className="h-4 w-4" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
-      <section className="card space-y-3 text-sm">
-        <h3 className="text-sm font-semibold">Estado / sincronizacion</h3>
-        <p>Estado Supabase: <strong>{IS_MOCK ? "Mock mode" : "Conectado"}</strong></p>
-        <p>Estado de red app: <strong>{syncState.connected ? "Conexión activa" : "Sin conexión"}</strong></p>
+      <SystemStatus />
+
+      <section className="card space-y-4 text-sm">
+        <h3 className="text-sm font-semibold">Sincronizacion avanzada</h3>
+        <p>Red app: <strong>{syncState.connected ? "Conexión activa" : "Sin conexión"}</strong></p>
         {syncState.error && <p className="text-xs text-danger">Último error: {syncState.error}</p>}
-        <p className="text-xs text-texts">
-          Último guardado: {syncState.lastSavedAt ? new Date(syncState.lastSavedAt).toLocaleString("es-CL") : "Sin registro"}
-        </p>
-        <p>Google Calendar: preparado para fase 2 (sin OAuth activo).</p>
-        <p>Preferencias visuales: paleta sobria activa.</p>
-        <div className="border-t border-borderc pt-2">
+        <p className="text-xs text-texts">Último guardado: {syncState.lastSavedAt ? new Date(syncState.lastSavedAt).toLocaleString("es-CL") : "Sin registro"}</p>
+        <div className="border-t border-borderc pt-3">
           <h4 className="text-xs font-semibold text-texts">Cola de sincronizacion</h4>
         </div>
         <p>Elementos pendientes: <strong>{queueItems.length}</strong></p>
@@ -102,7 +121,7 @@ export default function SettingsPage() {
         {queueResult && <p className="text-xs text-texts">{queueResult}</p>}
       </section>
 
-      <section className="card space-y-3 text-sm">
+      <section className="card space-y-4 text-sm">
         <h3 className="text-sm font-semibold">Backup y restauración</h3>
         <div className="flex flex-wrap gap-2">
           <button className="btn-ghost" onClick={handleBackupExport}>Exportar backup JSON</button>
@@ -121,7 +140,7 @@ export default function SettingsPage() {
         </div>
       </section>
 
-      <section className="card space-y-3 text-sm">
+      <section className="card space-y-4 text-sm">
         <h3 className="text-sm font-semibold">Mantenimiento / diagnostico</h3>
         <div className="space-y-2">
           <h4 className="text-xs font-semibold text-texts">Diagnostico de entorno</h4>

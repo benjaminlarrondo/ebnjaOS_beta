@@ -1,4 +1,5 @@
 import type { CalendarEvent } from "../../types/calendar";
+import { isSofiaDay, type CelesteCalendarState } from "../../lib/celesteCalendar";
 
 type DayCell = {
   date: Date;
@@ -42,29 +43,18 @@ function getMonthMatrix(base: Date, events: CalendarEvent[]) {
   return cells;
 }
 
-function dayBg(events: CalendarEvent[]) {
-  if (!events.length) return "bg-white";
-
-  const github = events.find((e) => e.source === "github");
-  if (!github) return "bg-[#f2f4f7]";
-
-  const owner = String(github.metadata?.owner || "").toLowerCase();
-  const exception = Boolean(github.metadata?.exception);
-
-  if (exception) return "bg-[#b7a3e8]/35";
-  if (owner === "mine") return "bg-[#f7d7dc]/55";
-  if (owner === "hers") return "bg-[#f8efc6]/55";
-  return "bg-[#f2f4f7]";
-}
-
 export function CalendarMonthGrid({
   month,
   events,
   onDaySelect,
+  selectedDay,
+  celesteState,
 }: {
   month: Date;
   events: CalendarEvent[];
   onDaySelect?: (dayIso: string) => void;
+  selectedDay?: string | null;
+  celesteState?: CelesteCalendarState;
 }) {
   const cells = getMonthMatrix(month, events);
   const todayKey = new Date().toISOString().slice(0, 10);
@@ -87,15 +77,34 @@ export function CalendarMonthGrid({
           <button
             key={cell.key}
             type="button"
-            onClick={() => onDaySelect?.(cell.key)}
-            className={`min-h-[54px] rounded-lg border p-1.5 text-left ${dayBg(cell.events)} ${cell.inMonth ? "" : "opacity-45"} ${cell.key === todayKey ? "border-black shadow-[0_0_0_1px_rgba(0,0,0,0.35)]" : "border-borderc"}`}
+            onClick={() => {
+              onDaySelect?.(cell.key);
+            }}
+            className={`min-h-[62px] rounded-xl border bg-surface p-1.5 text-left transition ${
+              cell.inMonth ? "" : "opacity-45"
+            } ${
+              cell.key === todayKey ? "border-primary ring-1 ring-primary/40" : "border-borderc"
+            } ${
+              cell.events.length > 0 ? "border-l-4 border-l-primary" : ""
+            } ${
+              selectedDay === cell.key ? "bg-[#151920]" : ""
+            }`}
           >
-            <p className="text-[11px] font-medium">{cell.date.getDate()}</p>
-            {cell.events.length > 0 && (
-              <p className="mt-1 text-[10px] text-texts">{cell.events.length} evento{cell.events.length > 1 ? "s" : ""}</p>
+            <p className="text-[11px] font-medium text-textp">{cell.date.getDate()}</p>
+            {isSofiaDay(cell.key, celesteState) && (
+              <span
+                aria-label="Tete"
+                title="Con Tete"
+                className="mx-auto mt-1 block h-[6px] w-[6px] rounded-[999px]"
+                style={{ background: "#F87171" }}
+              />
             )}
+            {cell.events.length > 0 && <p className="mt-1 text-[10px] text-texts">{cell.events.length} ev.</p>}
           </button>
         ))}
+      </div>
+      <div className="mt-3 text-xs text-texts">
+        <span style={{ color: "#F87171" }}>●</span> Tete
       </div>
     </section>
   );

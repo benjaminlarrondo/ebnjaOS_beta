@@ -3,13 +3,17 @@ import { mobileNavModules } from "../../lib/navigation";
 
 export function MobileBottomNav() {
   return (
-    <nav className="sticky top-0 z-20 mb-4 flex gap-2 overflow-x-auto rounded-[28px] border border-borderc bg-white/90 p-2 shadow-sm backdrop-blur lg:hidden">
+    <nav className="fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+0.35rem)] z-30 flex items-center justify-between gap-1 rounded-[18px] border border-borderc bg-surface px-2 py-1.5 md:hidden">
       {mobileNavModules.map((module) => (
         <NavLink
           key={module.id}
           to={module.path}
           className={({ isActive }) =>
-            `shrink-0 whitespace-nowrap rounded-2xl px-3 py-2 text-center text-xs ${isActive ? "bg-surface2 text-primary" : "text-texts"}`
+            `min-w-0 flex-1 truncate rounded-xl border px-2 py-2 text-center text-[11px] transition ${
+              isActive
+                ? "border-primary/35 bg-primary/15 font-medium text-primary"
+                : "border-transparent text-textp hover:border-primary/20 hover:bg-primary/10 hover:text-primary"
+            }`
           }
         >
           {module.mobileLabel ?? module.label}

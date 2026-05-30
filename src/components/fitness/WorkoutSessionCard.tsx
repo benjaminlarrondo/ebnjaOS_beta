@@ -4,13 +4,13 @@ import { ExerciseRow } from "./ExerciseRow";
 
 export function WorkoutSessionCard({ session, highlighted = false }: { session: WorkoutSession; highlighted?: boolean }) {
   return (
-    <article className={`card ${highlighted ? "border-primary/40 ring-2 ring-primary/10" : ""}`}>
+    <article className={`card ${highlighted ? "border-primary/40" : ""}`}>
       <div className="mb-3 flex items-center justify-between">
         <div>
           <h4 className="text-sm font-semibold">{session.name}</h4>
           <p className="mt-1 text-xs text-texts">{session.focus}</p>
         </div>
-        <span className={`rounded-full px-2 py-1 text-[11px] ${highlighted ? "bg-primary text-white" : session.completed ? "bg-[#eaf5ea] text-[#3f6f3f]" : "bg-[#eef1f6] text-primary"}`}>
+        <span className={`rounded-full border px-2 py-1 text-[11px] ${highlighted ? "border-primary/35 bg-primary/15 text-primary" : session.completed ? "border-[#2a4730] text-[#9ed6a8]" : "border-borderc text-texts"}`}>
           {highlighted ? "Sugerida" : session.completed ? "Completada" : "Pendiente"}
         </span>
       </div>

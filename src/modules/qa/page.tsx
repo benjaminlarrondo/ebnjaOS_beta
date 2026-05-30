@@ -64,7 +64,7 @@ export default function QaPage() {
           <button className="btn-ghost" onClick={reset}>Reset</button>
         </div>
         <p className="text-xs text-texts">{completed}/{items.length} checks · {pct}%</p>
-        <div className="h-2 rounded-full bg-[#edf0f4]">
+        <div className="h-2 rounded-full bg-surface2">
           <div className="h-2 rounded-full bg-primary" style={{ width: `${pct}%` }} />
         </div>
       </section>

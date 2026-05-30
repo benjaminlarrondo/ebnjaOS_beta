@@ -9,6 +9,7 @@ export default {
         surface2: "var(--color-surface-2)",
         textp: "var(--color-text-primary)",
         texts: "var(--color-text-secondary)",
+        textm: "var(--text-muted)",
         primary: "var(--color-primary)",
         primary2: "var(--color-primary-2)",
         accent: "var(--color-accent)",

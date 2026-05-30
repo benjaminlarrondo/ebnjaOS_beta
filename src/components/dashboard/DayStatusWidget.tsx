@@ -21,28 +21,30 @@ export function DayStatusWidget({
   recoveryScore: number;
 }) {
   return (
-    <section className="grid gap-3 sm:grid-cols-3">
-      <WidgetCard>
-        <div className="mb-4 flex items-center justify-between">
-          <span className="rounded-full bg-surface2 p-2 text-primary"><Target className="h-4 w-4" /></span>
-          <span className="text-xs text-texts">{doneTasks} done</span>
+    <WidgetCard className="card-equal">
+      <div className="grid gap-2 sm:grid-cols-3">
+        <div className="rounded-xl border border-borderc bg-surface p-2">
+          <div className="mb-1 flex items-center justify-between">
+            <span className="rounded-full bg-surface2 p-1.5 text-primary"><Target className="h-3.5 w-3.5" /></span>
+            <span className="text-[11px] text-texts">{doneTasks} done</span>
+          </div>
+          <WidgetMetric label="Prioridad" value={topPriority} size="sm" />
         </div>
-        <WidgetMetric label="Prioridad" value={topPriority} size="sm" />
-      </WidgetCard>
-      <WidgetCard>
-        <div className="mb-4 flex items-center justify-between">
-          <span className="rounded-full bg-surface2 p-2 text-primary"><CalendarDays className="h-4 w-4" /></span>
-          <span className="text-xs text-texts">{compactTime(nextEventStart)}</span>
+        <div className="rounded-xl border border-borderc bg-surface p-2">
+          <div className="mb-1 flex items-center justify-between">
+            <span className="rounded-full bg-surface2 p-1.5 text-primary"><CalendarDays className="h-3.5 w-3.5" /></span>
+            <span className="text-[11px] text-texts">{compactTime(nextEventStart)}</span>
+          </div>
+          <WidgetMetric label="Próximo bloque" value={nextEventTitle || "Sin eventos"} size="sm" />
         </div>
-        <WidgetMetric label="Proximo bloque" value={nextEventTitle || "Sin eventos"} size="sm" />
-      </WidgetCard>
-      <WidgetCard>
-        <div className="mb-4 flex items-center justify-between">
-          <span className="rounded-full bg-surface2 p-2 text-primary"><Moon className="h-4 w-4" /></span>
-          <span className="text-xs text-texts">{recoveryScore}%</span>
+        <div className="rounded-xl border border-borderc bg-surface p-2">
+          <div className="mb-1 flex items-center justify-between">
+            <span className="rounded-full bg-surface2 p-1.5 text-primary"><Moon className="h-3.5 w-3.5" /></span>
+            <span className="text-[11px] text-texts">{recoveryScore}%</span>
+          </div>
+          <WidgetMetric label="Recovery" value={recoveryScore >= 70 ? "Listo para empujar" : "Cuidar energía"} size="sm" />
         </div>
-        <WidgetMetric label="Recovery" value={recoveryScore >= 70 ? "Listo para empujar" : "Cuidar energia"} size="sm" />
-      </WidgetCard>
-    </section>
+      </div>
+    </WidgetCard>
   );
 }

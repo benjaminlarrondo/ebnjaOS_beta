@@ -22,7 +22,6 @@ export default function DashboardPage() {
   const data = db.load();
   const now = new Date();
   const todayKey = now.toDateString();
-  const todayLabel = now.toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "short" });
   const todayTasks = data.tasks.filter((task) => task.status === "today");
   const doneTasks = data.tasks.filter((task) => task.status === "done").length;
   const nextEvent = [...data.events].sort((a, b) => +new Date(a.start_time) - +new Date(b.start_time))[0];
@@ -35,6 +34,12 @@ export default function DashboardPage() {
     end.setDate(now.getDate() + 7);
     return date >= now && date <= end;
   });
+  const nextTeteEvent = [...data.events]
+    .filter((event) => {
+      const owner = String(event.metadata?.owner || "").toLowerCase();
+      return owner === "mine" && new Date(event.start_time) >= now;
+    })
+    .sort((a, b) => +new Date(a.start_time) - +new Date(b.start_time))[0];
   const activeGoals = listGoals().filter((goal) => goal.status === "active");
   const fitness = data.fitnessState;
   const fitnessPct = clampPct(fitness.adherencePct || (fitness.sessionsCompleted / 6) * 100);
@@ -50,10 +55,8 @@ export default function DashboardPage() {
   const secondaryModules = dashboardModules.filter((module) => !primaryActions.some((action) => action.id === module.id)).slice(0, 6);
 
   return (
-    <div className="space-y-5 pb-4">
+    <div className="page-shell">
       <HeroWidget
-        todayLabel={todayLabel}
-        focusPreview={focusPreview}
         dayScore={dayScore}
         todayTasksCount={todayTasks.length}
         todayEventsCount={todayEvents.length}
@@ -61,7 +64,28 @@ export default function DashboardPage() {
         topPriority={topPriority}
         nextEventTitle={nextEvent?.title}
         todaySessionName={todaySession.name}
+        recommendation={{
+          priority: topPriority,
+          nextEvent: nextEvent?.title || "Sin evento",
+          nextWorkout: todaySession.name,
+        }}
       />
+
+      <section className="card">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <p className="text-xs font-semibold uppercase tracking-[0.06em] text-primary">Tete</p>
+          <span className="text-[11px] text-texts">Widget compacto</span>
+        </div>
+        <h3 className="truncate text-base font-semibold text-textp">{nextTeteEvent ? nextTeteEvent.title : "Sin bloque con Tete"}</h3>
+        <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
+          <p className="rounded-xl border border-borderc bg-surface px-2 py-1.5 text-texts">
+            Inicio: <span className="text-textp">{nextTeteEvent ? new Date(nextTeteEvent.start_time).toLocaleString("es-CL") : "—"}</span>
+          </p>
+          <p className="rounded-xl border border-borderc bg-surface px-2 py-1.5 text-texts">
+            Término: <span className="text-textp">{nextTeteEvent ? new Date(nextTeteEvent.end_time).toLocaleString("es-CL") : "—"}</span>
+          </p>
+        </div>
+      </section>
 
       <DayStatusWidget
         doneTasks={doneTasks}

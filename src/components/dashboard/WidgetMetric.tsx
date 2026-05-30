@@ -1,3 +1,5 @@
+import { MetricCard } from "../system/MetricCard";
+
 export function WidgetMetric({
   label,
   value,
@@ -29,7 +31,7 @@ export function WidgetMetric({
   );
 
   if (boxed) {
-    return <div className="rounded-2xl border border-borderc bg-white p-3 shadow-sm">{content}</div>;
+    return <MetricCard>{content}</MetricCard>;
   }
 
   return <div>{content}</div>;
