@@ -16,6 +16,14 @@
 - `npm run preview` + smoke rutas profundas: OK (200 en `/calendar`, `/tracking`, `/fitness`, `/tasks`, `/notes`, `/projects`, `/settings`)
 - `npm test`: no disponible (Missing script: `test`)
 
+### Deploy + reauditoría producción
+- Push aplicado en `main` con commit `b46bf15`.
+- Tras propagación de GitHub Pages, rutas críticas auditadas en producción con resultado `200`:
+  - `/calendar`, `/tracking`, `/fitness`, `/tasks`, `/notes`, `/projects`, `/settings`
+- Evidencia guardada en:
+  - `docs/GITHUB_PAGES_ROOT_CAUSE.md`
+  - `docs/github_pages_route_validation.json`
+
 ## 2026-05-30 11:22
 
 ### Ejecutado

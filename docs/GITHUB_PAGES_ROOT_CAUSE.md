@@ -47,3 +47,17 @@
 
 ## Nota de despliegue
 - El estado en producción depende de la propagación del deploy de GitHub Pages posterior al push de este cambio.
+
+## Validación en producción (post-deploy)
+- URL auditada: `https://benjaminlarrondo.github.io/ebnjaOS_beta/`
+- Resultado final de rutas críticas:
+  - `/` => 200
+  - `/calendar` => 200
+  - `/tracking` => 200
+  - `/fitness` => 200
+  - `/tasks` => 200
+  - `/notes` => 200
+  - `/projects` => 200
+  - `/settings` => 200
+- Evidencia técnica adicional:
+  - `docs/github_pages_route_validation.json`
