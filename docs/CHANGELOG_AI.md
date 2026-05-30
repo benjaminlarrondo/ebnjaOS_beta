@@ -82,3 +82,53 @@
 - `npm run build`: OK
 - `npm run lint`: OK
 - `npm run typecheck`: OK
+
+## 2026-05-30 13:33
+
+### FASE 2.1 PREPARATION
+- Sidebar reordenado según orden oficial:
+  - Dashboard
+  - Calendar
+  - Fitness
+  - Tracking
+  - Tasks
+  - Projects
+  - Notes
+  - Resources
+  - Settings
+- Renombre funcional Goals → Tracking:
+  - Ruta oficial nueva: `/tracking`
+  - Compatibilidad: `/goals` redirige a `/tracking`
+  - Navegación y títulos actualizados al nuevo módulo.
+- Estructura base de Tracking creada (sin estadísticas reales aún):
+  - `TrackingHealthCard`
+  - `TrackingGrowthCard`
+  - `TrackingWeeklyScore`
+  - `TrackingHeatmap`
+  - `TrackingTrendChart`
+- Se excluyó lógica Tete en Tracking (sin score/hábitos/métricas Tete).
+- No se modificaron Dashboard ni Calendar en esta tarea.
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-05-30 14:00
+
+### Sprint 2.1A — Tracking Engine MVP
+- Tracking pasó de placeholders a módulo funcional de uso diario.
+- Implementado engine local en `src/lib/tracking.ts` con persistencia `localStorage`.
+- Implementado hook `useTrackingEngine` para acciones y selectores derivados.
+- Tracking ahora incluye:
+  - Vista Hoy (score + checklist interactivo)
+  - Vista Semana (heatmap + tendencia)
+  - Vista Salud (Agua, Comidas, Proteína, Entreno, Sueño)
+  - Vista Focus (PMP, PyMO, Music)
+- Se agregó card compacta “Tracking Hoy” en Dashboard.
+- Se documentó en `docs/TRACKING_IMPLEMENTATION.md`.
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK

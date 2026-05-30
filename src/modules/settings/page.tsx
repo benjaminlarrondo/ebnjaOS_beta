@@ -11,9 +11,9 @@ import { moreHubModules } from "../../lib/navigation";
 import { PlatformStatusBadge } from "../../components/system/PlatformStatusBadge";
 
 const hubGroups = [
-  { title: "Operar", ids: ["review", "goals", "projects"] },
-  { title: "Capturar", ids: ["notes", "daily-log", "prompts"] },
-  { title: "Consultar", ids: ["search", "resources", "qa"] },
+  { title: "Operar", ids: ["tracking", "projects"] },
+  { title: "Capturar", ids: ["notes"] },
+  { title: "Consultar", ids: ["resources"] },
 ];
 
 export default function SettingsPage() {

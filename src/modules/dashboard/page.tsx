@@ -2,11 +2,13 @@ import { CalendarWidget } from "../../components/dashboard/CalendarWidget";
 import { DayStatusWidget } from "../../components/dashboard/DayStatusWidget";
 import { FitnessWidget } from "../../components/dashboard/FitnessWidget";
 import { QuickActionsWidget } from "../../components/dashboard/QuickActionsWidget";
+import { TrackingTodayWidget } from "../../components/dashboard/TrackingTodayWidget";
 import { TetePremiumWidget } from "../../components/dashboard/TetePremiumWidget";
 import { todaySession } from "../../data/fitnessPlan";
 import { listGoals } from "../../lib/goals";
 import { dashboardModules, quickActionModules } from "../../lib/navigation";
 import { db } from "../../lib/store";
+import { computeDailyScore, loadTrackingState, toLocalDateKey } from "../../lib/tracking";
 import { getLastCalendarSyncAt } from "../../services/githubCalendarSync";
 
 function clampPct(value: number) {
@@ -43,6 +45,7 @@ export default function DashboardPage() {
   const recoveryScore = clampPct((sleepPct + energyPct) / 2);
   const topPriority = todayTasks[0]?.title || activeGoals[0]?.title || "Dia despejado";
   const lastSyncAt = getLastCalendarSyncAt();
+  const trackingToday = computeDailyScore(loadTrackingState(), toLocalDateKey());
   const primaryActions = quickActionModules.slice(0, 4);
   const secondaryModules = dashboardModules.filter((module) => !primaryActions.some((action) => action.id === module.id)).slice(0, 6);
 
@@ -79,6 +82,7 @@ export default function DashboardPage() {
           lastSyncAt={lastSyncAt}
         />
       </div>
+      <TrackingTodayWidget score={trackingToday.globalScore} health={trackingToday.healthScore} focus={trackingToday.growthScore} />
 
       <QuickActionsWidget primaryActions={primaryActions} secondaryModules={secondaryModules} />
     </div>

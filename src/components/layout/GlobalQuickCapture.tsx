@@ -41,9 +41,15 @@ export function GlobalQuickCapture() {
       ? "fitness"
       : location.pathname === "/calendar"
         ? "event"
+        : location.pathname === "/tracking"
+          ? "note"
         : location.pathname === "/notes"
           ? "note"
           : "task";
+  const contextualLabel =
+    location.pathname === "/tracking"
+      ? "Registro tracking rápido"
+      : "Acción rápida del módulo";
 
   useEffect(() => {
     const onOpen = (event: Event) => {
@@ -143,7 +149,7 @@ export function GlobalQuickCapture() {
       {menuOpen && (
         <div className="fixed bottom-32 right-[max(0.85rem,env(safe-area-inset-right))] z-40 grid gap-2">
           <button type="button" className="btn-primary flex items-center gap-2 text-xs" onClick={() => { setCaptureType(contextualType); setOpen(true); setMenuOpen(false); }}>
-            <Plus className="h-4 w-4" /> Acción rápida del módulo
+            <Plus className="h-4 w-4" /> {contextualLabel}
           </button>
           <button type="button" className="btn-ghost flex items-center gap-2" onClick={() => { setCaptureType("task"); setOpen(true); setMenuOpen(false); }}>
             <ClipboardPlus className="h-4 w-4" /> Nueva tarea

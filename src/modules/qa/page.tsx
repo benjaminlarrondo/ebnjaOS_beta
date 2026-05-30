@@ -17,7 +17,7 @@ const items: QaItem[] = [
   { id: "calendar_create", label: "Calendar crea evento manual desde formulario", to: "/calendar" },
   { id: "fitness_done", label: "Fitness marca realizado y suma consistencia", to: "/fitness" },
   { id: "review_weekly", label: "Review semanal guarda checklist", to: "/review" },
-  { id: "goals_progress", label: "Goals crea objetivo y suma progreso", to: "/goals" },
+  { id: "tracking_open", label: "Tracking abre arquitectura base", to: "/tracking" },
   { id: "search_global", label: "Search encuentra contenido cruzado", to: "/search" },
   { id: "settings_sync", label: "Settings prueba conexión y cola de sync", to: "/settings" },
   { id: "settings_backup", label: "Settings exporta/importa backup JSON", to: "/settings" },
