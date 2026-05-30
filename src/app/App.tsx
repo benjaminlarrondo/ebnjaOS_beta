@@ -10,9 +10,15 @@ export default function App() {
 
   useEffect(() => {
     const run = async () => {
+      const timeout = new Promise<null>((resolve) => {
+        window.setTimeout(() => resolve(null), 3500);
+      });
+
       await probeSupabaseConnection();
-      const remote = await hydrateAllFromSupabase();
-      db.hydrateCollections(remote);
+      const remote = await Promise.race([hydrateAllFromSupabase(), timeout]);
+      if (remote) {
+        db.hydrateCollections(remote);
+      }
       setReady((x) => x + 1);
       setHydrating(false);
     };

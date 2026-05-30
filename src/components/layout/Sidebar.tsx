@@ -2,10 +2,7 @@ import { NavLink } from "react-router-dom";
 import { sidebarModules } from "../../lib/navigation";
 
 const groups = [
-  { title: "OPERACION", ids: ["home", "tasks", "calendar", "fitness"] },
-  { title: "CONOCIMIENTO", ids: ["qa", "prompts", "notes", "resources"] },
-  { title: "GESTION", ids: ["goals", "review", "projects"] },
-  { title: "CONFIGURACION", ids: ["settings"] },
+  { title: "OPERACION", ids: ["home", "calendar", "fitness", "tracking", "tasks", "projects", "notes", "resources", "settings"] },
 ];
 
 export function Sidebar({ collapsed = false }: { collapsed?: boolean }) {
@@ -16,7 +13,9 @@ export function Sidebar({ collapsed = false }: { collapsed?: boolean }) {
       <p className={`mb-4 text-lg font-semibold text-textp ${collapsed ? "text-center" : ""}`}>{collapsed ? "OS" : "benjaOS"}</p>
       <nav className="space-y-4">
         {groups.map((group) => {
-          const modules = sidebarModules.filter((module) => group.ids.includes(module.id));
+          const modules = group.ids
+            .map((id) => sidebarModules.find((module) => module.id === id))
+            .filter((module): module is (typeof sidebarModules)[number] => Boolean(module));
           if (!modules.length) return null;
           return (
             <div key={group.title}>
