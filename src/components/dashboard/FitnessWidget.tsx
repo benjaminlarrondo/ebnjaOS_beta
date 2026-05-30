@@ -26,6 +26,12 @@ export function FitnessWidget({
   homeCompleted: number;
   fitnessPct: number;
 }) {
+  const metricItems = [
+    { label: "sesiones", value: sessionsCompleted },
+    { label: "gym", value: gymCompleted },
+    { label: "home", value: homeCompleted },
+  ].filter((item) => item.value > 0);
+
   return (
     <WidgetCard to="/fitness">
       <WidgetHeader
@@ -36,11 +42,15 @@ export function FitnessWidget({
         className="mb-5"
         icon={<span className="rounded-full bg-surface2 p-3 text-primary"><Dumbbell className="h-5 w-5" /></span>}
       />
-      <div className="grid grid-cols-3 gap-2">
-        <WidgetMetric label="sesiones" value={sessionsCompleted} labelPosition="bottom" />
-        <WidgetMetric label="gym" value={gymCompleted} labelPosition="bottom" />
-        <WidgetMetric label="home" value={homeCompleted} labelPosition="bottom" />
-      </div>
+      {metricItems.length > 0 ? (
+        <div className={`grid gap-2 ${metricItems.length === 1 ? "grid-cols-1" : metricItems.length === 2 ? "grid-cols-2" : "grid-cols-3"}`}>
+          {metricItems.map((metric) => (
+            <WidgetMetric key={metric.label} label={metric.label} value={metric.value} labelPosition="bottom" />
+          ))}
+        </div>
+      ) : (
+        <p className="rounded-2xl bg-surface2 p-3 text-sm text-texts">Sin sesiones registradas esta semana.</p>
+      )}
       <div className="mt-5">
         <div className="mb-2 flex justify-between text-xs text-texts">
           <span>Semana</span>

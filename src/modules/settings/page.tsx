@@ -8,7 +8,7 @@ import { subscribeSyncStatus, type SyncState } from "../../lib/syncStatus";
 import { listSyncQueue } from "../../lib/syncQueue";
 import { listGoals } from "../../lib/goals";
 import { moreHubModules } from "../../lib/navigation";
-import { SystemStatus } from "../../components/system/SystemStatus";
+import { PlatformStatusBadge } from "../../components/system/PlatformStatusBadge";
 
 const hubGroups = [
   { title: "Operar", ids: ["review", "goals", "projects"] },
@@ -106,7 +106,7 @@ export default function SettingsPage() {
         </div>
       </section>
 
-      <SystemStatus />
+      <PlatformStatusBadge inMoreMenu />
 
       <section className="card space-y-4 text-sm">
         <h3 className="text-sm font-semibold">Sincronizacion avanzada</h3>

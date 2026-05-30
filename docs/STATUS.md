@@ -1,28 +1,51 @@
 # STATUS.md
 
 ## Fecha
-2026-05-30 10:05
+2026-05-30 11:58
 
 ## Tarea ejecutada
-Ajuste de documentación y pipeline: se eliminó `npm test` de validaciones obligatorias y se oficializó el set de validación del proyecto (`build`, `lint`, `typecheck`).
+EBNJAOS RC1: auditoría completa (técnica, UX/UI, funcional, performance), limpieza de código muerto, QA visual RC1, validación final y preparación de release estable.
 
 ## Archivos modificados
-- AGENTS.md
-- .github/workflows/deploy.yml
+- src/components/layout/AppLayout.tsx
+- src/components/layout/GlobalQuickCapture.tsx
+- src/modules/dashboard/page.tsx
+- src/modules/fitness/page.tsx
+- src/components/layout/AppHeader.tsx
+- src/components/system/PlatformStatusBadge.tsx
+- src/components/dashboard/TetePremiumWidget.tsx
+- src/components/layout/Sidebar.tsx
+- src/components/dashboard/FitnessWidget.tsx
+- src/components/dashboard/QuickActionsWidget.tsx
+- src/modules/calendar/page.tsx
+- src/modules/settings/page.tsx
+- docs/TECH_AUDIT.md
+- docs/UI_AUDIT.md
+- docs/FUNCTIONAL_CHECKLIST.md
+- docs/PERFORMANCE_REPORT.md
+- docs/RC1_RELEASE_NOTES.md
 - docs/STATUS.md
 - docs/CHANGELOG_AI.md
+- (eliminados) src/components/layout/Header.tsx
+- (eliminados) src/components/layout/GlobalHeader.tsx
+- (eliminados) src/components/dashboard/HeroWidget.tsx
+- (eliminados) src/components/dashboard/FocusWidget.tsx
 
 ## Comandos ejecutados
-- Edición de policy en AGENTS.md - OK
-- Actualización workflow deploy.yml - OK
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+- Playwright screenshots RC1 - OK
 
 ## Validación
-- Build: Configurado como validación oficial
-- Lint: Configurado como validación oficial
-- Typecheck: Configurado como validación oficial
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+- Tests: N/A (validaciones oficiales actuales no incluyen `npm test`)
 
 ## Errores o riesgos
-- El workflow ahora valida `build`, `lint` y `typecheck`; si alguna regla de lint/typecheck nueva falla, bloqueará despliegue hasta corregirse.
+- Bundle principal y `store` siguen siendo los chunks más pesados.
+- Timeout transitorio en Calendar durante automatización de capturas (no persistente tras recaptura).
 
 ## Próximo paso sugerido
-- Ejecutar una corrida manual del workflow de GitHub Actions para verificar la nueva secuencia de validaciones.
+- Iniciar Fase 2 enfocando optimización de bundle/estado y refinamientos de accesibilidad visual.

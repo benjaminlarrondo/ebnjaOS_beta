@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
-import { Header } from "./Header";
+import { AppHeader } from "./AppHeader";
 import { MobileBottomNav } from "./MobileBottomNav";
 import { GlobalQuickCapture } from "./GlobalQuickCapture";
 import { AppShell } from "../system/AppShell";
@@ -34,7 +34,7 @@ export function AppLayout() {
       <Sidebar collapsed={sidebarCollapsed} />
       <main className="app-main">
         <MobileBottomNav />
-        <Header onToggleSidebar={() => setSidebarCollapsed((value) => !value)} />
+        <AppHeader onToggleSidebar={() => setSidebarCollapsed((value) => !value)} />
         <Outlet />
       </main>
       <CommandPalette />
