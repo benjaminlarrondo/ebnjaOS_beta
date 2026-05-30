@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { APP_NAME, IS_MOCK } from "../../lib/constants";
-import { subscribeSyncStatus, type SyncState } from "../../lib/syncStatus";
+import { useSyncStatus } from "../../hooks/useSyncStatus";
 import { getLastCalendarSyncAt } from "../../services/githubCalendarSync";
 
 function formatTime(iso: string | null) {
@@ -14,11 +14,9 @@ function appVersion() {
 }
 
 export function PlatformStatusBadge({ inMoreMenu = false }: { inMoreMenu?: boolean }) {
-  const [state, setState] = useState<SyncState>({ connected: false, saving: false, lastSavedAt: null, error: null });
+  const state = useSyncStatus();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => subscribeSyncStatus(setState), []);
 
   useEffect(() => {
     const onClickOutside = (event: MouseEvent) => {
@@ -30,10 +28,10 @@ export function PlatformStatusBadge({ inMoreMenu = false }: { inMoreMenu?: boole
   }, []);
 
   const status = useMemo(() => {
-    if (state.error) return { label: "OFFLINE", tone: "text-danger", dot: "bg-danger" };
-    if (state.saving) return { label: "SYNC", tone: "text-primary", dot: "bg-primary" };
-    if (state.connected || IS_MOCK) return { label: "ONLINE", tone: "text-success", dot: "bg-success" };
-    return { label: "OFFLINE", tone: "text-danger", dot: "bg-danger" };
+    if (state.error) return { label: "🔴 ERROR", tone: "text-danger", dot: "bg-danger" };
+    if (state.saving) return { label: "🟡 SINCRONIZANDO", tone: "text-primary", dot: "bg-primary" };
+    if (state.connected || IS_MOCK) return { label: "🟢 ACTUALIZADO", tone: "text-success", dot: "bg-success" };
+    return { label: "🔴 ERROR", tone: "text-danger", dot: "bg-danger" };
   }, [state]);
 
   const calendarSync = getLastCalendarSyncAt();
