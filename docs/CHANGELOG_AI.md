@@ -157,3 +157,20 @@
 - `npm run lint`: OK
 - `npm run typecheck`: OK
 - `preview` smoke-check: sin pantalla "Cargando ebnjaOS..."
+
+## 2026-05-30 19:16
+
+### P0 — Fix GitHub Pages routing
+- Verificada configuración de router/basename/base:
+  - `src/app/router.tsx` usa `import.meta.env.BASE_URL`
+  - `vite.config.ts` usa `base: "/ebnjaOS_beta/"`
+- Implementado fallback SPA para GitHub Pages:
+  - `public/404.html` captura deep links y redirige al root del proyecto
+  - `index.html` restaura ruta original para React Router
+- Documentado en `docs/GITHUB_ROUTING_FIX.md`.
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+- `preview` localhost: `/`, `/calendar`, `/tracking` OK en desktop/iPhone

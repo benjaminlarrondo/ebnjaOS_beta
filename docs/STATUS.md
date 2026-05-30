@@ -1,20 +1,15 @@
 # STATUS.md
 
 ## Fecha
-2026-05-30 19:12
+2026-05-30 19:16
 
 ## Tarea ejecutada
-Background sync and non-blocking boot: eliminación de pantalla de arranque bloqueante y migración a sincronización en segundo plano con estado global visible en header.
+P0 Fix GitHub Pages routing: implementación de fallback SPA para rutas profundas (`calendar`, `tracking`) bajo `/ebnjaOS_beta/`.
 
 ## Archivos modificados
-- src/app/App.tsx
-- src/components/system/PlatformStatusBadge.tsx
-- src/hooks/useSyncStatus.ts
-- src/services/sync/syncManager.ts
-- src/services/sync/supabaseSync.ts
-- src/services/sync/calendarSync.ts
-- src/services/sync/githubSync.ts
-- docs/BOOT_AUDIT.md
+- index.html
+- public/404.html
+- docs/GITHUB_ROUTING_FIX.md
 - docs/STATUS.md
 - docs/CHANGELOG_AI.md
 
@@ -22,16 +17,16 @@ Background sync and non-blocking boot: eliminación de pantalla de arranque bloq
 - npm run build - OK
 - npm run lint - OK
 - npm run typecheck - OK
-- npm run preview + smoke boot check - OK
+- npm run preview + smoke routing - OK
 
 ## Validación
 - Build: OK
 - Lint: OK
 - Typecheck: OK
-- Boot UI: render inmediato sin pantalla bloqueante
+- Localhost rutas profundas: OK
 
 ## Errores o riesgos
-- Si servicios remotos fallan, el estado puede quedar en `🔴 ERROR` pero la UI permanece operativa (comportamiento esperado).
+- Hasta que GitHub Pages publique el nuevo build, rutas profundas seguirán en 404 en producción previa.
 
 ## Próximo paso sugerido
-- Completar `docs/BACKGROUND_SYNC_ARCHITECTURE.md` con diagrama de secuencia y matriz de fallback por servicio.
+- Confirmar publicación GitHub Pages y revalidar `/calendar` y `/tracking` en desktop/iPhone.
