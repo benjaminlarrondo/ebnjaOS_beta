@@ -1,0 +1,74 @@
+[
+  {
+    "route": "/",
+    "status": 200,
+    "finalUrl": "https://benjaminlarrondo.github.io/ebnjaOS_beta/",
+    "title": "ebnjaOS Core",
+    "hasRoot": true,
+    "has404Visible": false,
+    "consoleErrors": 12
+  },
+  {
+    "route": "/calendar",
+    "status": 200,
+    "finalUrl": "https://benjaminlarrondo.github.io/ebnjaOS_beta/calendar/",
+    "title": "ebnjaOS Core",
+    "hasRoot": true,
+    "has404Visible": false,
+    "consoleErrors": 30
+  },
+  {
+    "route": "/tracking",
+    "status": 200,
+    "finalUrl": "https://benjaminlarrondo.github.io/ebnjaOS_beta/tracking/",
+    "title": "ebnjaOS Core",
+    "hasRoot": true,
+    "has404Visible": false,
+    "consoleErrors": 12
+  },
+  {
+    "route": "/fitness",
+    "status": 200,
+    "finalUrl": "https://benjaminlarrondo.github.io/ebnjaOS_beta/fitness/",
+    "title": "ebnjaOS Core",
+    "hasRoot": true,
+    "has404Visible": false,
+    "consoleErrors": 12
+  },
+  {
+    "route": "/tasks",
+    "status": 200,
+    "finalUrl": "https://benjaminlarrondo.github.io/ebnjaOS_beta/tasks/",
+    "title": "ebnjaOS Core",
+    "hasRoot": true,
+    "has404Visible": false,
+    "consoleErrors": 12
+  },
+  {
+    "route": "/notes",
+    "status": 200,
+    "finalUrl": "https://benjaminlarrondo.github.io/ebnjaOS_beta/notes/",
+    "title": "ebnjaOS Core",
+    "hasRoot": true,
+    "has404Visible": false,
+    "consoleErrors": 12
+  },
+  {
+    "route": "/projects",
+    "status": 200,
+    "finalUrl": "https://benjaminlarrondo.github.io/ebnjaOS_beta/projects/",
+    "title": "ebnjaOS Core",
+    "hasRoot": true,
+    "has404Visible": false,
+    "consoleErrors": 12
+  },
+  {
+    "route": "/settings",
+    "status": 200,
+    "finalUrl": "https://benjaminlarrondo.github.io/ebnjaOS_beta/settings/",
+    "title": "ebnjaOS Core",
+    "hasRoot": true,
+    "has404Visible": false,
+    "consoleErrors": 12
+  }
+]
