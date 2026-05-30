@@ -10,6 +10,13 @@ type DayCell = {
 
 const DOW = ["L", "M", "X", "J", "V", "S", "D"];
 
+function toLocalDateKey(date: Date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
 function getMonthMatrix(base: Date, events: CalendarEvent[]) {
   const year = base.getFullYear();
   const month = base.getMonth();
@@ -23,20 +30,20 @@ function getMonthMatrix(base: Date, events: CalendarEvent[]) {
 
   for (let i = 0; i < startOffset; i += 1) {
     const d = new Date(year, month, i - startOffset + 1);
-    const key = d.toISOString().slice(0, 10);
+    const key = toLocalDateKey(d);
     cells.push({ date: d, inMonth: false, key, events: [] });
   }
 
   for (let day = 1; day <= daysInMonth; day += 1) {
     const d = new Date(year, month, day);
-    const key = d.toISOString().slice(0, 10);
-    const dayEvents = events.filter((e) => new Date(e.start_time).toISOString().slice(0, 10) === key);
+    const key = toLocalDateKey(d);
+    const dayEvents = events.filter((e) => toLocalDateKey(new Date(e.start_time)) === key);
     cells.push({ date: d, inMonth: true, key, events: dayEvents });
   }
 
   while (cells.length % 7 !== 0) {
     const d = new Date(year, month + 1, cells.length % 7);
-    const key = d.toISOString().slice(0, 10);
+    const key = toLocalDateKey(d);
     cells.push({ date: d, inMonth: false, key, events: [] });
   }
 
@@ -57,7 +64,7 @@ export function CalendarMonthGrid({
   celesteState?: CelesteCalendarState;
 }) {
   const cells = getMonthMatrix(month, events);
-  const todayKey = new Date().toISOString().slice(0, 10);
+  const todayKey = toLocalDateKey(new Date());
 
   return (
     <section className="card">
