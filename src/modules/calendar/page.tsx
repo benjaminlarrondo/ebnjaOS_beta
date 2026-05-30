@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { PageTitle } from "../../components/layout/PageTitle";
 import { db } from "../../lib/store";
@@ -40,6 +40,7 @@ export default function CalendarPage() {
     return new Date(end.getTime() - end.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
   });
   const [, setTick] = useState(0);
+  const hasBootSyncedRef = useRef(false);
   const events = db.list("events");
 
   const sorted = useMemo(
@@ -165,11 +166,15 @@ export default function CalendarPage() {
   };
 
   useEffect(() => {
+    if (hasBootSyncedRef.current) return;
+    hasBootSyncedRef.current = true;
+
     const boot = async () => {
       if (IS_MOCK) {
         setStatus("Sin conexión a Supabase (Mock mode). Muestra datos locales.");
         return;
       }
+      setStatus("Sincronización inicial automática...");
       await refreshFromSupabase();
       await doSync();
       await refreshFromSupabase();
