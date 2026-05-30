@@ -78,6 +78,7 @@ function getSessionNotes(session: WorkoutSession) {
 }
 
 export default function FitnessPage() {
+  const [fitnessTab, setFitnessTab] = useState<"resumen" | "rutina" | "recovery" | "historial">("rutina");
   const [trainingMode, setTrainingMode] = useState<TrainingMode>("Gym");
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"workout" | "weight" | "pr" | "recovery" | "notes" | "weights">("workout");
@@ -416,8 +417,31 @@ export default function FitnessPage() {
   return (
     <div className="page-shell">
       <PageTitle title="Fitness" subtitle="Resumen ejecutivo y ejecución diaria" />
-
       <section className="card">
+        <div className="grid grid-cols-4 gap-1">
+          {[
+            { id: "resumen", label: "Resumen" },
+            { id: "rutina", label: "Rutina" },
+            { id: "recovery", label: "Recovery" },
+            { id: "historial", label: "Historial" },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setFitnessTab(tab.id as "resumen" | "rutina" | "recovery" | "historial")}
+              className={`rounded-xl border px-2 py-1.5 text-xs transition ${
+                fitnessTab === tab.id
+                  ? "border-primary/35 bg-primary/15 font-medium text-primary"
+                  : "border-transparent text-texts"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {fitnessTab === "resumen" && <section className="card">
         <div className="mb-3 flex items-start justify-between gap-3">
           <div>
             <p className="eyebrow">Resumen ejecutivo</p>
@@ -486,16 +510,16 @@ export default function FitnessPage() {
           </button>
         </div>
         {status && <p className="mt-2 text-xs text-texts">{status}</p>}
-      </section>
+      </section>}
 
-      <section className="card">
+      {fitnessTab === "rutina" && <section className="card">
         <div className="mb-2 flex items-center justify-between">
           <h3 className="text-sm font-semibold text-textp">Rutina visible hoy</h3>
           <span className="text-xs text-texts">{suggestedSession?.location ?? "Descanso"}</span>
         </div>
         {suggestedSession ? (
           <div className="grid gap-1.5 text-xs text-texts">
-            {suggestedSession.exercises.slice(0, 4).map((exercise) => (
+            {suggestedSession.exercises.map((exercise) => (
               <p key={exercise.name} className="rounded-xl border border-borderc bg-surface px-2 py-1.5">
                 <span className="text-textp">{exercise.name}</span> · {exercise.prescription}
               </p>
@@ -504,11 +528,11 @@ export default function FitnessPage() {
         ) : (
           <p className="text-sm text-texts">No hay rutina asignada para hoy.</p>
         )}
-      </section>
+      </section>}
 
-      <WorkoutTodayCard session={suggestedSession} onStart={markWorkoutDone} />
+      {fitnessTab === "rutina" && <WorkoutTodayCard session={suggestedSession} onStart={markWorkoutDone} />}
 
-      <section className="card">
+      {fitnessTab === "rutina" && <section className="card">
         <div className="mb-2 flex items-center justify-between">
           <h3 className="text-sm font-semibold text-textp">Seleccionar rutina</h3>
           <span className="text-xs text-texts">Visible y directa</span>
@@ -525,18 +549,18 @@ export default function FitnessPage() {
             </div>
           ))}
         </div>
-      </section>
+      </section>}
 
-      <div className="grid gap-2.5 sm:grid-cols-2">
+      {fitnessTab === "recovery" && <div className="grid gap-2.5 sm:grid-cols-2">
         <RecoveryCard metrics={recoveryMetrics} />
         <WeeklyConsistencyCard
           completed={completedThisWeek}
           pending={Math.max(0, WEEK_TARGET - completedThisWeek)}
           streak={state.weeklyStreak}
         />
-      </div>
+      </div>}
 
-      <section className="card">
+      {fitnessTab === "rutina" && <section className="card">
         <button
           type="button"
           onClick={() => setWeekPlannerOpen((v) => !v)}
@@ -604,9 +628,9 @@ export default function FitnessPage() {
             })}
           </div>
         )}
-      </section>
+      </section>}
 
-      <section className="card">
+      {fitnessTab === "historial" && <section className="card">
         <div className="mb-3 flex items-center justify-between gap-2">
           <div>
             <h3 className="text-sm font-semibold">Progreso de cargas</h3>
@@ -630,9 +654,9 @@ export default function FitnessPage() {
         ) : (
           <p className="text-sm text-texts">Guarda pesos al cerrar un entrenamiento para iniciar el comparativo mensual.</p>
         )}
-      </section>
+      </section>}
 
-      <section className="card">
+      {fitnessTab === "historial" && <section className="card">
         <button
           type="button"
           onClick={() => setWeeklyTrackingOpen((v) => !v)}
@@ -693,9 +717,9 @@ export default function FitnessPage() {
             </div>
           </div>
         )}
-      </section>
+      </section>}
 
-      <section className="card">
+      {fitnessTab === "historial" && <section className="card">
         <button
           type="button"
           onClick={() => setMonthlyOpen((v) => !v)}
@@ -720,21 +744,21 @@ export default function FitnessPage() {
             ))}
           </div>
         )}
-      </section>
+      </section>}
 
-      <StrengthProgressCard rows={strengthProgress} />
+      {fitnessTab === "historial" && <StrengthProgressCard rows={strengthProgress} />}
 
-      <QuickLogCard onAction={openQuickLog} />
+      {fitnessTab === "historial" && <QuickLogCard onAction={openQuickLog} />}
 
-      <SectionCard title="Progresión (6 semanas)">
+      {fitnessTab === "historial" && <SectionCard title="Progresión (6 semanas)">
         <ul className="space-y-1 text-sm text-texts">
           {progressionPhases.map((phase) => (
             <li key={phase} className="flex gap-2"><CircleSlash className="mt-0.5 h-3.5 w-3.5 shrink-0" />{phase}</li>
           ))}
         </ul>
-      </SectionCard>
+      </SectionCard>}
 
-      <WorkoutPlanList sessions={fitnessSessions} highlightedId={suggestedSession?.id} />
+      {fitnessTab === "historial" && <WorkoutPlanList sessions={fitnessSessions} highlightedId={suggestedSession?.id} />}
 
       <Modal open={modalOpen}>
         <h3 className="mb-2 text-sm font-semibold">

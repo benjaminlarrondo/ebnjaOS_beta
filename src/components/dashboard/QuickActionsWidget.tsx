@@ -12,6 +12,7 @@ export function QuickActionsWidget({
   secondaryModules: AppModule[];
 }) {
   void primaryActions;
+  void secondaryModules;
   const actionable = [
     { id: "new-task", title: "Nueva tarea", description: "Captura en inbox", to: "/tasks", icon: ClipboardPlus },
     { id: "new-event", title: "Nuevo evento", description: "Agenda rápida", to: "/calendar", icon: CalendarDays },
@@ -20,52 +21,36 @@ export function QuickActionsWidget({
   ];
 
   return (
-    <>
-      <WidgetCard>
-        <WidgetHeader
-          eyebrow="Acciones"
-          title="Movimiento rapido"
-          icon={<CheckCircle2 className="h-5 w-5 text-primary" />}
-        />
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
-          {actionable.map((action) => {
-            const Icon = action.icon;
-            return (
-              <WidgetAction
-                key={action.id}
-                to={action.to}
-                variant="tile"
-                className="text-left"
-                icon={<Icon className="h-4 w-4 text-primary" />}
-              >
-                <div>
-                  <p className="text-sm font-semibold">{action.title}</p>
-                  <p className="text-xs text-texts">{action.description}</p>
-                </div>
-              </WidgetAction>
-            );
-          })}
-        </div>
-      </WidgetCard>
-
-      <WidgetCard>
-        <WidgetHeader
-          title="Sistema"
-          size="sm"
-          action={
-            <WidgetAction to="/settings" variant="plain">
+    <WidgetCard>
+      <WidgetHeader
+        eyebrow="Acciones"
+        title="Movimiento rapido"
+        icon={<CheckCircle2 className="h-5 w-5 text-primary" />}
+        action={
+          <WidgetAction to="/settings" variant="plain">
             Mas <ArrowUpRight className="h-3.5 w-3.5" />
+          </WidgetAction>
+        }
+      />
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        {actionable.map((action) => {
+          const Icon = action.icon;
+          return (
+            <WidgetAction
+              key={action.id}
+              to={action.to}
+              variant="tile"
+              className="text-left"
+              icon={<Icon className="h-4 w-4 text-primary" />}
+            >
+              <div>
+                <p className="text-sm font-semibold">{action.title}</p>
+                <p className="text-xs text-texts">{action.description}</p>
+              </div>
             </WidgetAction>
-          }
-        />
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {secondaryModules.map((module) => (
-            <WidgetAction key={module.id} to={module.path} className="text-center">
-              {module.label}
-            </WidgetAction>
-          ))}
-        </div>
-      </WidgetCard>
-    </>
+          );
+        })}
+      </div>
+    </WidgetCard>
   );
 }

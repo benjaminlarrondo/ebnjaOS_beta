@@ -1,11 +1,8 @@
-import { useState } from "react";
 import { CalendarWidget } from "../../components/dashboard/CalendarWidget";
 import { DayStatusWidget } from "../../components/dashboard/DayStatusWidget";
 import { FitnessWidget } from "../../components/dashboard/FitnessWidget";
-import { FocusWidget } from "../../components/dashboard/FocusWidget";
-import { HeroWidget } from "../../components/dashboard/HeroWidget";
-import { InsightsWidget } from "../../components/dashboard/InsightsWidget";
 import { QuickActionsWidget } from "../../components/dashboard/QuickActionsWidget";
+import { TetePremiumWidget } from "../../components/dashboard/TetePremiumWidget";
 import { todaySession } from "../../data/fitnessPlan";
 import { listGoals } from "../../lib/goals";
 import { dashboardModules, quickActionModules } from "../../lib/navigation";
@@ -17,8 +14,6 @@ function clampPct(value: number) {
 }
 
 export default function DashboardPage() {
-  const [, setTick] = useState(0);
-
   const data = db.load();
   const now = new Date();
   const todayKey = now.toDateString();
@@ -46,9 +41,6 @@ export default function DashboardPage() {
   const sleepPct = clampPct(((fitness.recovery.sleep || fitness.sleepAvg || 0) / 10) * 100);
   const energyPct = clampPct(((fitness.recovery.energy || 0) / 10) * 100);
   const recoveryScore = clampPct((sleepPct + energyPct) / 2);
-  const focusScore = clampPct(todayTasks.length === 0 ? 100 : Math.max(20, 100 - todayTasks.length * 18));
-  const dayScore = clampPct((fitnessPct + recoveryScore + focusScore) / 3);
-  const focusPreview = data.focus || "Define el foco central del dia";
   const topPriority = todayTasks[0]?.title || activeGoals[0]?.title || "Dia despejado";
   const lastSyncAt = getLastCalendarSyncAt();
   const primaryActions = quickActionModules.slice(0, 4);
@@ -56,44 +48,20 @@ export default function DashboardPage() {
 
   return (
     <div className="page-shell">
-      <HeroWidget
-        dayScore={dayScore}
-        todayTasksCount={todayTasks.length}
-        todayEventsCount={todayEvents.length}
-        fitnessSessionsCompleted={fitness.sessionsCompleted}
-        topPriority={topPriority}
-        nextEventTitle={nextEvent?.title}
-        todaySessionName={todaySession.name}
-        recommendation={{
-          priority: topPriority,
-          nextEvent: nextEvent?.title || "Sin evento",
-          nextWorkout: todaySession.name,
-        }}
-      />
-
-      <section className="card">
-        <div className="mb-2 flex items-center justify-between gap-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.06em] text-primary">Tete</p>
-          <span className="text-[11px] text-texts">Widget compacto</span>
-        </div>
-        <h3 className="truncate text-base font-semibold text-textp">{nextTeteEvent ? nextTeteEvent.title : "Sin bloque con Tete"}</h3>
-        <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
-          <p className="rounded-xl border border-borderc bg-surface px-2 py-1.5 text-texts">
-            Inicio: <span className="text-textp">{nextTeteEvent ? new Date(nextTeteEvent.start_time).toLocaleString("es-CL") : "—"}</span>
-          </p>
-          <p className="rounded-xl border border-borderc bg-surface px-2 py-1.5 text-texts">
-            Término: <span className="text-textp">{nextTeteEvent ? new Date(nextTeteEvent.end_time).toLocaleString("es-CL") : "—"}</span>
-          </p>
-        </div>
-      </section>
-
-      <DayStatusWidget
-        doneTasks={doneTasks}
-        topPriority={topPriority}
-        nextEventStart={nextEvent?.start_time}
-        nextEventTitle={nextEvent?.title}
-        recoveryScore={recoveryScore}
-      />
+      <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+        <DayStatusWidget
+          doneTasks={doneTasks}
+          topPriority={topPriority}
+          nextEventStart={nextEvent?.start_time}
+          nextEventTitle={nextEvent?.title}
+          recoveryScore={recoveryScore}
+        />
+        <TetePremiumWidget
+          title={nextTeteEvent ? nextTeteEvent.title : "Sin bloque con Tete"}
+          start={nextTeteEvent ? new Date(nextTeteEvent.start_time).toLocaleString("es-CL") : "—"}
+          end={nextTeteEvent ? new Date(nextTeteEvent.end_time).toLocaleString("es-CL") : "—"}
+        />
+      </div>
 
       <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
         <FitnessWidget
@@ -109,22 +77,6 @@ export default function DashboardPage() {
           nextEvent={nextEvent}
           nextWeekEventsCount={nextWeekEvents.length}
           lastSyncAt={lastSyncAt}
-        />
-      </div>
-
-      <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-        <FocusWidget
-          focus={focusPreview}
-          tasks={todayTasks}
-          onSave={(nextFocus) => {
-            db.upsertFocus(nextFocus);
-            setTick((x) => x + 1);
-          }}
-        />
-        <InsightsWidget
-          fitnessPct={fitnessPct}
-          recoveryScore={recoveryScore}
-          activeGoalsCount={activeGoals.length}
         />
       </div>
 

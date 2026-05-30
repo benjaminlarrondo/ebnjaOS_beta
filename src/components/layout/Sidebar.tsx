@@ -1,6 +1,5 @@
 import { NavLink } from "react-router-dom";
 import { sidebarModules } from "../../lib/navigation";
-import { SystemStatus } from "../system/SystemStatus";
 
 const groups = [
   { title: "OPERACION", ids: ["home", "tasks", "calendar", "fitness"] },
@@ -50,9 +49,6 @@ export function Sidebar({ collapsed = false }: { collapsed?: boolean }) {
           );
         })}
       </nav>
-      <div className="mt-4 border-t border-borderc pt-3">
-        <SystemStatus compact />
-      </div>
     </aside>
   );
 }

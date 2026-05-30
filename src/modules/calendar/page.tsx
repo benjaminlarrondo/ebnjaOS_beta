@@ -224,8 +224,6 @@ export default function CalendarPage() {
               <h3 className="mt-2 heading-md font-semibold text-textp">{event.title}</h3>
               <p className="mt-2 caption text-texts">
                 {new Date(event.start_time).toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" })}
-                {" - "}
-                {event.source}
               </p>
             </article>
           ))
