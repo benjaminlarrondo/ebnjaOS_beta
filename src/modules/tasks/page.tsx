@@ -87,12 +87,18 @@ export default function TasksPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="page-shell">
       <PageTitle title="Tasks" subtitle="Inbox y procesamiento diario" />
 
       <section className="card">
-        <h3 className="mb-3 text-sm font-semibold">Captura rápida a Inbox</h3>
-        <div className="grid gap-2">
+        <div className="mb-2 flex items-start justify-between gap-2">
+          <div>
+            <p className="eyebrow">Inbox</p>
+            <h3 className="mt-0.5 heading-lg font-semibold text-textp">Captura rápida</h3>
+          </div>
+          <span className="pill-soft">{inboxCount} pendientes</span>
+        </div>
+        <div className="grid gap-1.5">
           <Input placeholder="Título de la tarea" value={title} onChange={(e) => setTitle(e.target.value)} />
           <Textarea placeholder="Detalle opcional" value={description} onChange={(e) => setDescription(e.target.value)} />
           <Button type="button" onClick={createInboxTask}>Agregar a Inbox</Button>
@@ -101,38 +107,38 @@ export default function TasksPage() {
       </section>
 
       <section className="card">
-        <h3 className="mb-3 text-sm font-semibold">Revisión diaria</h3>
+        <h3 className="mb-2 section-title">Revisión diaria</h3>
         <div className="grid grid-cols-3 gap-2 text-sm">
-          <div className="rounded-xl border border-borderc p-2.5">
+          <div className="metric-card">
             <p className="text-xs text-texts">Inbox</p>
-            <p className="font-semibold">{inboxCount}</p>
+            <p className="metric-value mt-2">{inboxCount}</p>
           </div>
-          <div className="rounded-xl border border-borderc p-2.5">
+          <div className="metric-card">
             <p className="text-xs text-texts">Today</p>
-            <p className="font-semibold">{todayCount}</p>
+            <p className="metric-value mt-2">{todayCount}</p>
           </div>
-          <div className="rounded-xl border border-borderc p-2.5">
+          <div className="metric-card">
             <p className="text-xs text-texts">Done semana</p>
-            <p className="font-semibold">{doneThisWeek}</p>
+            <p className="metric-value mt-2">{doneThisWeek}</p>
           </div>
         </div>
       </section>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 rounded-2xl border border-borderc bg-surface p-1">
         {tabs.map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`rounded-full border px-3 py-1 text-xs ${tab === t ? "border-primary bg-[#eef1f6] text-primary" : "border-borderc text-texts"}`}
+            className={`rounded-xl border px-3 py-1.5 text-xs transition ${tab === t ? "border-primary/35 bg-primary/15 text-primary" : "border-transparent text-texts"}`}
           >
             {t}
           </button>
         ))}
       </div>
 
-      <section className="card space-y-2">
-        <div className="mb-1 flex items-center justify-between">
-          <h3 className="text-sm font-semibold">Vista: {tab}</h3>
+      <section className="card space-y-1.5">
+        <div className="mb-0.5 flex items-center justify-between">
+          <h3 className="section-title">Vista: {tab}</h3>
           <p className="text-xs text-texts">{filtered.length} tareas</p>
         </div>
 
@@ -141,7 +147,7 @@ export default function TasksPage() {
         )}
 
         {filtered.map((task) => (
-          <article key={task.id} className="rounded-xl border border-borderc p-3">
+          <article key={task.id} className="inner-card">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-sm font-medium">{task.title}</p>
@@ -152,7 +158,7 @@ export default function TasksPage() {
               </div>
               <button className="btn-ghost" onClick={() => deleteTask(task.id)}>Eliminar</button>
             </div>
-            <div className="mt-2 flex flex-wrap gap-2">
+            <div className="mt-2 flex flex-wrap gap-1.5">
               {task.status !== "today" && <button className="btn-ghost" onClick={() => moveTask(task.id, "today")}>Today</button>}
               {task.status !== "next" && <button className="btn-ghost" onClick={() => moveTask(task.id, "next")}>Next</button>}
               {task.status !== "waiting" && <button className="btn-ghost" onClick={() => moveTask(task.id, "waiting")}>Waiting</button>}

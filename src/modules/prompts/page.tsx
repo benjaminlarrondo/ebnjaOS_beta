@@ -16,7 +16,7 @@ export default function PromptsPage() {
       <PageTitle title="Prompts" subtitle="Biblioteca reusable" />
       <div className="flex flex-wrap gap-2">
         {categories.map((c) => (
-          <button key={c} onClick={() => setCategory(c)} className={`rounded-full border px-3 py-1 text-xs ${category === c ? "border-primary bg-[#eef1f6] text-primary" : "border-borderc text-texts"}`}>{c}</button>
+          <button key={c} onClick={() => setCategory(c)} className={`rounded-full border px-3 py-1 text-xs ${category === c ? "border-primary/35 bg-primary/15 text-primary" : "border-borderc text-texts"}`}>{c}</button>
         ))}
       </div>
 

@@ -3,7 +3,7 @@ import { ExternalSourceBadge } from "./ExternalSourceBadge";
 
 export function EventCard({ event }: { event: CalendarEvent }) {
   return (
-    <article className="rounded-xl border border-borderc bg-white p-3">
+    <article className="inner-card">
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="text-sm font-medium">{event.title}</p>

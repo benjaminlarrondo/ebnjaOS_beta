@@ -69,7 +69,7 @@ export default function GoalsPage() {
                 </div>
                 <button className="btn-ghost" onClick={() => { removeGoal(g.id); setTick((x) => x + 1); }}>Eliminar</button>
               </div>
-              <div className="mt-2 h-2 rounded-full bg-[#edf0f4]"><div className="h-2 rounded-full bg-primary" style={{ width: `${pct}%` }} /></div>
+              <div className="mt-2 h-2 rounded-full bg-surface2"><div className="h-2 rounded-full bg-primary" style={{ width: `${pct}%` }} /></div>
               <div className="mt-2 flex flex-wrap gap-2">
                 <button className="btn-ghost" onClick={() => { updateGoal(g.id, { progress: Math.min(g.target, g.progress + 1) }); setTick((x) => x + 1); }}>+1 progreso</button>
                 <button className="btn-ghost" onClick={() => { updateGoal(g.id, { status: g.status === "done" ? "active" : "done" }); setTick((x) => x + 1); }}>

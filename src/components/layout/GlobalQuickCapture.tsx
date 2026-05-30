@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
-import { Plus } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { CalendarDays, ClipboardPlus, Dumbbell, NotebookPen, Plus, X } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Modal } from "../forms/Modal";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -7,7 +8,7 @@ import { Select } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 import { db } from "../../lib/store";
 
-type CaptureType = "auto" | "task" | "note" | "event";
+type CaptureType = "auto" | "task" | "note" | "event" | "fitness";
 
 function toLocalDateTimeInput(d: Date) {
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
@@ -23,7 +24,10 @@ function inferType(text: string): Exclude<CaptureType, "auto"> {
 }
 
 export function GlobalQuickCapture() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [captureType, setCaptureType] = useState<CaptureType>("auto");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -32,6 +36,25 @@ export function GlobalQuickCapture() {
   const [endAt, setEndAt] = useState(() => toLocalDateTimeInput(new Date(Date.now() + 3600000)));
 
   const textForInference = useMemo(() => `${title} ${content}`.trim(), [title, content]);
+  const contextualType: CaptureType =
+    location.pathname === "/fitness"
+      ? "fitness"
+      : location.pathname === "/calendar"
+        ? "event"
+        : location.pathname === "/notes"
+          ? "note"
+          : "task";
+
+  useEffect(() => {
+    const onOpen = (event: Event) => {
+      const custom = event as CustomEvent<{ type?: CaptureType }>;
+      setCaptureType(custom.detail?.type || "auto");
+      setOpen(true);
+      setMenuOpen(false);
+    };
+    window.addEventListener("ebnja:quick-capture-open", onOpen as EventListener);
+    return () => window.removeEventListener("ebnja:quick-capture-open", onOpen as EventListener);
+  }, []);
 
   const reset = () => {
     setCaptureType("auto");
@@ -71,6 +94,16 @@ export function GlobalQuickCapture() {
         tags: [],
         pinned: false,
       });
+    } else if (finalType === "fitness") {
+      db.create("workouts", {
+        title: finalTitle,
+        date: new Date().toISOString().slice(0, 10),
+        type: "strength",
+        duration_minutes: 45,
+        intensity: 7,
+        notes: cleanContent || "Registro rapido",
+      });
+      navigate("/fitness");
     } else {
       const start = new Date(startAt);
       const end = new Date(endAt);
@@ -101,12 +134,31 @@ export function GlobalQuickCapture() {
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
-        className="fixed bottom-20 right-4 z-40 grid h-12 w-12 place-items-center rounded-full bg-primary text-white shadow-lg"
+        onClick={() => setMenuOpen((value) => !value)}
+        className="fixed bottom-[calc(env(safe-area-inset-bottom)+1.05rem)] right-[max(0.85rem,env(safe-area-inset-right))] z-40 grid h-11 w-11 place-items-center rounded-full border border-primary/40 bg-primary text-[#171717] md:h-12 md:w-12"
         aria-label="Quick capture"
       >
-        <Plus className="h-5 w-5" />
+        {menuOpen ? <X className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
       </button>
+      {menuOpen && (
+        <div className="fixed bottom-32 right-[max(0.85rem,env(safe-area-inset-right))] z-40 grid gap-2">
+          <button type="button" className="btn-primary flex items-center gap-2 text-xs" onClick={() => { setCaptureType(contextualType); setOpen(true); setMenuOpen(false); }}>
+            <Plus className="h-4 w-4" /> Acción rápida del módulo
+          </button>
+          <button type="button" className="btn-ghost flex items-center gap-2" onClick={() => { setCaptureType("task"); setOpen(true); setMenuOpen(false); }}>
+            <ClipboardPlus className="h-4 w-4" /> Nueva tarea
+          </button>
+          <button type="button" className="btn-ghost flex items-center gap-2" onClick={() => { setCaptureType("event"); setOpen(true); setMenuOpen(false); }}>
+            <CalendarDays className="h-4 w-4" /> Nuevo evento
+          </button>
+          <button type="button" className="btn-ghost flex items-center gap-2" onClick={() => { setCaptureType("note"); setOpen(true); setMenuOpen(false); }}>
+            <NotebookPen className="h-4 w-4" /> Nueva nota
+          </button>
+          <button type="button" className="btn-ghost flex items-center gap-2" onClick={() => { setCaptureType("fitness"); setOpen(true); setMenuOpen(false); }}>
+            <Dumbbell className="h-4 w-4" /> Nuevo registro fitness
+          </button>
+        </div>
+      )}
 
       <Modal open={open}>
         <h3 className="mb-2 text-sm font-semibold">Quick capture</h3>
@@ -116,6 +168,7 @@ export function GlobalQuickCapture() {
             <option value="task">Tarea</option>
             <option value="note">Nota</option>
             <option value="event">Evento</option>
+            <option value="fitness">Fitness</option>
           </Select>
           <Input placeholder="Título (opcional)" value={title} onChange={(e) => setTitle(e.target.value)} />
           <Textarea placeholder="Escribe lo que quieres guardar..." value={content} onChange={(e) => setContent(e.target.value)} />

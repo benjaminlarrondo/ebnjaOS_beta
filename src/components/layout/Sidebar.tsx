@@ -1,6 +1,58 @@
 import { NavLink } from "react-router-dom";
 import { sidebarModules } from "../../lib/navigation";
+import { SystemStatus } from "../system/SystemStatus";
 
-export function Sidebar() {
-  return <aside className="hidden h-screen w-64 border-r border-borderc bg-surface2 p-5 lg:block"><p className="mb-5 text-xl font-semibold">benjaOS</p><nav className="space-y-1.5">{sidebarModules.map((module) => <NavLink key={module.id} to={module.path} className={({isActive}) => `block rounded-2xl px-3 py-2 text-sm transition ${isActive ? "bg-white text-primary shadow-sm" : "text-texts hover:bg-white/80 hover:text-textp"}`}>{module.label}</NavLink>)}</nav></aside>;
+const groups = [
+  { title: "OPERACION", ids: ["home", "tasks", "calendar", "fitness"] },
+  { title: "CONOCIMIENTO", ids: ["qa", "prompts", "notes", "resources"] },
+  { title: "GESTION", ids: ["goals", "review", "projects"] },
+  { title: "CONFIGURACION", ids: ["settings"] },
+];
+
+export function Sidebar({ collapsed = false }: { collapsed?: boolean }) {
+  return (
+    <aside
+      className={`sticky top-0 hidden h-screen shrink-0 self-start overflow-y-auto border-r border-borderc bg-surface p-4 lg:block ${collapsed ? "w-[72px]" : "w-[220px]"}`}
+    >
+      <p className={`mb-4 text-lg font-semibold text-textp ${collapsed ? "text-center" : ""}`}>{collapsed ? "OS" : "benjaOS"}</p>
+      <nav className="space-y-4">
+        {groups.map((group) => {
+          const modules = sidebarModules.filter((module) => group.ids.includes(module.id));
+          if (!modules.length) return null;
+          return (
+            <div key={group.title}>
+              {!collapsed && <p className="mb-1 px-2 text-[10px] font-semibold tracking-[0.08em] text-textm">{group.title}</p>}
+              <div className="space-y-1">
+                {modules.map((module) => {
+                  const Icon = module.icon;
+                  return (
+                    <NavLink
+                      key={module.id}
+                      to={module.path}
+                      className={({ isActive }) =>
+                        `flex items-center rounded-xl border px-2.5 py-2 text-sm transition ${
+                          collapsed ? "justify-center" : "gap-2"
+                        } ${
+                          isActive
+                            ? "border-primary/35 bg-primary/15 text-primary"
+                            : "border-transparent text-textp hover:border-primary/20 hover:bg-primary/10 hover:text-primary"
+                        }`
+                      }
+                      title={module.label}
+                    >
+                      <Icon className="h-4 w-4 shrink-0" />
+                      {!collapsed && <span>{module.label}</span>}
+                    </NavLink>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </nav>
+      <div className="mt-4 border-t border-borderc pt-3">
+        <SystemStatus compact />
+      </div>
+    </aside>
+  );
 }

@@ -70,7 +70,7 @@ export default function ReviewPage() {
         <p className="text-xs text-texts">Semana de {wk} · {checkedCount}/{checklistItems.length} completado</p>
         <div className="space-y-2">
           {checklistItems.map((item) => (
-            <label key={item.id} className="flex items-center gap-2 rounded-2xl border border-borderc bg-white p-3 text-sm">
+            <label key={item.id} className="flex items-center gap-2 rounded-2xl border border-borderc bg-surface p-3 text-sm">
               <input type="checkbox" checked={!!current[item.id]} onChange={() => toggle(item.id)} />
               <span>{item.label}</span>
             </label>

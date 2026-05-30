@@ -20,7 +20,7 @@ export function WidgetAction({
     variant === "primary"
       ? `btn-primary ${className}`
       : variant === "tile"
-        ? `rounded-2xl border border-borderc bg-white p-3 text-sm font-medium text-textp shadow-sm transition active:scale-[0.99] ${className}`
+        ? `rounded-2xl border border-borderc bg-surface p-3 text-sm font-medium text-textp transition active:scale-[0.99] ${className}`
         : variant === "plain"
           ? `flex items-center gap-1 text-xs font-medium text-primary ${className}`
           : `btn-ghost ${className}`;

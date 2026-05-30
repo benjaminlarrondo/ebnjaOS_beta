@@ -6,9 +6,9 @@ export function CalendarViewToggle({ view, onChange }: { view: "month" | "week" 
   ];
 
   return (
-    <div className="flex gap-2">
+    <div className="flex rounded-2xl border border-borderc bg-surface p-1">
       {options.map(([key, label]) => (
-        <button key={key} onClick={() => onChange(key)} className={`rounded-full border px-3 py-1 text-xs ${view === key ? "border-primary bg-[#eef1f6] text-primary" : "border-borderc text-texts"}`}>
+        <button key={key} onClick={() => onChange(key)} className={`rounded-xl border px-3 py-1.5 text-xs transition ${view === key ? "border-primary/35 bg-primary/15 text-primary" : "border-transparent text-texts"}`}>
           {label}
         </button>
       ))}

@@ -56,6 +56,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

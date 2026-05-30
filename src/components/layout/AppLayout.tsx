@@ -1,21 +1,44 @@
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import { MobileBottomNav } from "./MobileBottomNav";
-import { SyncIndicator } from "./SyncIndicator";
 import { GlobalQuickCapture } from "./GlobalQuickCapture";
+import { AppShell } from "../system/AppShell";
+import { CommandPalette } from "./CommandPalette";
 
 export function AppLayout() {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    const stored = localStorage.getItem("ebnjaos-sidebar-collapsed");
+    if (stored === "1") return true;
+    if (stored === "0") return false;
+    return window.innerWidth < 1440;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("ebnjaos-sidebar-collapsed", sidebarCollapsed ? "1" : "0");
+  }, [sidebarCollapsed]);
+
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth < 1280) {
+        setSidebarCollapsed(true);
+      }
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   return (
-    <div className="min-h-screen lg:flex">
-      <Sidebar />
-      <main className="mx-auto w-full max-w-6xl px-4 pb-7 pt-[calc(env(safe-area-inset-top)+10px)] sm:px-5 lg:p-7">
+    <AppShell>
+      <Sidebar collapsed={sidebarCollapsed} />
+      <main className="app-main">
         <MobileBottomNav />
-        <Header />
+        <Header onToggleSidebar={() => setSidebarCollapsed((value) => !value)} />
         <Outlet />
       </main>
-      <SyncIndicator />
+      <CommandPalette />
       <GlobalQuickCapture />
-    </div>
+    </AppShell>
   );
 }

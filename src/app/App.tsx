@@ -6,6 +6,7 @@ import { hydrateAllFromSupabase, probeSupabaseConnection } from "../lib/supabase
 
 export default function App() {
   const [, setReady] = useState(0);
+  const [hydrating, setHydrating] = useState(true);
 
   useEffect(() => {
     const run = async () => {
@@ -13,10 +14,25 @@ export default function App() {
       const remote = await hydrateAllFromSupabase();
       db.hydrateCollections(remote);
       setReady((x) => x + 1);
+      setHydrating(false);
     };
 
     void run();
   }, []);
+
+  if (hydrating) {
+    return (
+      <div className="app-shell">
+        <main className="app-main">
+          <section className="card">
+            <p className="text-xs text-textm">Inicializando plataforma</p>
+            <h1 className="mt-1 text-lg font-semibold text-textp">Cargando ebnjaOS…</h1>
+            <p className="mt-2 text-sm text-texts">Sincronizando estado local y calendario.</p>
+          </section>
+        </main>
+      </div>
+    );
+  }
 
   return <RouterProvider router={buildRouter()} />;
 }

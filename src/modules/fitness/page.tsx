@@ -7,12 +7,12 @@ import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { Button } from "../../components/ui/button";
 import { Select } from "../../components/ui/select";
-import { FloatingQuickLogButton } from "../../components/fitness/FloatingQuickLogButton";
 import { QuickLogCard } from "../../components/fitness/QuickLogCard";
 import { RecoveryCard } from "../../components/fitness/RecoveryCard";
 import { StrengthProgressCard } from "../../components/fitness/StrengthProgressCard";
 import { WeeklyConsistencyCard } from "../../components/fitness/WeeklyConsistencyCard";
 import { WorkoutPlanList } from "../../components/fitness/WorkoutPlanList";
+import { WorkoutTodayCard } from "../../components/fitness/WorkoutTodayCard";
 import { fitnessSessions, progressionPhases, strengthProgress } from "../../data/fitnessPlan";
 import { db } from "../../lib/store";
 import type { WorkoutSession } from "../../data/fitnessPlan";
@@ -414,35 +414,35 @@ export default function FitnessPage() {
   );
 
   return (
-    <div className="space-y-4">
-      <PageTitle title="TRAINO" subtitle="Resumen semanal y seguimiento flexible" />
+    <div className="page-shell">
+      <PageTitle title="Fitness" subtitle="Resumen ejecutivo y ejecución diaria" />
 
-      <section className="card border-primary/25 bg-white">
-        <div className="mb-4 flex items-start justify-between gap-3">
+      <section className="card">
+        <div className="mb-3 flex items-start justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-primary">Resumen ejecutivo</p>
+            <p className="eyebrow">Resumen ejecutivo</p>
             <h3 className="mt-1 text-xl font-semibold">{suggestedSession ? suggestedSession.name : "Descanso"}</h3>
             <p className="text-xs text-texts">{suggestedSession ? suggestedSession.focus : "Recuperacion activa o pausa total"}</p>
           </div>
-          <span className="rounded-full bg-[#eef1f6] px-2.5 py-1 text-[11px] font-medium text-primary">{weekStatus}</span>
+          <span className="pill-soft text-primary">{weekStatus}</span>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-1.5 text-sm sm:grid-cols-4">
           <div className="surface-tile">
             <p className="text-xs text-texts">Sesiones</p>
-            <p className="text-lg font-semibold">{completedThisWeek}/{WEEK_TARGET}</p>
+            <p className="metric-value mt-2">{completedThisWeek}/{WEEK_TARGET}</p>
           </div>
           <div className="surface-tile">
             <p className="text-xs text-texts">Peso</p>
-            <p className="text-lg font-semibold">{state.weeklyTracking.weight || state.bodyWeightKg || 0} kg</p>
+            <p className="metric-value mt-2">{state.weeklyTracking.weight || state.bodyWeightKg || 0} kg</p>
           </div>
           <div className="surface-tile">
             <p className="text-xs text-texts">Cargas</p>
-            <p className="text-lg font-semibold">{latestLoadAvg} kg</p>
+            <p className="metric-value mt-2">{latestLoadAvg} kg</p>
           </div>
           <div className="surface-tile">
             <p className="text-xs text-texts">Recovery</p>
-            <p className="text-lg font-semibold">{recoveryAvg}/10</p>
+            <p className="metric-value mt-2">{recoveryAvg}/10</p>
           </div>
         </div>
 
@@ -450,7 +450,7 @@ export default function FitnessPage() {
           <div className="h-full rounded-full bg-primary" style={{ width: `${adherencePct}%` }} />
         </div>
 
-        <div className="mt-4 grid gap-2 sm:grid-cols-3">
+        <div className="mt-3 grid gap-2 sm:grid-cols-3">
           <label className="text-xs text-texts sm:col-span-1">
             Hoy
             <Select className="mt-1" value={trainingMode} onChange={(e) => setTrainingMode(e.target.value as TrainingMode)}>
@@ -469,7 +469,7 @@ export default function FitnessPage() {
           </div>
         </div>
 
-        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
           <button type="button" onClick={markWorkoutDone} className="btn-primary flex items-center justify-center gap-2 text-xs">
             <Check className="h-4 w-4" />
             Completado
@@ -489,6 +489,54 @@ export default function FitnessPage() {
       </section>
 
       <section className="card">
+        <div className="mb-2 flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-textp">Rutina visible hoy</h3>
+          <span className="text-xs text-texts">{suggestedSession?.location ?? "Descanso"}</span>
+        </div>
+        {suggestedSession ? (
+          <div className="grid gap-1.5 text-xs text-texts">
+            {suggestedSession.exercises.slice(0, 4).map((exercise) => (
+              <p key={exercise.name} className="rounded-xl border border-borderc bg-surface px-2 py-1.5">
+                <span className="text-textp">{exercise.name}</span> · {exercise.prescription}
+              </p>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-texts">No hay rutina asignada para hoy.</p>
+        )}
+      </section>
+
+      <WorkoutTodayCard session={suggestedSession} onStart={markWorkoutDone} />
+
+      <section className="card">
+        <div className="mb-2 flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-textp">Seleccionar rutina</h3>
+          <span className="text-xs text-texts">Visible y directa</span>
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {fitnessSessions.map((session) => (
+            <div
+              key={session.id}
+              className={`rounded-xl border p-2 ${suggestedSession?.id === session.id ? "border-primary/50 bg-primary/10" : "border-borderc bg-surface"}`}
+            >
+              <p className="text-sm font-semibold text-textp">{session.name}</p>
+              <p className="text-xs text-texts">{session.focus}</p>
+              <p className="mt-1 text-[11px] text-textm">{session.durationMin ?? 45} min</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="grid gap-2.5 sm:grid-cols-2">
+        <RecoveryCard metrics={recoveryMetrics} />
+        <WeeklyConsistencyCard
+          completed={completedThisWeek}
+          pending={Math.max(0, WEEK_TARGET - completedThisWeek)}
+          streak={state.weeklyStreak}
+        />
+      </div>
+
+      <section className="card">
         <button
           type="button"
           onClick={() => setWeekPlannerOpen((v) => !v)}
@@ -497,7 +545,7 @@ export default function FitnessPage() {
           aria-controls="week-planner-panel"
         >
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-primary">Semana actual</p>
+            <p className="eyebrow">Semana actual</p>
             <h3 className="text-sm font-semibold">Plan y sesiones realizadas</h3>
           </div>
           <div className="flex items-center gap-2 text-texts">
@@ -506,7 +554,7 @@ export default function FitnessPage() {
           </div>
         </button>
         {weekPlannerOpen && (
-          <div id="week-planner-panel" className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-7">
+          <div id="week-planner-panel" className="mt-2.5 grid gap-2 sm:grid-cols-2 lg:grid-cols-7">
             {weekDays.map((day) => {
               const entry = getScheduleEntry(day.date);
               const availableSessions = entry.mode === "Gym" ? gymSessions : entry.mode === "Casa" ? homeSessions : [];
@@ -583,19 +631,6 @@ export default function FitnessPage() {
           <p className="text-sm text-texts">Guarda pesos al cerrar un entrenamiento para iniciar el comparativo mensual.</p>
         )}
       </section>
-
-      <div className="grid gap-3 sm:grid-cols-2">
-        <WeeklyConsistencyCard
-          completed={completedThisWeek}
-          pending={Math.max(0, WEEK_TARGET - completedThisWeek)}
-          streak={state.weeklyStreak}
-        />
-        <RecoveryCard metrics={recoveryMetrics} />
-      </div>
-
-      <StrengthProgressCard rows={strengthProgress} />
-
-      <QuickLogCard onAction={openQuickLog} />
 
       <section className="card">
         <button
@@ -687,6 +722,10 @@ export default function FitnessPage() {
         )}
       </section>
 
+      <StrengthProgressCard rows={strengthProgress} />
+
+      <QuickLogCard onAction={openQuickLog} />
+
       <SectionCard title="Progresión (6 semanas)">
         <ul className="space-y-1 text-sm text-texts">
           {progressionPhases.map((phase) => (
@@ -696,8 +735,6 @@ export default function FitnessPage() {
       </SectionCard>
 
       <WorkoutPlanList sessions={fitnessSessions} highlightedId={suggestedSession?.id} />
-
-      <FloatingQuickLogButton onClick={() => openQuickLog("workout")} />
 
       <Modal open={modalOpen}>
         <h3 className="mb-2 text-sm font-semibold">
