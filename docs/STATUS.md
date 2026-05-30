@@ -1,51 +1,35 @@
 # STATUS.md
 
 ## Fecha
-2026-05-30 11:58
+2026-05-30 12:01
 
 ## Tarea ejecutada
-EBNJAOS RC1: auditoría completa (técnica, UX/UI, funcional, performance), limpieza de código muerto, QA visual RC1, validación final y preparación de release estable.
+BUG CRÍTICO — Sincronización Tete: auditoría de endpoint/JSON/transformación de calendario, corrección de semántica `owner`, eliminación de puntos rojos y validación automática de mayo 2026 contra celeste_calendar.
 
 ## Archivos modificados
-- src/components/layout/AppLayout.tsx
-- src/components/layout/GlobalQuickCapture.tsx
-- src/modules/dashboard/page.tsx
-- src/modules/fitness/page.tsx
-- src/components/layout/AppHeader.tsx
-- src/components/system/PlatformStatusBadge.tsx
-- src/components/dashboard/TetePremiumWidget.tsx
-- src/components/layout/Sidebar.tsx
-- src/components/dashboard/FitnessWidget.tsx
-- src/components/dashboard/QuickActionsWidget.tsx
 - src/modules/calendar/page.tsx
-- src/modules/settings/page.tsx
-- docs/TECH_AUDIT.md
-- docs/UI_AUDIT.md
-- docs/FUNCTIONAL_CHECKLIST.md
-- docs/PERFORMANCE_REPORT.md
-- docs/RC1_RELEASE_NOTES.md
+- src/components/calendar/CalendarMonthGrid.tsx
+- src/lib/celesteCalendar.ts
+- src/services/githubCalendarSync.ts
+- docs/TETE_CALENDAR_AUDIT.md
+- docs/TETE_VALIDATION.md
 - docs/STATUS.md
 - docs/CHANGELOG_AI.md
-- (eliminados) src/components/layout/Header.tsx
-- (eliminados) src/components/layout/GlobalHeader.tsx
-- (eliminados) src/components/dashboard/HeroWidget.tsx
-- (eliminados) src/components/dashboard/FocusWidget.tsx
 
 ## Comandos ejecutados
 - npm run build - OK
 - npm run lint - OK
 - npm run typecheck - OK
-- Playwright screenshots RC1 - OK
+- Validación automática de fuente GitHub celeste_calendar - OK
 
 ## Validación
 - Build: OK
 - Lint: OK
 - Typecheck: OK
-- Tests: N/A (validaciones oficiales actuales no incluyen `npm test`)
+- Tests: N/A
 
 ## Errores o riesgos
-- Bundle principal y `store` siguen siendo los chunks más pesados.
-- Timeout transitorio en Calendar durante automatización de capturas (no persistente tras recaptura).
+- Dependencia de disponibilidad de GitHub API/RAW para la carga del estado oficial mensual.
 
 ## Próximo paso sugerido
-- Iniciar Fase 2 enfocando optimización de bundle/estado y refinamientos de accesibilidad visual.
+- Validar visualmente mayo 2026 en la UI para confirmar coincidencia exacta de colores por día con celeste_calendar.

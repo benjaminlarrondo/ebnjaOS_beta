@@ -65,3 +65,20 @@
 - `npm run build`: OK
 - `npm run lint`: OK
 - `npm run typecheck`: OK
+
+## 2026-05-30 12:01
+
+### Fix crítico calendario Tete
+- Se auditó la fuente oficial de `celeste_calendar` y se documentó en `docs/TETE_CALENDAR_AUDIT.md`.
+- Se corrigió la representación mensual para usar estado oficial del endpoint (no derivado de eventos).
+- Se reemplazó render de puntos rojos por fondos por día:
+  - `owner === "mine"` → conmigo (`rgba(214,167,177,.35)`)
+  - `owner === "hers"` → Tete (`rgba(231,212,133,.35)`)
+- Se dejó `hoy` con outline amarillo.
+- Se eliminó lógica heurística y simbología previa de puntos rojos.
+- Se validó mayo 2026 automáticamente y se reportó en `docs/TETE_VALIDATION.md`.
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK

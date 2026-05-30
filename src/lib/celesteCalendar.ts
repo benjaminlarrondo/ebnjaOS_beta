@@ -19,7 +19,7 @@ function toOwner(value: unknown): CelesteOwner {
 export function normalizeCelesteState(input: unknown): CelesteCalendarState | null {
   if (!input || typeof input !== "object") return null;
   const source = input as { year?: unknown; days?: unknown };
-  if (typeof source.year !== "number" || !source.days || typeof source.days !== "object") return null;
+  if (!source.days || typeof source.days !== "object") return null;
 
   const days: Record<string, CelesteDay> = {};
   for (const [key, value] of Object.entries(source.days as Record<string, unknown>)) {
@@ -33,7 +33,9 @@ export function normalizeCelesteState(input: unknown): CelesteCalendarState | nu
     };
   }
 
-  return { year: source.year, days };
+  const inferredYear = Number(Object.keys(days)[0]?.slice(0, 4));
+  const year = typeof source.year === "number" ? source.year : (Number.isFinite(inferredYear) ? inferredYear : new Date().getFullYear());
+  return { year, days };
 }
 
 export function getCelesteDay(dateIso: string, state?: CelesteCalendarState): CelesteDay | null {
@@ -43,5 +45,5 @@ export function getCelesteDay(dateIso: string, state?: CelesteCalendarState): Ce
 
 export function isSofiaDay(dateIso: string, state?: CelesteCalendarState): boolean {
   const day = getCelesteDay(dateIso, state);
-  return day?.owner === "mine";
+  return day?.owner === "hers";
 }
