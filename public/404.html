@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ebnjaOS redirect</title>
+  </head>
+  <body>
+    <script>
+      (function () {
+        var basePath = "/ebnjaOS_beta";
+        var path = window.location.pathname;
+        var search = window.location.search || "";
+        var hash = window.location.hash || "";
+
+        var appPath = path.startsWith(basePath) ? path.slice(basePath.length) : path;
+        if (!appPath.startsWith("/")) appPath = "/" + appPath;
+
+        var redirectTarget = basePath + appPath + search + hash;
+        sessionStorage.setItem("gh-spa-redirect", redirectTarget);
+        window.location.replace(basePath + "/");
+      })();
+    </script>
+  </body>
+</html>
