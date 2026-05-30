@@ -1,15 +1,15 @@
 # STATUS.md
 
 ## Fecha
-2026-05-30 19:16
+2026-05-30 19:52
 
 ## Tarea ejecutada
-P0 Fix GitHub Pages routing: implementación de fallback SPA para rutas profundas (`calendar`, `tracking`) bajo `/ebnjaOS_beta/`.
+Auditoría P0 GitHub Pages routing + corrección HTTP para rutas profundas SPA sin 404.
 
 ## Archivos modificados
-- index.html
-- public/404.html
-- docs/GITHUB_ROUTING_FIX.md
+- package.json
+- scripts/prepare-gh-pages-routes.mjs
+- docs/GITHUB_PAGES_ROOT_CAUSE.md
 - docs/STATUS.md
 - docs/CHANGELOG_AI.md
 
@@ -17,16 +17,19 @@ P0 Fix GitHub Pages routing: implementación de fallback SPA para rutas profunda
 - npm run build - OK
 - npm run lint - OK
 - npm run typecheck - OK
-- npm run preview + smoke routing - OK
+- npm run preview + smoke routing - OK (rutas profundas 200)
+- npm test - FAIL (Missing script: "test")
 
 ## Validación
 - Build: OK
 - Lint: OK
 - Typecheck: OK
-- Localhost rutas profundas: OK
+- Tests: No disponible en el proyecto
+- Localhost (preview) rutas profundas: OK (200)
 
 ## Errores o riesgos
-- Hasta que GitHub Pages publique el nuevo build, rutas profundas seguirán en 404 en producción previa.
+- Hasta que GitHub Pages publique el nuevo build, la producción puede seguir mostrando estado previo.
+- `npm test` no existe en `package.json`.
 
 ## Próximo paso sugerido
-- Confirmar publicación GitHub Pages y revalidar `/calendar` y `/tracking` en desktop/iPhone.
+- Confirmar deploy en GitHub Pages y reauditar `/calendar`, `/tracking`, `/fitness`, `/tasks`, `/notes`, `/projects`, `/settings`.

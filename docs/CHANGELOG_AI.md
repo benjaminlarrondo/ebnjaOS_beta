@@ -1,5 +1,21 @@
 # CHANGELOG_AI.md
 
+## 2026-05-30 19:52
+
+### P0 — GitHub Pages routing (404 = 0 en deep links)
+- Se identificó causa raíz de 404 en rutas profundas bajo GitHub Pages estático.
+- Se implementó solución de entradas estáticas por ruta para evitar 404 HTTP:
+  - Nuevo script: `scripts/prepare-gh-pages-routes.mjs`
+  - Integración en build: `package.json` (`vite build && node scripts/prepare-gh-pages-routes.mjs`)
+- Se documentó auditoría y resolución en `docs/GITHUB_PAGES_ROOT_CAUSE.md`.
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+- `npm run preview` + smoke rutas profundas: OK (200 en `/calendar`, `/tracking`, `/fitness`, `/tasks`, `/notes`, `/projects`, `/settings`)
+- `npm test`: no disponible (Missing script: `test`)
+
 ## 2026-05-30 11:22
 
 ### Ejecutado
