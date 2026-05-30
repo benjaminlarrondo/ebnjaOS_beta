@@ -1,17 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { PageTitle } from "../../components/layout/PageTitle";
 import { db } from "../../lib/store";
 import { IS_MOCK } from "../../lib/constants";
 import { CalendarViewToggle } from "../../components/calendar/CalendarViewToggle";
 import { EventCard } from "../../components/calendar/EventCard";
-import { syncCelesteCalendar } from "../../services/githubCalendarSync";
+import { fetchOfficialCelesteCalendarState, syncCelesteCalendar } from "../../services/githubCalendarSync";
 import { hydrateAllFromSupabase, pullCollection } from "../../lib/supabaseSync";
 import { CalendarMonthGrid } from "../../components/calendar/CalendarMonthGrid";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { Button } from "../../components/ui/button";
-import { normalizeCelesteState } from "../../lib/celesteCalendar";
+import { normalizeCelesteState, type CelesteCalendarState } from "../../lib/celesteCalendar";
 
 function inNextDays(dateISO: string, days: number) {
   const now = new Date();
@@ -28,6 +28,7 @@ export default function CalendarPage() {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [celesteState, setCelesteState] = useState<CelesteCalendarState | null>(null);
   const [startAt, setStartAt] = useState(() => {
     const now = new Date();
     now.setMinutes(0, 0, 0);
@@ -45,30 +46,14 @@ export default function CalendarPage() {
     () => [...events].sort((a, b) => +new Date(a.start_time) - +new Date(b.start_time)),
     [events],
   );
-  const celesteState = useMemo(
-    () =>
-      normalizeCelesteState({
-        year: monthCursor.getFullYear(),
-        days: Object.fromEntries(
-          sorted
-            .filter((event) => event.source === "github")
-            .map((event) => {
-              const dayIso = new Date(event.start_time).toISOString().slice(0, 10);
-              const ownerRaw = String(event.metadata?.owner || "neutral").toLowerCase();
-              const owner = ownerRaw === "mine" || ownerRaw === "hers" || ownerRaw === "neutral" ? ownerRaw : "neutral";
-              return [
-                dayIso,
-                {
-                  owner,
-                  exception: Boolean(event.metadata?.exception),
-                  note: String(event.metadata?.note || ""),
-                },
-              ];
-            }),
-        ),
-      }),
-    [sorted, monthCursor],
-  );
+  const loadOfficialCelesteState = useCallback(async () => {
+    try {
+      const { file } = await fetchOfficialCelesteCalendarState();
+      setCelesteState(normalizeCelesteState(file));
+    } catch {
+      setCelesteState(null);
+    }
+  }, []);
 
   const windowEvents = useMemo(() => {
     if (view === "week") {
@@ -97,7 +82,7 @@ export default function CalendarPage() {
     .slice(0, 12);
   const upcomingEvents = sorted.filter((e) => new Date(e.start_time) >= new Date()).slice(0, 3);
 
-  const doSync = async () => {
+  const doSync = useCallback(async () => {
     if (IS_MOCK) {
       setStatus("Mock mode activo: configura variables VITE_SUPABASE_* para sincronizar calendario real.");
       return;
@@ -109,6 +94,7 @@ export default function CalendarPage() {
       const remote = await hydrateAllFromSupabase();
       db.hydrateCollections(remote);
       setTick((x) => x + 1);
+      await loadOfficialCelesteState();
 
       if (result.errors > 0) {
         setStatus(
@@ -125,15 +111,15 @@ export default function CalendarPage() {
     } catch (error) {
       setStatus(error instanceof Error ? `Error: ${error.message}` : "Error de sincronización");
     }
-  };
+  }, [loadOfficialCelesteState]);
 
-  const refreshFromSupabase = async () => {
+  const refreshFromSupabase = useCallback(async () => {
     const rows = await pullCollection("events");
     if (rows) {
       db.hydrateCollections({ events: rows });
       setTick((x) => x + 1);
     }
-  };
+  }, []);
 
   const onDaySelect = (dayIso: string) => {
     setSelectedDay(dayIso);
@@ -187,9 +173,10 @@ export default function CalendarPage() {
       await refreshFromSupabase();
       await doSync();
       await refreshFromSupabase();
+      await loadOfficialCelesteState();
     };
     void boot();
-  }, []);
+  }, [doSync, refreshFromSupabase, loadOfficialCelesteState]);
 
   return (
     <div className="page-shell">

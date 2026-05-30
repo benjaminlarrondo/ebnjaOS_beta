@@ -1,5 +1,5 @@
 import type { CalendarEvent } from "../../types/calendar";
-import { isSofiaDay, type CelesteCalendarState } from "../../lib/celesteCalendar";
+import { getCelesteDay, type CelesteCalendarState } from "../../lib/celesteCalendar";
 
 type DayCell = {
   date: Date;
@@ -74,37 +74,50 @@ export function CalendarMonthGrid({
 
       <div className="grid grid-cols-7 gap-1">
         {cells.map((cell) => (
-          <button
-            key={cell.key}
-            type="button"
-            onClick={() => {
-              onDaySelect?.(cell.key);
-            }}
-            className={`min-h-[62px] rounded-xl border bg-surface p-1.5 text-left transition ${
+          (() => {
+            const celesteDay = getCelesteDay(cell.key, celesteState);
+            const isMineDay = celesteDay?.owner === "mine";
+            const isTeteDay = celesteDay?.owner === "hers";
+            return (
+              <button
+                key={cell.key}
+                type="button"
+                onClick={() => {
+                  onDaySelect?.(cell.key);
+                }}
+                className={`min-h-[62px] rounded-xl border p-1.5 text-left transition ${
               cell.inMonth ? "" : "opacity-45"
             } ${
-              cell.key === todayKey ? "border-primary ring-1 ring-primary/40" : "border-borderc"
+              cell.key === todayKey ? "border-primary ring-1 ring-primary/60" : "border-borderc"
             } ${
               cell.events.length > 0 ? "border-l-4 border-l-primary" : ""
             } ${
               selectedDay === cell.key ? "bg-[#151920]" : ""
             }`}
-          >
-            <p className="text-[11px] font-medium text-textp">{cell.date.getDate()}</p>
-            {isSofiaDay(cell.key, celesteState) && (
-              <span
-                aria-label="Tete"
-                title="Con Tete"
-                className="mx-auto mt-1 block h-[6px] w-[6px] rounded-[999px]"
-                style={{ background: "#F87171" }}
-              />
-            )}
-            {cell.events.length > 0 && <p className="mt-1 text-[10px] text-texts">{cell.events.length} ev.</p>}
-          </button>
+                style={{
+                  background: isMineDay
+                    ? "rgba(214,167,177,.35)"
+                    : isTeteDay
+                      ? "rgba(231,212,133,.35)"
+                      : undefined,
+                }}
+              >
+                <p className="text-[11px] font-medium text-textp">{cell.date.getDate()}</p>
+                {cell.events.length > 0 && <p className="mt-1 text-[10px] text-texts">{cell.events.length} ev.</p>}
+              </button>
+            );
+          })()
         ))}
       </div>
-      <div className="mt-3 text-xs text-texts">
-        <span style={{ color: "#F87171" }}>●</span> Tete
+      <div className="mt-3 flex items-center gap-3 text-xs text-texts">
+        <span className="inline-flex items-center gap-1">
+          <span className="h-2.5 w-2.5 rounded-[4px]" style={{ background: "rgba(214,167,177,.35)" }} />
+          Conmigo
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <span className="h-2.5 w-2.5 rounded-[4px]" style={{ background: "rgba(231,212,133,.35)" }} />
+          Tete
+        </span>
       </div>
     </section>
   );

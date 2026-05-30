@@ -8,13 +8,13 @@ const LOCAL_SYNC_KEY = "ebnjaos-calendar-last-sync";
 const GITHUB_API_REPO = `https://api.github.com/repos/${REPO}`;
 const GH_PAGES_BASE = "https://benjaminlarrondo.github.io/celeste_calendar";
 
-type CelesteEntry = {
+export type CelesteEntry = {
   owner: string;
   exception?: boolean;
   note?: string;
 };
 
-type CelesteFile = {
+export type CelesteFile = {
   year?: number;
   days?: Record<string, CelesteEntry>;
 };
@@ -255,6 +255,10 @@ async function fetchLatestCelesteFile() {
   throw new Error("No se pudo leer archivo_base.json desde GitHub (contents/raw).");
 }
 
+export async function fetchOfficialCelesteCalendarState() {
+  return fetchLatestCelesteFile();
+}
+
 export function getLastCalendarSyncAt() {
   return localStorage.getItem(LOCAL_SYNC_KEY);
 }
@@ -270,7 +274,7 @@ export async function syncCelesteCalendar(): Promise<CalendarSyncResult> {
   setSyncError(null);
 
   try {
-    const { file, sourceUrl, sourcePath, detectedDate } = await fetchLatestCelesteFile();
+    const { file, sourceUrl, sourcePath, detectedDate } = await fetchOfficialCelesteCalendarState();
     const days = file.days || {};
 
     const { data: existing, error: existingErr } = await supabase
