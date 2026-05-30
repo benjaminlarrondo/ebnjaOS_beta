@@ -78,6 +78,11 @@ export function CalendarMonthGrid({
             const celesteDay = getCelesteDay(cell.key, celesteState);
             const isMineDay = celesteDay?.owner === "mine";
             const isTeteDay = celesteDay?.owner === "hers";
+            const dotColor = isMineDay
+              ? "rgba(214,167,177,.95)"
+              : isTeteDay
+                ? "rgba(231,212,133,.95)"
+                : "";
             return (
               <button
                 key={cell.key}
@@ -94,15 +99,11 @@ export function CalendarMonthGrid({
             } ${
               selectedDay === cell.key ? "bg-[#151920]" : ""
             }`}
-                style={{
-                  background: isMineDay
-                    ? "rgba(214,167,177,.35)"
-                    : isTeteDay
-                      ? "rgba(231,212,133,.35)"
-                      : undefined,
-                }}
               >
-                <p className="text-[11px] font-medium text-textp">{cell.date.getDate()}</p>
+                <p className="flex items-center gap-1 text-[11px] font-medium text-textp">
+                  {cell.date.getDate()}
+                  {dotColor && <span className="h-1.5 w-1.5 rounded-full" style={{ background: dotColor }} />}
+                </p>
                 {cell.events.length > 0 && <p className="mt-1 text-[10px] text-texts">{cell.events.length} ev.</p>}
               </button>
             );
@@ -111,12 +112,12 @@ export function CalendarMonthGrid({
       </div>
       <div className="mt-3 flex items-center gap-3 text-xs text-texts">
         <span className="inline-flex items-center gap-1">
-          <span className="h-2.5 w-2.5 rounded-[4px]" style={{ background: "rgba(214,167,177,.35)" }} />
-          Conmigo
+          <span className="h-2.5 w-2.5 rounded-full" style={{ background: "rgba(214,167,177,.95)" }} />
+          Benja
         </span>
         <span className="inline-flex items-center gap-1">
-          <span className="h-2.5 w-2.5 rounded-[4px]" style={{ background: "rgba(231,212,133,.35)" }} />
-          Tete
+          <span className="h-2.5 w-2.5 rounded-full" style={{ background: "rgba(231,212,133,.95)" }} />
+          Charo
         </span>
       </div>
     </section>
