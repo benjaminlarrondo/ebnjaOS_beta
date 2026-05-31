@@ -38,7 +38,7 @@ Servicios auditados:
 - `npm run typecheck` ✅
 
 ## Auditoría producción (GitHub Pages)
-- Ruta de evidencia: `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_02`
+- Ruta de evidencia inicial: `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_02`
 - Resultado:
   - `console_errors = 0`
   - `runtime_errors = 0`
@@ -46,6 +46,18 @@ Servicios auditados:
   - `failed_assets = 0`
   - `failed_api_calls = 10`
 
+## Revalidación post-deploy
+- Ruta de evidencia: `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_03`
+- Resultado:
+  - `console_errors = 1`
+  - `runtime_errors = 0`
+  - `failed_fetch = 0`
+  - `failed_assets = 0`
+  - `failed_api_calls = 9`
+- Hallazgo principal:
+  - Persisten requests legacy en `Calendar` hacia `api.github.com` con `403`.
+  - Persisten `ERR_ABORTED` de endpoints Supabase al navegar.
+
 ## Estado
 - La capa quedó endurecida.
-- Falta validar post-deploy de este commit para confirmar reducción final de `failed_api_calls`.
+- Fase 1.5 aún no cierra por `failed_api_calls` residuales en producción.
