@@ -1,7 +1,5 @@
 import { setConnected, setSaving, setSyncError } from "../../lib/syncStatus";
-import { syncCalendarBackground } from "./calendarSync";
 import { probeGithubSyncSource } from "./githubSync";
-import { syncSupabaseState } from "./supabaseSync";
 import { runSilently } from "./backgroundErrorHandling";
 import { setNetworkState } from "./networkStatusLayer";
 
@@ -21,27 +19,15 @@ export async function startBackgroundSync() {
 
   let hadError = false;
 
-  const supabaseResult = await runSilently(() => syncSupabaseState(), { ok: false as const, hydrated: false as const });
-  if (!supabaseResult.ok) {
-    hadError = true;
-    setNetworkState("supabase", "degraded");
-  } else {
-    setNetworkState("supabase", "ok");
-  }
+  setNetworkState("supabase", "degraded");
 
   const githubProbe = await runSilently(() => probeGithubSyncSource(), null);
   if (!githubProbe) {
     hadError = true;
     setNetworkState("github", "degraded");
-  } else {
-    setNetworkState("github", "ok");
-  }
-
-  const calendarSync = await runSilently(() => syncCalendarBackground(), null);
-  if (!calendarSync) {
-    hadError = true;
     setNetworkState("calendar", "degraded");
   } else {
+    setNetworkState("github", "ok");
     setNetworkState("calendar", "ok");
   }
 
