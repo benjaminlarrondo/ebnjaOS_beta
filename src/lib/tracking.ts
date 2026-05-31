@@ -2,7 +2,10 @@ export type TrackingCategoryId = "health" | "growth";
 
 export type TrackingHabitId =
   | "water"
-  | "meals"
+  | "breakfast"
+  | "lunch"
+  | "snack"
+  | "dinner"
   | "protein"
   | "workout"
   | "sleep"
@@ -42,13 +45,16 @@ export const TRACKING_KEY = "ebnjaos-tracking-v1";
 
 export const trackingHabits: TrackingHabitDefinition[] = [
   { id: "water", category: "health", label: "Agua", unit: "ml", defaultTarget: 2500, weight: 1, active: true, order: 1 },
-  { id: "meals", category: "health", label: "Comidas", unit: "count", defaultTarget: 3, weight: 1, active: true, order: 2 },
-  { id: "protein", category: "health", label: "Proteína", unit: "g", defaultTarget: 140, weight: 1, active: true, order: 3 },
-  { id: "workout", category: "health", label: "Entreno", unit: "boolean", defaultTarget: 1, weight: 1.2, active: true, order: 4 },
-  { id: "sleep", category: "health", label: "Sueño", unit: "hours", defaultTarget: 8, weight: 1, active: true, order: 5 },
-  { id: "pmp", category: "growth", label: "PMP", unit: "minutes", defaultTarget: 60, weight: 1, active: true, order: 6 },
-  { id: "pymo", category: "growth", label: "PyMO", unit: "minutes", defaultTarget: 60, weight: 1, active: true, order: 7 },
-  { id: "music", category: "growth", label: "Music", unit: "minutes", defaultTarget: 30, weight: 1, active: true, order: 8 },
+  { id: "breakfast", category: "health", label: "Desayuno", unit: "count", defaultTarget: 1, weight: 0.8, active: true, order: 2 },
+  { id: "lunch", category: "health", label: "Almuerzo", unit: "count", defaultTarget: 1, weight: 0.8, active: true, order: 3 },
+  { id: "snack", category: "health", label: "Snack", unit: "count", defaultTarget: 1, weight: 0.6, active: true, order: 4 },
+  { id: "dinner", category: "health", label: "Cena", unit: "count", defaultTarget: 1, weight: 0.8, active: true, order: 5 },
+  { id: "protein", category: "health", label: "Proteína", unit: "g", defaultTarget: 140, weight: 1, active: true, order: 6 },
+  { id: "workout", category: "health", label: "Entrenamiento", unit: "boolean", defaultTarget: 1, weight: 1.2, active: true, order: 7 },
+  { id: "sleep", category: "health", label: "Sueño", unit: "hours", defaultTarget: 8, weight: 1, active: true, order: 8 },
+  { id: "pmp", category: "growth", label: "PMP", unit: "minutes", defaultTarget: 60, weight: 1, active: true, order: 9 },
+  { id: "pymo", category: "growth", label: "PyMO", unit: "minutes", defaultTarget: 60, weight: 1, active: true, order: 10 },
+  { id: "music", category: "growth", label: "Music", unit: "minutes", defaultTarget: 30, weight: 1, active: true, order: 11 },
 ];
 
 export function toLocalDateKey(date = new Date()) {
@@ -61,10 +67,58 @@ export function toLocalDateKey(date = new Date()) {
 function defaultTrackingState(): TrackingState {
   const week = weekDatesFrom();
   const mockLogs: TrackingState["logs"] = {
-    [week[0]]: { water: 2100, meals: 3, protein: 115, workout: true, sleep: 7.5, pmp: 45, pymo: 60, music: 20 },
-    [week[1]]: { water: 1800, meals: 2, protein: 100, workout: false, sleep: 6.5, pmp: 30, pymo: 25, music: 15 },
-    [week[2]]: { water: 2500, meals: 3, protein: 140, workout: true, sleep: 8, pmp: 60, pymo: 50, music: 30 },
-    [week[3]]: { water: 2300, meals: 3, protein: 130, workout: true, sleep: 7.2, pmp: 55, pymo: 35, music: 25 },
+    [week[0]]: {
+      water: 2100,
+      breakfast: 1,
+      lunch: 1,
+      snack: 1,
+      dinner: 1,
+      protein: 115,
+      workout: true,
+      sleep: 7.5,
+      pmp: 45,
+      pymo: 60,
+      music: 20,
+    },
+    [week[1]]: {
+      water: 1800,
+      breakfast: 1,
+      lunch: 1,
+      snack: 0,
+      dinner: 1,
+      protein: 100,
+      workout: false,
+      sleep: 6.5,
+      pmp: 30,
+      pymo: 25,
+      music: 15,
+    },
+    [week[2]]: {
+      water: 2500,
+      breakfast: 1,
+      lunch: 1,
+      snack: 1,
+      dinner: 1,
+      protein: 140,
+      workout: true,
+      sleep: 8,
+      pmp: 60,
+      pymo: 50,
+      music: 30,
+    },
+    [week[3]]: {
+      water: 2300,
+      breakfast: 1,
+      lunch: 1,
+      snack: 1,
+      dinner: 1,
+      protein: 130,
+      workout: true,
+      sleep: 7.2,
+      pmp: 55,
+      pymo: 35,
+      music: 25,
+    },
   };
   return {
     version: "v1",

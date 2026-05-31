@@ -1,5 +1,61 @@
 # CHANGELOG_AI.md
 
+## 2026-05-30 21:05
+
+### Sprint P0.5 — Clean Network Layer
+- Implementado `NetworkStatusLayer`:
+  - `src/services/sync/networkStatusLayer.ts`
+- Implementado manejo silencioso:
+  - `src/services/sync/backgroundErrorHandling.ts`
+- Endurecido `githubCalendarSync`:
+  - fuente principal desde GitHub Pages (`archivo_base.json`)
+  - fallback a raw GitHub (`main/master`)
+  - reducción de dependencia a `api.github.com` para evitar `403`
+- Endurecido `supabaseSync`:
+  - nueva guarda `canRunSupabaseQueries()`
+  - sin sesión autenticada => no queries
+- `syncManager` actualizado a ejecución silenciosa (sin romper UX).
+- `Calendar` boot ajustado para no disparar sync agresivo en foreground.
+- Documentación añadida:
+  - `docs/NETWORK_LAYER_AUDIT.md`
+  - `docs/FALLBACK_STRATEGY.md`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+- `npm test`: no disponible (Missing script: `test`)
+- Auditoría producción en `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_02`:
+  - `console_errors = 0`
+  - `runtime_errors = 0`
+  - `failed_fetch = 0`
+  - `failed_assets = 0`
+  - `failed_api_calls = 10` (pendiente revalidar post-deploy)
+
+## 2026-05-30 20:37
+
+### Sprint 2.1A — Tracking Today MVP
+- Tracking se consolidó en vista principal `Hoy`, sin heatmap/streaks/insights en este sprint.
+- Se implementó score diario visible (0-100) con progreso de hábitos completados (`x / 11`).
+- Se actualizó la estructura de hábitos:
+  - Salud: Agua, Desayuno, Almuerzo, Snack, Cena, Proteína, Entrenamiento, Sueño.
+  - Focus: PMP, PyMO, Music.
+- Interacción por tap/click con toggle instantáneo y guardado automático en `localStorage`.
+- Dashboard actualizado con card compacta de Tracking:
+  - Score
+  - Hábitos completados
+- Se documentó implementación en `docs/TRACKING_TODAY_IMPLEMENTATION.md`.
+- Se generaron capturas:
+  - `tracking-today-desktop.png`
+  - `tracking-today-mobile.png`
+  - `dashboard-tracking-card.png`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+- `npm test`: no disponible (Missing script: `test`)
+
 ## 2026-05-30 19:52
 
 ### P0 — GitHub Pages routing (404 = 0 en deep links)

@@ -2,6 +2,8 @@ import { setConnected, setSaving, setSyncError } from "../../lib/syncStatus";
 import { syncCalendarBackground } from "./calendarSync";
 import { probeGithubSyncSource } from "./githubSync";
 import { syncSupabaseState } from "./supabaseSync";
+import { runSilently } from "./backgroundErrorHandling";
+import { setNetworkState } from "./networkStatusLayer";
 
 export type SyncManagerState = "idle" | "syncing" | "success" | "error";
 
@@ -19,32 +21,32 @@ export async function startBackgroundSync() {
 
   let hadError = false;
 
-  try {
-    await syncSupabaseState();
-  } catch (error) {
+  const supabaseResult = await runSilently(() => syncSupabaseState(), { ok: false as const, hydrated: false as const });
+  if (!supabaseResult.ok) {
     hadError = true;
-    setConnected(false);
-    setSyncError(error instanceof Error ? error.message : "Error en sync Supabase");
+    setNetworkState("supabase", "degraded");
+  } else {
+    setNetworkState("supabase", "ok");
   }
 
-  try {
-    await probeGithubSyncSource();
-  } catch (error) {
+  const githubProbe = await runSilently(() => probeGithubSyncSource(), null);
+  if (!githubProbe) {
     hadError = true;
-    setConnected(false);
-    setSyncError(error instanceof Error ? error.message : "Error en sync GitHub");
+    setNetworkState("github", "degraded");
+  } else {
+    setNetworkState("github", "ok");
   }
 
-  try {
-    await syncCalendarBackground();
-  } catch (error) {
+  const calendarSync = await runSilently(() => syncCalendarBackground(), null);
+  if (!calendarSync) {
     hadError = true;
-    setConnected(false);
-    setSyncError(error instanceof Error ? error.message : "Error en sync Calendar");
+    setNetworkState("calendar", "degraded");
+  } else {
+    setNetworkState("calendar", "ok");
   }
 
   lastSyncAt = new Date().toISOString();
   state = hadError ? "error" : "success";
   setSaving(false);
-  if (!hadError) setConnected(true);
+  setConnected(!hadError);
 }
