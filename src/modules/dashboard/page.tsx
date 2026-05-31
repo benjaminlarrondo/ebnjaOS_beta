@@ -45,7 +45,10 @@ export default function DashboardPage() {
   const recoveryScore = clampPct((sleepPct + energyPct) / 2);
   const topPriority = todayTasks[0]?.title || activeGoals[0]?.title || "Dia despejado";
   const lastSyncAt = getLastCalendarSyncAt();
-  const trackingToday = computeDailyScore(loadTrackingState(), toLocalDateKey());
+  const trackingState = loadTrackingState();
+  const trackingToday = computeDailyScore(trackingState, toLocalDateKey());
+  const trackingHabits = trackingState.habits.filter((habit) => habit.active);
+  const trackingCompleted = trackingHabits.filter((habit) => trackingToday.completions[habit.id] >= 1).length;
   const primaryActions = quickActionModules.slice(0, 4);
   const secondaryModules = dashboardModules.filter((module) => !primaryActions.some((action) => action.id === module.id)).slice(0, 6);
 
@@ -82,7 +85,7 @@ export default function DashboardPage() {
           lastSyncAt={lastSyncAt}
         />
       </div>
-      <TrackingTodayWidget score={trackingToday.globalScore} health={trackingToday.healthScore} focus={trackingToday.growthScore} />
+      <TrackingTodayWidget score={trackingToday.globalScore} completed={trackingCompleted} total={trackingHabits.length} />
 
       <QuickActionsWidget primaryActions={primaryActions} secondaryModules={secondaryModules} />
     </div>

@@ -1,16 +1,20 @@
 # STATUS.md
 
 ## Fecha
-2026-05-30 19:56
+2026-05-30 21:05
 
 ## Tarea ejecutada
-Auditoría P0 GitHub Pages routing + corrección HTTP para rutas profundas SPA sin 404, deploy y reauditoría en producción.
+Sprint P0.5 — Clean Network Layer (fallbacks silenciosos + guardas de autenticación + auditoría producción rev incremental).
 
 ## Archivos modificados
-- package.json
-- scripts/prepare-gh-pages-routes.mjs
-- docs/GITHUB_PAGES_ROOT_CAUSE.md
-- docs/github_pages_route_validation.json
+- src/services/sync/networkStatusLayer.ts
+- src/services/sync/backgroundErrorHandling.ts
+- src/services/githubCalendarSync.ts
+- src/lib/supabaseSync.ts
+- src/services/sync/syncManager.ts
+- src/modules/calendar/page.tsx
+- docs/NETWORK_LAYER_AUDIT.md
+- docs/FALLBACK_STRATEGY.md
 - docs/STATUS.md
 - docs/CHANGELOG_AI.md
 
@@ -18,20 +22,24 @@ Auditoría P0 GitHub Pages routing + corrección HTTP para rutas profundas SPA s
 - npm run build - OK
 - npm run lint - OK
 - npm run typecheck - OK
-- npm run preview + smoke routing - OK (rutas profundas 200)
 - npm test - FAIL (Missing script: "test")
-- Validación producción GitHub Pages (curl + browser) - OK (200 en rutas críticas)
+- Auditoría GitHub Pages (Playwright) - OK
 
 ## Validación
 - Build: OK
 - Lint: OK
 - Typecheck: OK
 - Tests: No disponible en el proyecto
-- Localhost (preview) rutas profundas: OK (200)
-- GitHub Pages rutas profundas críticas: OK (200)
+- Auditoría producción (`rev_02`):
+  - Console errors: 0
+  - Runtime errors: 0
+  - Failed fetch: 0
+  - Failed assets: 0
+  - Failed API calls: 10
 
 ## Errores o riesgos
+- Persisten `failed_api_calls` en producción actual hasta confirmar propagación del deploy con este fix.
 - `npm test` no existe en `package.json`.
 
 ## Próximo paso sugerido
-- Investigar y limpiar errores de consola residuales detectados en producción (no bloquean routing).
+- Hacer deploy y re-auditar en `rev_03` para buscar `failed_api_calls = 0`.

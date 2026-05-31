@@ -26,6 +26,16 @@ const tableMap: Record<SupaCollection, string> = {
   projects: "projects",
 };
 
+export async function canRunSupabaseQueries() {
+  if (IS_MOCK) return false;
+  try {
+    const { data } = await supabase.auth.getSession();
+    return Boolean(data.session);
+  } catch {
+    return false;
+  }
+}
+
 function normalizeForDb(key: SupaCollection, row: Record<string, unknown>) {
   if (key === "events") {
     const event = row as unknown as CalendarEvent;
@@ -109,8 +119,9 @@ function normalizeForDb(key: SupaCollection, row: Record<string, unknown>) {
 }
 
 export async function probeSupabaseConnection() {
-  if (IS_MOCK) {
+  if (!(await canRunSupabaseQueries())) {
     setConnected(false);
+    setSyncError(null);
     return false;
   }
 

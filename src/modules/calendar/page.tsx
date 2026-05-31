@@ -6,7 +6,7 @@ import { IS_MOCK } from "../../lib/constants";
 import { CalendarViewToggle } from "../../components/calendar/CalendarViewToggle";
 import { EventCard } from "../../components/calendar/EventCard";
 import { fetchOfficialCelesteCalendarState, syncCelesteCalendar } from "../../services/githubCalendarSync";
-import { hydrateAllFromSupabase, pullCollection } from "../../lib/supabaseSync";
+import { canRunSupabaseQueries, hydrateAllFromSupabase, pullCollection } from "../../lib/supabaseSync";
 import { CalendarMonthGrid } from "../../components/calendar/CalendarMonthGrid";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
@@ -84,16 +84,14 @@ export default function CalendarPage() {
   const upcomingEvents = sorted.filter((e) => new Date(e.start_time) >= new Date()).slice(0, 3);
 
   const doSync = useCallback(async () => {
-    if (IS_MOCK) {
-      setStatus("Mock mode activo: configura variables VITE_SUPABASE_* para sincronizar calendario real.");
-      return;
-    }
-
     try {
       setStatus("Sincronizando...");
       const result = await syncCelesteCalendar();
-      const remote = await hydrateAllFromSupabase();
-      db.hydrateCollections(remote);
+      const canSyncRemote = await canRunSupabaseQueries();
+      if (canSyncRemote) {
+        const remote = await hydrateAllFromSupabase();
+        db.hydrateCollections(remote);
+      }
       setTick((x) => x + 1);
       await loadOfficialCelesteState();
 
@@ -109,12 +107,13 @@ export default function CalendarPage() {
       } else {
         setStatus(`Sincronizado: +${result.inserted} nuevos, ${result.updated} actualizados`);
       }
-    } catch (error) {
-      setStatus(error instanceof Error ? `Error: ${error.message}` : "Error de sincronización");
+    } catch {
+      setStatus("Sincronización en modo degradado. Usando estado local.");
     }
   }, [loadOfficialCelesteState]);
 
   const refreshFromSupabase = useCallback(async () => {
+    if (!(await canRunSupabaseQueries())) return;
     const rows = await pullCollection("events");
     if (rows) {
       db.hydrateCollections({ events: rows });
@@ -170,14 +169,7 @@ export default function CalendarPage() {
     hasBootSyncedRef.current = true;
 
     const boot = async () => {
-      if (IS_MOCK) {
-        setStatus("Sin conexión a Supabase (Mock mode). Muestra datos locales.");
-        return;
-      }
-      setStatus("Sincronización inicial automática...");
-      await refreshFromSupabase();
-      await doSync();
-      await refreshFromSupabase();
+      if (IS_MOCK) setStatus("Modo local activo. Carga inmediata.");
       await loadOfficialCelesteState();
     };
     void boot();
