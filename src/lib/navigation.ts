@@ -73,7 +73,7 @@ export const appModules = [
   },
   {
     id: "tracking",
-    label: "Tracking",
+    label: "Objetivos",
     path: "/tracking",
     icon: Target,
     category: "principal",

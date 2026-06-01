@@ -141,7 +141,7 @@ export function GlobalQuickCapture() {
       <button
         type="button"
         onClick={() => setMenuOpen((value) => !value)}
-        className="fixed bottom-[calc(80px+env(safe-area-inset-bottom))] right-[max(0.85rem,env(safe-area-inset-right))] z-40 grid h-11 w-11 place-items-center rounded-full border border-primary/40 bg-primary text-[#171717] md:bottom-[calc(env(safe-area-inset-bottom)+1.05rem)] md:h-12 md:w-12"
+        className="fixed bottom-[calc(92px+env(safe-area-inset-bottom))] right-[max(0.85rem,env(safe-area-inset-right))] z-40 grid h-11 w-11 place-items-center rounded-full border border-primary/40 bg-primary text-[#171717] md:bottom-[calc(env(safe-area-inset-bottom)+1.05rem)] md:h-12 md:w-12"
         aria-label="Quick capture"
       >
         {menuOpen ? <X className="h-5 w-5" /> : <Plus className="h-5 w-5" />}

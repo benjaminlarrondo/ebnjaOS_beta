@@ -14,7 +14,10 @@ import { WeeklyConsistencyCard } from "../../components/fitness/WeeklyConsistenc
 import { WorkoutPlanList } from "../../components/fitness/WorkoutPlanList";
 import { WorkoutTodayCard } from "../../components/fitness/WorkoutTodayCard";
 import { fitnessSessions, progressionPhases, strengthProgress } from "../../data/fitnessPlan";
+import { loadHealthState } from "../../lib/health/healthStore";
+import { toDateKey } from "../../lib/health/healthMetrics";
 import { db } from "../../lib/store";
+import { computeFitnessHealthMetrics } from "./fitnessMetrics";
 import type { WorkoutSession } from "../../data/fitnessPlan";
 
 function toStatus(value: number): "good" | "mid" | "low" {
@@ -93,6 +96,10 @@ export default function FitnessPage() {
 
   const state = db.getFitnessState();
   const workouts = db.list("workouts");
+  const todayDateKey = toDateKey();
+  const healthState = loadHealthState();
+  const workoutsToday = workouts.filter((workout) => workout.date === todayDateKey).length;
+  const healthMetrics = computeFitnessHealthMetrics(healthState, todayDateKey, workoutsToday);
   const currentWeek = getWeekKey();
   const gymSessions = useMemo(() => fitnessSessions.filter((s) => s.location === "Gym"), []);
   const homeSessions = useMemo(() => fitnessSessions.filter((s) => s.location === "Casa"), []);
@@ -410,13 +417,9 @@ export default function FitnessPage() {
     mobility: { label: "Movilidad", value: state.recovery.mobility, status: toStatus(state.recovery.mobility) },
   };
   const latestLoadAvg = monthlyWeightProgress[monthlyWeightProgress.length - 1]?.avg ?? 0;
-  const recoveryAvg = Math.round(
-    (state.recovery.sleep + state.recovery.energy + Math.max(0, 10 - state.recovery.fatigue) + state.recovery.mobility) / 4,
-  );
-
   return (
     <div className="page-shell">
-      <PageTitle title="Fitness" subtitle="Resumen ejecutivo y ejecución diaria" />
+      <PageTitle title="Fitness" subtitle={`Score ${healthMetrics.fitnessScore}% · Recovery ${healthMetrics.recoveryScore}%`} />
       <section className="card">
         <div className="grid grid-cols-4 gap-1">
           {[
@@ -451,7 +454,7 @@ export default function FitnessPage() {
           <span className="pill-soft text-primary">{weekStatus}</span>
         </div>
 
-        <div className="grid grid-cols-2 gap-1.5 text-sm sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-1.5 text-sm sm:grid-cols-5">
           <div className="surface-tile">
             <p className="text-xs text-texts">Sesiones</p>
             <p className="metric-value mt-2">{completedThisWeek}/{WEEK_TARGET}</p>
@@ -465,8 +468,12 @@ export default function FitnessPage() {
             <p className="metric-value mt-2">{latestLoadAvg} kg</p>
           </div>
           <div className="surface-tile">
-            <p className="text-xs text-texts">Recovery</p>
-            <p className="metric-value mt-2">{recoveryAvg}/10</p>
+            <p className="text-xs text-texts">Fitness Score</p>
+            <p className="metric-value mt-2">{healthMetrics.fitnessScore}%</p>
+          </div>
+          <div className="surface-tile">
+            <p className="text-xs text-texts">Recovery Score</p>
+            <p className="metric-value mt-2">{healthMetrics.recoveryScore}%</p>
           </div>
         </div>
 

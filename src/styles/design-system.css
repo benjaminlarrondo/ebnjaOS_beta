@@ -75,7 +75,7 @@ body {
   width: 100%;
   max-width: 1480px;
   margin: 0 auto;
-  padding: calc(env(safe-area-inset-top) + 8px) 0.9rem calc(env(safe-area-inset-bottom) + 6.25rem);
+  padding: calc(env(safe-area-inset-top) + 8px) 0.9rem calc(env(safe-area-inset-bottom) + 7.5rem);
   min-width: 0;
 }
 

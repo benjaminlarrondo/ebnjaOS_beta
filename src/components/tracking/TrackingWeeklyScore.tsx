@@ -1,33 +1,21 @@
 export function TrackingWeeklyScore({
   daily,
-  health,
-  growth,
   completed,
   total,
 }: {
   daily: number;
-  health: number;
-  growth: number;
   completed: number;
   total: number;
 }) {
   return (
-    <section className="card space-y-2">
+    <section className="card space-y-2 py-3">
       <h3 className="text-sm font-semibold text-textp">Score hoy</h3>
       <p className="text-xs text-texts">Hábitos completados: {completed} / {total}</p>
-      <div className="metric-card">
-        <p className="text-xs text-texts">Global</p>
-        <p className="metric-value mt-2">{daily}%</p>
-      </div>
-      <div className="grid grid-cols-2 gap-2 text-sm">
-        <div className="inner-card">
-          <p className="text-xs text-texts">Salud</p>
-          <p className="mt-1 font-semibold text-textp">{health}%</p>
-        </div>
-        <div className="inner-card">
-          <p className="text-xs text-texts">Focus</p>
-          <p className="mt-1 font-semibold text-textp">{growth}%</p>
-        </div>
+      <div className="flex items-end justify-between rounded-xl border border-borderc bg-surface px-3 py-2">
+        <p className="text-3xl font-semibold leading-none text-textp">{daily}%</p>
+        <p className="text-sm text-texts">
+          {completed}/{total} hábitos
+        </p>
       </div>
     </section>
   );

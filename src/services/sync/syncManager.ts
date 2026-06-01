@@ -1,5 +1,5 @@
 import { setConnected, setSaving, setSyncError } from "../../lib/syncStatus";
-import { probeGithubSyncSource } from "./githubSync";
+import { syncCelesteCalendar } from "../githubCalendarSync";
 import { runSilently } from "./backgroundErrorHandling";
 import { setNetworkState } from "./networkStatusLayer";
 
@@ -21,8 +21,8 @@ export async function startBackgroundSync() {
 
   setNetworkState("supabase", "degraded");
 
-  const githubProbe = await runSilently(() => probeGithubSyncSource(), null);
-  if (!githubProbe) {
+  const syncResult = await runSilently(() => syncCelesteCalendar(), null);
+  if (!syncResult || syncResult.errors > 0) {
     hadError = true;
     setNetworkState("github", "degraded");
     setNetworkState("calendar", "degraded");

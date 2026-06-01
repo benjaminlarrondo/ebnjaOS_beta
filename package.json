@@ -8,7 +8,8 @@
     "build": "vite build && node scripts/prepare-gh-pages-routes.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
-    "typecheck": "tsc -b"
+    "typecheck": "tsc -b",
+    "audit:package": "node scripts/package-audit-rev.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",

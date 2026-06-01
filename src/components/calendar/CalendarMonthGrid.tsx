@@ -1,5 +1,5 @@
 import type { CalendarEvent } from "../../types/calendar";
-import { getCelesteDay, type CelesteCalendarState } from "../../lib/celesteCalendar";
+import type { CalendarDomainDay } from "../../lib/calendarDomain/calendarDomainTypes";
 
 type DayCell = {
   date: Date;
@@ -55,13 +55,13 @@ export function CalendarMonthGrid({
   events,
   onDaySelect,
   selectedDay,
-  celesteState,
+  ownershipByDate,
 }: {
   month: Date;
   events: CalendarEvent[];
   onDaySelect?: (dayIso: string) => void;
   selectedDay?: string | null;
-  celesteState?: CelesteCalendarState;
+  ownershipByDate?: Record<string, CalendarDomainDay>;
 }) {
   const cells = getMonthMatrix(month, events);
   const todayKey = toLocalDateKey(new Date());
@@ -82,7 +82,7 @@ export function CalendarMonthGrid({
       <div className="grid grid-cols-7 gap-1">
         {cells.map((cell) => (
           (() => {
-            const celesteDay = getCelesteDay(cell.key, celesteState);
+            const celesteDay = ownershipByDate?.[cell.key];
             const isMineDay = celesteDay?.owner === "mine";
             const isTeteDay = celesteDay?.owner === "hers";
             const dotColor = isMineDay

@@ -41,6 +41,22 @@ export type TrackingDailyScore = {
   completions: Record<TrackingHabitId, number>;
 };
 
+export type ObjectiveDailyScore = {
+  date: string;
+  health: number;
+  growth: number;
+  family: number;
+  overall: number;
+};
+
+export type ObjectiveWeekSummary = {
+  weekDates: string[];
+  days: ObjectiveDailyScore[];
+  average: number;
+  completionRate: number;
+  streakReadyDays: number;
+};
+
 export const TRACKING_KEY = "ebnjaos-tracking-v1";
 
 export const trackingHabits: TrackingHabitDefinition[] = [
@@ -187,4 +203,46 @@ export function weekDatesFrom(date = new Date()) {
     d.setDate(monday.getDate() + i);
     return toLocalDateKey(d);
   });
+}
+
+export function computeObjectiveDailyScore(input: {
+  date: string;
+  dailyScore: TrackingDailyScore;
+  isFamilyDone: boolean;
+}) {
+  const family = input.isFamilyDone ? 100 : 0;
+  const overall = Math.round(input.dailyScore.healthScore * 0.4 + input.dailyScore.growthScore * 0.4 + family * 0.2);
+  return {
+    date: input.date,
+    health: input.dailyScore.healthScore,
+    growth: input.dailyScore.growthScore,
+    family,
+    overall,
+  } satisfies ObjectiveDailyScore;
+}
+
+export function computeObjectiveWeekSummary(input: {
+  state: TrackingState;
+  weekDates: string[];
+  isFamilyDoneAt: (date: string) => boolean;
+}) {
+  const days = input.weekDates.map((date) => {
+    const dailyScore = computeDailyScore(input.state, date);
+    return computeObjectiveDailyScore({
+      date,
+      dailyScore,
+      isFamilyDone: input.isFamilyDoneAt(date),
+    });
+  });
+  const average = Math.round(days.reduce((sum, day) => sum + day.overall, 0) / Math.max(1, days.length));
+  const completionRate = Math.round((days.filter((day) => day.overall >= 70).length / Math.max(1, days.length)) * 100);
+  const streakReadyDays = days.filter((day) => day.overall >= 80).length;
+
+  return {
+    weekDates: input.weekDates,
+    days,
+    average,
+    completionRate,
+    streakReadyDays,
+  } satisfies ObjectiveWeekSummary;
 }

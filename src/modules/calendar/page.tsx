@@ -5,13 +5,15 @@ import { db } from "../../lib/store";
 import { IS_MOCK } from "../../lib/constants";
 import { CalendarViewToggle } from "../../components/calendar/CalendarViewToggle";
 import { EventCard } from "../../components/calendar/EventCard";
-import { fetchOfficialCelesteCalendarState, syncCelesteCalendar } from "../../services/githubCalendarSync";
-import { canRunSupabaseQueries, hydrateAllFromSupabase, pullCollection } from "../../lib/supabaseSync";
+import { syncCelesteCalendar } from "../../services/githubCalendarSync";
 import { CalendarMonthGrid } from "../../components/calendar/CalendarMonthGrid";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { Button } from "../../components/ui/button";
-import { normalizeCelesteState, type CelesteCalendarState } from "../../lib/celesteCalendar";
+import {
+  getCalendarDomainState,
+  mergeDomainWithManualEvents,
+} from "../../lib/calendarDomain/calendarDomainSelectors";
 
 function inNextDays(dateISO: string, days: number) {
   const now = new Date();
@@ -28,7 +30,6 @@ export default function CalendarPage() {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [celesteState, setCelesteState] = useState<CelesteCalendarState | null>(null);
   const [startAt, setStartAt] = useState(() => {
     const now = new Date();
     now.setMinutes(0, 0, 0);
@@ -42,19 +43,16 @@ export default function CalendarPage() {
   const [, setTick] = useState(0);
   const hasBootSyncedRef = useRef(false);
   const events = db.list("events");
+  const domainState = getCalendarDomainState();
+  const mergedEvents = useMemo(
+    () => mergeDomainWithManualEvents(events.filter((event) => event.source !== "github"), domainState),
+    [domainState, events],
+  );
 
   const sorted = useMemo(
-    () => [...events].sort((a, b) => +new Date(a.start_time) - +new Date(b.start_time)),
-    [events],
+    () => [...mergedEvents].sort((a, b) => +new Date(a.start_time) - +new Date(b.start_time)),
+    [mergedEvents],
   );
-  const loadOfficialCelesteState = useCallback(async () => {
-    try {
-      const { file } = await fetchOfficialCelesteCalendarState();
-      setCelesteState(normalizeCelesteState(file));
-    } catch {
-      setCelesteState(null);
-    }
-  }, []);
 
   const windowEvents = useMemo(() => {
     if (view === "week") {
@@ -87,13 +85,7 @@ export default function CalendarPage() {
     try {
       setStatus("Sincronizando...");
       const result = await syncCelesteCalendar();
-      const canSyncRemote = await canRunSupabaseQueries();
-      if (canSyncRemote) {
-        const remote = await hydrateAllFromSupabase();
-        db.hydrateCollections(remote);
-      }
       setTick((x) => x + 1);
-      await loadOfficialCelesteState();
 
       if (result.errors > 0) {
         setStatus(
@@ -109,15 +101,6 @@ export default function CalendarPage() {
       }
     } catch {
       setStatus("Sincronización en modo degradado. Usando estado local.");
-    }
-  }, [loadOfficialCelesteState]);
-
-  const refreshFromSupabase = useCallback(async () => {
-    if (!(await canRunSupabaseQueries())) return;
-    const rows = await pullCollection("events");
-    if (rows) {
-      db.hydrateCollections({ events: rows });
-      setTick((x) => x + 1);
     }
   }, []);
 
@@ -161,7 +144,7 @@ export default function CalendarPage() {
     setTitle("");
     setDescription("");
     setStatus("Evento creado.");
-    await refreshFromSupabase();
+    setTick((x) => x + 1);
   };
 
   useEffect(() => {
@@ -170,10 +153,11 @@ export default function CalendarPage() {
 
     const boot = async () => {
       if (IS_MOCK) setStatus("Modo local activo. Carga inmediata.");
-      await loadOfficialCelesteState();
+      await syncCelesteCalendar();
+      setTick((x) => x + 1);
     };
     void boot();
-  }, [doSync, refreshFromSupabase, loadOfficialCelesteState]);
+  }, []);
 
   return (
     <div className="page-shell">
@@ -226,7 +210,7 @@ export default function CalendarPage() {
             events={sorted}
             onDaySelect={onDaySelect}
             selectedDay={selectedDay}
-            celesteState={celesteState ?? undefined}
+            ownershipByDate={domainState.daysByDate}
           />
         </section>
       )}
@@ -235,7 +219,7 @@ export default function CalendarPage() {
         <section className="card space-y-3">
           <div className="mb-1 flex items-center justify-between">
             <h3 className="text-sm font-semibold">{view === "week" ? "Semana" : "Lista"}</h3>
-            <button className="btn-ghost" onClick={refreshFromSupabase}>Actualizar</button>
+            <button className="btn-ghost" onClick={doSync}>Actualizar</button>
           </div>
           {windowEvents.length === 0 ? (
             <p className="text-sm text-texts">Sin eventos</p>

@@ -1,5 +1,227 @@
 # CHANGELOG_AI.md
 
+## 2026-06-01 19:47
+
+### Celeste Calendar Persistence — definitivo (Fase A + B)
+- Se creó dominio canónico local para calendario celeste:
+  - `src/lib/calendarDomain/calendarDomainTypes.ts`
+  - `src/lib/calendarDomain/calendarDomainStore.ts`
+  - `src/lib/calendarDomain/calendarDomainHash.ts`
+  - `src/lib/calendarDomain/calendarDomainSelectors.ts`
+- Nueva persistencia local:
+  - key `ebnjaos-calendar-domain-v1`
+  - campos: `schemaVersion`, `lastSuccessfulSyncAt`, `sourceFingerprint`, `daysByDate`, `eventsBySourceId`, `syncMeta`.
+- Se implementó `CelesteSyncAdapter`:
+  - `src/services/celeste/CelesteSyncAdapter.ts`
+  - endpoint primario + fallback raw `main/master`
+  - normalización por `days[YYYY-MM-DD]`
+  - hash estable por `date+owner+note+exception`
+  - snapshot con `fetchedAt`, `sourceUrl`, `datasetHash`.
+- `githubCalendarSync` migrado a local-first:
+  - guarda snapshot en dominio local sin requerir Supabase
+  - fallback degradado mantiene cache previa (no borra datos).
+- Calendar migrado:
+  - ownership/dots desde `CalendarDomainStore` (ya no desde `celesteState` remoto en memoria)
+  - merge de eventos manuales + eventos derivados de dominio.
+- Dashboard Tete migrado:
+  - próximo bloque y estado diario desde `CalendarDomainStore` (no solo `db.events`).
+- Sync de arranque:
+  - `syncManager` ejecuta `syncCelesteCalendar()` en background.
+- Documentación:
+  - `docs/CELESTE_PERSISTENCE_IMPLEMENTATION.md`
+- Capturas:
+  - `calendar-domain-desktop.png`
+  - `dashboard-tete-domain.png`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-01 19:34
+
+### Sprint 2.2A — Health Integration Layer
+- Objetivos migra `Agua`, `Proteína` y `Sueño` para leer/escribir desde `healthStore`:
+  - `src/hooks/useTrackingEngine.ts`
+  - `state` combinado (`tracking + health`) para mantener scoring sin romper compatibilidad.
+- Dashboard integra nueva card `Health Today`:
+  - `src/components/dashboard/HealthTodayWidget.tsx`
+  - `src/modules/dashboard/page.tsx`
+- Fitness incorpora capa de scoring basada en Health:
+  - nuevo `src/modules/fitness/fitnessMetrics.ts`
+  - integración en `src/modules/fitness/page.tsx`
+  - muestra `Fitness Score` y `Recovery Score`.
+- Documentación del sprint:
+  - `docs/HEALTH_INTEGRATION.md`
+- Capturas generadas:
+  - `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_04/screenshots/health-dashboard.png`
+  - `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_04/screenshots/health-objectives.png`
+  - `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_04/screenshots/fitness-score.png`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-01 19:20
+
+### Health Foundation Layer
+- Se consolidó modelo unificado de salud:
+  - Water
+  - Protein
+  - Sleep
+  - Workout
+  - Weight
+  - Activity
+- Nueva estructura base:
+  - `src/lib/health/healthTypes.ts`
+  - `src/lib/health/healthMetrics.ts`
+  - `src/lib/health/healthStore.ts`
+- Persistencia local:
+  - estado versionado `v1`
+  - key `ebnjaos-health-foundation-v1`
+- Se añadió hydration desde infraestructura actual:
+  - Tracking (agua/proteína/sueño)
+  - Workouts locales (entrenamientos)
+- Se preparó integración futura Apple Health:
+  - contrato `AppleHealthPort`
+  - placeholder no operativo (`appleHealthPortPlaceholder`)
+- Se mantiene compatibilidad por reexport:
+  - `src/lib/healthFoundation.ts`
+- Sin cambios visuales en Dashboard ni Objetivos.
+- Documentación creada:
+  - `docs/HEALTH_FOUNDATION.md`
+- Captura generada:
+  - `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_03/screenshots/health-architecture-desktop.png`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-01 19:14
+
+### Sprint 2.1B — Consistency Engine
+- Implementado `Heatmap 30 días` con escala de intensidad 0/25/50/75/100:
+  - `src/components/tracking/TrackingHeatmap.tsx`
+- Implementado `Streak Engine`:
+  - 🔥 Streak actual
+  - 🏆 Mejor histórico
+  - 📈 Consistencia 30 días
+  - `src/components/tracking/TrackingStreakStats.tsx`
+- Implementado `Weekly Progress` con barra minimalista:
+  - `src/components/tracking/TrackingWeeklyProgress.tsx`
+- Implementado `Trend 30 días` con sparkline SVG:
+  - `src/components/tracking/TrackingTrendChart.tsx`
+- Integración en página Objetivos (`/tracking`):
+  - `src/modules/tracking/page.tsx`
+- Se documentó en:
+  - `docs/CONSISTENCY_ENGINE.md`
+- Capturas generadas:
+  - `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_02/screenshots/heatmap-desktop.png`
+  - `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_02/screenshots/heatmap-mobile.png`
+  - `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_02/screenshots/streak-desktop.png`
+  - `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_02/screenshots/streak-mobile.png`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-01 19:07
+
+### Sprint 2.1A.1 — Objectives UX Refinement
+- FAB móvil corregido para evitar solapamiento de contenido:
+  - ajuste de `bottom` en `GlobalQuickCapture`
+  - mayor `safe area` inferior en `app-main`.
+- Score card de Objetivos refinada (más compacta):
+  - `% diario`
+  - `x/y hábitos`.
+- Familia refinada:
+  - sin visualización de `0%`
+  - estados textuales `Sin bloque Tete hoy` / `Tete ✓`.
+- Salud refinada:
+  - Agua 3L con atajos `+250ml` y `+500ml`
+  - Proteína 135g con atajos `+25g` y `+50g`
+  - Sueño 8h con input rápido.
+- Dashboard:
+  - card de Objetivos simplificada a `Score`, `Hábitos`, `Salud`.
+- Capturas generadas:
+  - `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_01/screenshots/objectives-refined-desktop.png`
+  - `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_01/screenshots/objectives-refined-mobile.png`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-01 19:04
+
+### Auditoría externa — empaquetado automático
+- Se implementó script de empaquetado post-sprint:
+  - `scripts/package-audit-rev.mjs`
+- Nuevo comando:
+  - `npm run audit:package`
+- El flujo genera automáticamente:
+  - `~/Desktop/ebnjaOS_AUDIT_rev_XX/`
+  - `~/Desktop/ebnjaOS_AUDIT_rev_XX.zip`
+- Incluye evidencia para auditoría externa:
+  - screenshots desktop/mobile
+  - implementación
+  - auditoría técnica
+  - changelog
+  - status
+  - `MANIFEST.json`
+- Se documentó el procedimiento en:
+  - `docs/AUDIT_PACKAGING.md`
+- Primera ejecución verificada:
+  - `~/Desktop/ebnjaOS_AUDIT_rev_01`
+  - `~/Desktop/ebnjaOS_AUDIT_rev_01.zip`
+
+## 2026-06-01 19:02
+
+### Objetivos MVP — consolidación funcional
+- Se unificó cálculo de Objetivos en utilidades compartidas (`src/lib/tracking.ts`):
+  - `computeObjectiveDailyScore`
+  - `computeObjectiveWeekSummary`
+- Se eliminó duplicación de fórmula en Dashboard y página de Objetivos.
+- Se dejó base explícita para próxima fase:
+  - promedio semanal
+  - completion rate semanal
+  - días listos para streak (`>=80`)
+- `Objetivos` mantiene persistencia local y feedback inmediato.
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-01 18:56
+
+### Sprint 2.1A — Objetivos MVP
+- Se mantuvo infraestructura interna de Tracking:
+  - ruta `/tracking`
+  - `TrackingPage`
+  - persistencia `localStorage`
+- Se actualizó experiencia visual a `Objetivos`:
+  - Sidebar: `🎯 Objetivos` (misma ruta `/tracking`)
+  - Página: Header `Objetivos` + `Score semanal`
+  - Dashboard: card `Objetivos` con `General`, `Salud`, `Desarrollo`, `Familia`
+- Se implementó sección `Familia` integrada con calendario:
+  - Si el día corresponde a Benja (`owner = mine`), queda completado automáticamente.
+- Se consolidó sección `Salud` para mostrar `Comidas` como objetivo único visual (manteniendo modelo interno granular).
+- Se agregó documentación:
+  - `docs/OBJECTIVES_MVP.md`
+- Capturas generadas en carpeta incremental:
+  - `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_05/screenshots/objectives-desktop.png`
+  - `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_05/screenshots/objectives-mobile.png`
+  - `~/Desktop/ebnjaOS_PRODUCTION_AUDIT/rev_05/screenshots/dashboard-objectives-card.png`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
 ## 2026-05-30 21:05
 
 ### Sprint P0.5 — Clean Network Layer
