@@ -1,20 +1,23 @@
 # STATUS.md
 
 ## Fecha
-2026-05-30 21:05
+2026-06-01 19:47
 
 ## Tarea ejecutada
-Sprint P0.5 — Clean Network Layer (fallbacks silenciosos + guardas de autenticación + auditoría producción rev incremental).
+Implementación definitiva de persistencia celeste (Fase A + B): CalendarDomainStore + CelesteSyncAdapter + migración Calendar/Dashboard.
 
 ## Archivos modificados
-- src/services/sync/networkStatusLayer.ts
-- src/services/sync/backgroundErrorHandling.ts
+- src/lib/calendarDomain/calendarDomainTypes.ts
+- src/lib/calendarDomain/calendarDomainStore.ts
+- src/lib/calendarDomain/calendarDomainHash.ts
+- src/lib/calendarDomain/calendarDomainSelectors.ts
+- src/services/celeste/CelesteSyncAdapter.ts
 - src/services/githubCalendarSync.ts
-- src/lib/supabaseSync.ts
-- src/services/sync/syncManager.ts
 - src/modules/calendar/page.tsx
-- docs/NETWORK_LAYER_AUDIT.md
-- docs/FALLBACK_STRATEGY.md
+- src/components/calendar/CalendarMonthGrid.tsx
+- src/modules/dashboard/page.tsx
+- src/services/sync/syncManager.ts
+- docs/CELESTE_PERSISTENCE_IMPLEMENTATION.md
 - docs/STATUS.md
 - docs/CHANGELOG_AI.md
 
@@ -22,24 +25,18 @@ Sprint P0.5 — Clean Network Layer (fallbacks silenciosos + guardas de autentic
 - npm run build - OK
 - npm run lint - OK
 - npm run typecheck - OK
-- npm test - FAIL (Missing script: "test")
-- Auditoría GitHub Pages (Playwright) - OK
+- npm run preview + capturas celeste persistence - OK
 
 ## Validación
 - Build: OK
 - Lint: OK
 - Typecheck: OK
-- Tests: No disponible en el proyecto
-- Auditoría producción (`rev_02`):
-  - Console errors: 0
-  - Runtime errors: 0
-  - Failed fetch: 0
-  - Failed assets: 0
-  - Failed API calls: 10
+- Capturas:
+  - `calendar-domain-desktop.png` OK
+  - `dashboard-tete-domain.png` OK
 
 ## Errores o riesgos
-- Persisten `failed_api_calls` en producción actual hasta confirmar propagación del deploy con este fix.
-- `npm test` no existe en `package.json`.
+- Pendiente Supabase avanzado para reconciliación multi-dispositivo (fuera de alcance de Fase A+B).
 
 ## Próximo paso sugerido
-- Hacer deploy y re-auditar en `rev_03` para buscar `failed_api_calls = 0`.
+- Fase C: replicación opcional dominio↔Supabase con resolución de conflictos por `sourceId + hash`.

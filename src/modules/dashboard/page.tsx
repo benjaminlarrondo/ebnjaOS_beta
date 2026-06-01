@@ -1,14 +1,21 @@
 import { CalendarWidget } from "../../components/dashboard/CalendarWidget";
 import { DayStatusWidget } from "../../components/dashboard/DayStatusWidget";
 import { FitnessWidget } from "../../components/dashboard/FitnessWidget";
+import { HealthTodayWidget } from "../../components/dashboard/HealthTodayWidget";
 import { QuickActionsWidget } from "../../components/dashboard/QuickActionsWidget";
 import { TrackingTodayWidget } from "../../components/dashboard/TrackingTodayWidget";
 import { TetePremiumWidget } from "../../components/dashboard/TetePremiumWidget";
 import { todaySession } from "../../data/fitnessPlan";
+import {
+  getNextOwnerEvent,
+  isOwnerAtDate,
+  mergeDomainWithManualEvents,
+} from "../../lib/calendarDomain/calendarDomainSelectors";
+import { getHealthDay, loadHealthState } from "../../lib/health/healthStore";
 import { listGoals } from "../../lib/goals";
 import { dashboardModules, quickActionModules } from "../../lib/navigation";
 import { db } from "../../lib/store";
-import { computeDailyScore, loadTrackingState, toLocalDateKey } from "../../lib/tracking";
+import { computeDailyScore, computeObjectiveDailyScore, loadTrackingState, toLocalDateKey } from "../../lib/tracking";
 import { getLastCalendarSyncAt } from "../../services/githubCalendarSync";
 
 function clampPct(value: number) {
@@ -17,26 +24,22 @@ function clampPct(value: number) {
 
 export default function DashboardPage() {
   const data = db.load();
+  const mergedEvents = mergeDomainWithManualEvents(data.events.filter((event) => event.source !== "github"));
   const now = new Date();
   const todayKey = now.toDateString();
   const todayTasks = data.tasks.filter((task) => task.status === "today");
   const doneTasks = data.tasks.filter((task) => task.status === "done").length;
-  const nextEvent = [...data.events].sort((a, b) => +new Date(a.start_time) - +new Date(b.start_time))[0];
-  const todayEvents = data.events
+  const nextEvent = [...mergedEvents].sort((a, b) => +new Date(a.start_time) - +new Date(b.start_time))[0];
+  const todayEvents = mergedEvents
     .filter((event) => new Date(event.start_time).toDateString() === todayKey)
     .sort((a, b) => +new Date(a.start_time) - +new Date(b.start_time));
-  const nextWeekEvents = data.events.filter((event) => {
+  const nextWeekEvents = mergedEvents.filter((event) => {
     const date = new Date(event.start_time);
     const end = new Date();
     end.setDate(now.getDate() + 7);
     return date >= now && date <= end;
   });
-  const nextTeteEvent = [...data.events]
-    .filter((event) => {
-      const owner = String(event.metadata?.owner || "").toLowerCase();
-      return owner === "mine" && new Date(event.start_time) >= now;
-    })
-    .sort((a, b) => +new Date(a.start_time) - +new Date(b.start_time))[0];
+  const nextTeteEvent = getNextOwnerEvent("hers");
   const activeGoals = listGoals().filter((goal) => goal.status === "active");
   const fitness = data.fitnessState;
   const fitnessPct = clampPct(fitness.adherencePct || (fitness.sessionsCompleted / 6) * 100);
@@ -49,6 +52,14 @@ export default function DashboardPage() {
   const trackingToday = computeDailyScore(trackingState, toLocalDateKey());
   const trackingHabits = trackingState.habits.filter((habit) => habit.active);
   const trackingCompleted = trackingHabits.filter((habit) => trackingToday.completions[habit.id] >= 1).length;
+  const todayIso = toLocalDateKey();
+  const isFamilyDone = isOwnerAtDate("hers", todayIso);
+  const objectiveToday = computeObjectiveDailyScore({
+    date: todayIso,
+    dailyScore: trackingToday,
+    isFamilyDone,
+  });
+  const healthToday = getHealthDay(loadHealthState(), todayIso);
   const primaryActions = quickActionModules.slice(0, 4);
   const secondaryModules = dashboardModules.filter((module) => !primaryActions.some((action) => action.id === module.id)).slice(0, 6);
 
@@ -85,7 +96,18 @@ export default function DashboardPage() {
           lastSyncAt={lastSyncAt}
         />
       </div>
-      <TrackingTodayWidget score={trackingToday.globalScore} completed={trackingCompleted} total={trackingHabits.length} />
+      <TrackingTodayWidget
+        score={objectiveToday.overall}
+        completed={trackingCompleted}
+        total={trackingHabits.length}
+        health={objectiveToday.health}
+      />
+      <HealthTodayWidget
+        waterMl={healthToday.water_ml}
+        proteinG={healthToday.protein_g}
+        sleepHours={healthToday.sleep_hours}
+        workouts={healthToday.workouts_count}
+      />
 
       <QuickActionsWidget primaryActions={primaryActions} secondaryModules={secondaryModules} />
     </div>
