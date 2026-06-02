@@ -1,0 +1,109 @@
+import { getSingleUserId } from "../supabaseSync";
+import type { CalendarEvent } from "../../types/calendar";
+import type { CalendarDomainState } from "../calendarDomain/calendarDomainTypes";
+import { listCalendarDomainEvents } from "../calendarDomain/calendarDomainSelectors";
+import { loadCalendarDomainState, saveCalendarDomainState } from "../calendarDomain/calendarDomainStore";
+import { pullRows, upsertRows } from "./syncRepository";
+
+const TABLE = "calendar_events";
+
+function toDomainStateFromEvents(
+  current: CalendarDomainState,
+  events: CalendarEvent[],
+): CalendarDomainState {
+  const nextDays = { ...current.daysByDate };
+  const nextEvents = { ...current.eventsBySourceId };
+
+  for (const event of events) {
+    if (event.source !== "github" || !event.source_id) continue;
+    const owner = String(event.metadata?.owner || "neutral");
+    const note = String(event.metadata?.note || "");
+    const exception = Boolean(event.metadata?.exception);
+    const hash = String(event.metadata?.domainHash || event.metadata?._hash || "");
+
+    nextDays[event.source_id] = {
+      date: event.source_id,
+      owner: owner === "mine" || owner === "hers" ? owner : "neutral",
+      note,
+      exception,
+      source: "celeste_calendar",
+      sourceId: event.source_id,
+      hash,
+      fetchedAt: event.external_updated_at || event.updated_at || new Date().toISOString(),
+    };
+    nextEvents[event.source_id] = {
+      ...(event as CalendarDomainState["eventsBySourceId"][string]),
+      domainHash: hash,
+    };
+  }
+
+  return {
+    ...current,
+    daysByDate: nextDays,
+    eventsBySourceId: nextEvents,
+    syncMeta: {
+      ...current.syncMeta,
+      lastAttemptAt: new Date().toISOString(),
+      lastSuccessAt: new Date().toISOString(),
+      status: "ok",
+      sourceKind: current.syncMeta.sourceKind || "cache",
+      sourceUrl: current.syncMeta.sourceUrl || "calendar_events",
+    },
+  };
+}
+
+export async function pushCalendarDomainToSupabase(state = loadCalendarDomainState()) {
+  const events = listCalendarDomainEvents(state).map((event) => ({
+    id: event.id,
+    user_id: getSingleUserId(),
+    title: event.title,
+    description: event.description,
+    start_time: event.start_time,
+    end_time: event.end_time,
+    location: event.location || "",
+    source: "github",
+    source_id: event.source_id || event.id,
+    source_repo: event.source_repo || "benjaminlarrondo/celeste_calendar",
+    source_url: event.source_url || "",
+    external_updated_at: event.external_updated_at || event.updated_at,
+    sync_status: event.sync_status || "synced",
+    event_type: event.event_type || "event",
+    metadata: {
+      ...(event.metadata || {}),
+      domainHash: event.domainHash,
+    },
+    created_at: event.created_at,
+    updated_at: event.updated_at,
+  }));
+  await upsertRows(TABLE, events, "id");
+}
+
+export async function pullCalendarDomainFromSupabase() {
+  const rows = await pullRows<CalendarEvent>(TABLE, getSingleUserId());
+  const current = loadCalendarDomainState();
+  const next = toDomainStateFromEvents(current, rows);
+  saveCalendarDomainState(next);
+  return next;
+}
+
+export async function syncCalendarDomainState() {
+  const local = loadCalendarDomainState();
+  const remoteRows = await pullRows<CalendarEvent>(TABLE, getSingleUserId());
+  const localRows = listCalendarDomainEvents(local);
+  const bySourceId = new Map<string, CalendarEvent>();
+
+  for (const row of [...remoteRows, ...localRows]) {
+    const sourceId = String(row.source_id || row.id);
+    const existing = bySourceId.get(sourceId);
+    if (!existing) {
+      bySourceId.set(sourceId, row as CalendarEvent);
+      continue;
+    }
+    const existingTs = new Date(existing.updated_at || 0).toISOString();
+    const incomingTs = new Date(row.updated_at || 0).toISOString();
+    if (incomingTs >= existingTs) bySourceId.set(sourceId, row as CalendarEvent);
+  }
+
+  await upsertRows<CalendarEvent>(TABLE, Array.from(bySourceId.values()), "id");
+  return pullCalendarDomainFromSupabase();
+}

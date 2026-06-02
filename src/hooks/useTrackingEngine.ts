@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { pushHealthState, syncHealthState } from "../lib/repositories/healthRepository";
+import { pushTrackingState, syncTrackingState } from "../lib/repositories/trackingRepository";
 import {
   computeDailyScore,
   loadTrackingState,
@@ -42,6 +44,29 @@ function boolOrDefault(value: number | boolean | undefined) {
 export function useTrackingEngine() {
   const [state, setState] = useState<TrackingState>(loadTrackingState);
   const [healthState, setHealthState] = useState(loadHealthState);
+  const healthMutationChainRef = useRef<Promise<void>>(Promise.resolve());
+  const trackingMutationChainRef = useRef<Promise<void>>(Promise.resolve());
+
+  useEffect(() => {
+    let cancelled = false;
+    const bootSync = async () => {
+      try {
+        const [trackingRemote, healthRemote] = await Promise.all([
+          syncTrackingState(loadTrackingState()),
+          syncHealthState(loadHealthState()),
+        ]);
+        if (cancelled) return;
+        setState(trackingRemote);
+        setHealthState(healthRemote);
+      } catch {
+        // offline/local fallback
+      }
+    };
+    void bootSync();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     saveTrackingState(state);
@@ -72,12 +97,57 @@ export function useTrackingEngine() {
     [stateWithHealth, weekDates],
   );
 
-  const setValue = (habitId: TrackingHabitId, value: number | boolean, date = today) => {
+  const enqueueHealthMutation = (run: () => Promise<void>) => {
+    healthMutationChainRef.current = healthMutationChainRef.current.then(run).catch(() => {});
+    return healthMutationChainRef.current;
+  };
+
+  const enqueueTrackingMutation = (run: () => Promise<void>) => {
+    trackingMutationChainRef.current = trackingMutationChainRef.current.then(run).catch(() => {});
+    return trackingMutationChainRef.current;
+  };
+
+  const setValue = async (habitId: TrackingHabitId, value: number | boolean, date = today) => {
     if (habitId === "water" || habitId === "protein" || habitId === "sleep") {
       const metric = healthHabitMap[habitId];
-      setHealthState((prev) => upsertHealthDay(prev, date, { [metric]: Number(value) || 0 }));
+      await enqueueHealthMutation(async () => {
+        try {
+          const base = await syncHealthState(loadHealthState());
+          const nextHealth = upsertHealthDay(base, date, { [metric]: Number(value) || 0 });
+          await pushHealthState(nextHealth);
+          const remote = await syncHealthState(nextHealth);
+          setHealthState(remote);
+        } catch {
+          const nextHealth = upsertHealthDay(loadHealthState(), date, { [metric]: Number(value) || 0 });
+          setHealthState(nextHealth);
+        }
+      });
       return;
     }
+    await enqueueTrackingMutation(async () => {
+      const base = loadTrackingState();
+      const nextTracking: TrackingState = {
+        ...base,
+        logs: {
+          ...base.logs,
+          [date]: {
+            ...base.logs[date],
+            [habitId]: value,
+          },
+        },
+        updatedAt: new Date().toISOString(),
+      };
+      try {
+        await pushTrackingState(nextTracking);
+        const remote = await syncTrackingState(nextTracking);
+        setState(remote);
+      } catch {
+        setState(nextTracking);
+      }
+    });
+  };
+
+  const setValueLocal = (habitId: TrackingHabitId, value: number | boolean, date = today) => {
     setState((prev) => ({
       ...prev,
       logs: {
@@ -94,11 +164,16 @@ export function useTrackingEngine() {
   const toggleChecklist = (habit: TrackingHabitDefinition, date = today) => {
     const current = stateWithHealth.logs[date]?.[habit.id];
     if (habit.unit === "boolean") {
-      setValue(habit.id, !boolOrDefault(current), date);
+      void setValue(habit.id, !boolOrDefault(current), date);
       return;
     }
     const completion = todayScore.completions[habit.id];
-    setValue(habit.id, completion >= 1 ? 0 : habit.defaultTarget, date);
+    if (habit.id === "water" || habit.id === "protein" || habit.id === "sleep") {
+      void setValue(habit.id, completion >= 1 ? 0 : habit.defaultTarget, date);
+      return;
+    }
+    setValueLocal(habit.id, completion >= 1 ? 0 : habit.defaultTarget, date);
+    void setValue(habit.id, completion >= 1 ? 0 : habit.defaultTarget, date);
   };
 
   const getLogValue = (habitId: TrackingHabitId, date = today) => {

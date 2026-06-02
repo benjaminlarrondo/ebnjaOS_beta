@@ -29,8 +29,8 @@ const tableMap: Record<SupaCollection, string> = {
 export async function canRunSupabaseQueries() {
   if (IS_MOCK) return false;
   try {
-    const { data } = await supabase.auth.getSession();
-    return Boolean(data.session);
+    const { error } = await supabase.from("projects").select("id").limit(1);
+    return !error;
   } catch {
     return false;
   }
