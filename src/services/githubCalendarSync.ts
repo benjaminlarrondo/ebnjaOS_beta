@@ -9,6 +9,7 @@ import {
   setCalendarDomainDegraded,
   upsertCalendarDomainSnapshot,
 } from "../lib/calendarDomain/calendarDomainStore";
+import { syncCalendarDomainState } from "../lib/repositories/calendarRepository";
 import type { CalendarDomainDay } from "../lib/calendarDomain/calendarDomainTypes";
 import { setConnected, setSaving, setSyncError } from "../lib/syncStatus";
 import { fetchCelesteSnapshot } from "./celeste/CelesteSyncAdapter";
@@ -106,6 +107,7 @@ export async function syncCelesteCalendar(): Promise<CalendarSyncResult> {
       sourceUrl: snapshot.sourceUrl,
       sourceKind: snapshot.sourceKind,
     });
+    await syncCalendarDomainState().catch(() => {});
 
     localStorage.setItem(LOCAL_SYNC_KEY, snapshot.fetchedAt);
     setConnected(true);
@@ -142,4 +144,3 @@ export async function syncCelesteCalendar(): Promise<CalendarSyncResult> {
     setSaving(false);
   }
 }
-

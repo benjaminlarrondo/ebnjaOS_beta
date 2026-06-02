@@ -1,19 +1,16 @@
 # STATUS.md
 
 ## Fecha
-2026-06-01 20:01
+2026-06-01 21:20
 
 ## Tarea ejecutada
-Sprint 2.3 — Fitness 2.0 (score, recovery, activity rings, PR tracker, dashboard card).
+Sprint 2.2D — Supabase First (auditoría de flujo real + hardening de persistencia para Agua/Proteína/Sueño).
 
 ## Archivos modificados
-- src/modules/fitness/fitnessMetrics.ts
-- src/components/fitness/FitnessActivityRings.tsx
-- src/components/fitness/FitnessPRTracker.tsx
-- src/modules/fitness/page.tsx
-- src/components/dashboard/FitnessWidget.tsx
-- src/modules/dashboard/page.tsx
-- docs/FITNESS_2_0.md
+- src/hooks/useTrackingEngine.ts
+- docs/SUPABASE_FIRST_AUDIT.md
+- docs/SUPABASE_DATA_FLOW.md
+- docs/MULTI_DEVICE_VALIDATION.md
 - docs/STATUS.md
 - docs/CHANGELOG_AI.md
 
@@ -21,19 +18,14 @@ Sprint 2.3 — Fitness 2.0 (score, recovery, activity rings, PR tracker, dashboa
 - npm run build - OK
 - npm run lint - OK
 - npm run typecheck - OK
-- npm run preview + capturas sprint - OK
 
 ## Validación
 - Build: OK
 - Lint: OK
 - Typecheck: OK
-- Capturas:
-  - `fitness-2-desktop.png` OK
-  - `fitness-2-mobile.png` OK
-  - `dashboard-fitness-card.png` OK
 
 ## Errores o riesgos
-- Sin riesgos críticos. PR Tracker queda local-first (`localStorage`) por diseño MVP.
+- Se mitigó condición de carrera en escrituras de salud/tracking, pero falta corrida de evidencia final post-fix con caso explícito `Agua 3000ml` en A/B/iPhone físico para cerrar en READY.
 
 ## Próximo paso sugerido
-- Sprint 2.4: insights de fitness (sin tocar integración externa).
+- Ejecutar validación multi-dispositivo post-fix (A/B/iPhone físico + reload + GitHub Pages) y adjuntar JSON/capturas de cierre para cambiar estado a 🟢 READY.

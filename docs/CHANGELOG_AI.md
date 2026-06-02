@@ -1,4 +1,81 @@
+## 2026-06-01 21:20
+
+### Sprint 2.2D — Supabase First
+- Se auditó el flujo real para `Agua`, `Proteína` y `Sueño`:
+  - UI: `src/modules/tracking/page.tsx`
+  - Hook: `src/hooks/useTrackingEngine.ts`
+  - Repositorios: `src/lib/repositories/healthRepository.ts`, `src/lib/repositories/trackingRepository.ts`
+  - Persistencia remota: `health_states` y `tracking_states`
+- Se corrigió inconsistencia de persistencia por concurrencia en `useTrackingEngine`:
+  - serialización de mutaciones con colas (`healthMutationChainRef`, `trackingMutationChainRef`)
+  - eliminación de `push` directo con estado stale desde `toggleChecklist`
+  - write path: push remoto -> sync remoto -> update de estado UI
+- Se generó documentación de sprint:
+  - `docs/SUPABASE_FIRST_AUDIT.md`
+  - `docs/SUPABASE_DATA_FLOW.md`
+  - `docs/MULTI_DEVICE_VALIDATION.md`
+- Estado del sprint:
+  - 🟡 PARTIAL (requiere evidencia final explícita A/B/iPhone para cierre READY)
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
 # CHANGELOG_AI.md
+
+## 2026-06-01 20:20
+
+### Sprint 2.2C — Persistence Foundation
+- Se implementó `Repository Layer`:
+  - `src/lib/repositories/syncRepository.ts`
+  - `src/lib/repositories/trackingRepository.ts`
+  - `src/lib/repositories/healthRepository.ts`
+  - `src/lib/repositories/calendarRepository.ts`
+- Tracking persistido en Supabase:
+  - tabla `tracking_states`
+  - single-record pattern (`tracking-single-state-v1`)
+- Health persistido en Supabase:
+  - tabla `health_states`
+  - single-record pattern (`health-single-state-v1`)
+- Calendar conectado a persistencia remota:
+  - `CalendarDomainStore` sincroniza con `calendar_events`
+  - merge `lastUpdated wins`
+- Single-user mode sin login obligatorio:
+  - `src/lib/supabaseSync.ts` ahora habilita queries por conectividad real de tabla, no por sesión auth estricta
+  - mantiene `VITE_SINGLE_USER_ID`
+- Fallback offline mantenido:
+  - `localStorage` sigue como cache de continuidad.
+- Se añadió migración SQL:
+  - `supabase/persistence_foundation.sql`
+- Documentación:
+  - `docs/PERSISTENCE_FOUNDATION.md`
+  - `docs/SUPABASE_DATA_MODEL.md`
+- Capturas:
+  - `persistence-flow.png`
+  - `supabase-sync.png`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-01 20:08
+
+### Supabase Readiness Audit
+- Auditoría completa de preparación Supabase antes de migración total de persistencia.
+- Se revisó:
+  - configuración de entorno (`.env`, cliente, vite base)
+  - conectividad API (`rest`/`auth settings`)
+  - estado de auth en app (session-gated)
+  - tablas, columnas e índices (foco en `calendar_events`)
+  - RLS y políticas (`schema.sql` y `single-user-anon-setup.sql`)
+  - uso actual por módulos (qué escribe remoto vs qué queda local)
+- Documentos generados:
+  - `docs/SUPABASE_READINESS_AUDIT.md`
+  - `docs/PERSISTENCE_FOUNDATION_PLAN.md`
+- Estado emitido:
+  - 🟡 `PARTIAL`
 
 ## 2026-06-01 20:01
 
