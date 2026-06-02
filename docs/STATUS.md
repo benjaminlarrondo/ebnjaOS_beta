@@ -1,23 +1,19 @@
 # STATUS.md
 
 ## Fecha
-2026-06-01 19:47
+2026-06-01 20:01
 
 ## Tarea ejecutada
-Implementación definitiva de persistencia celeste (Fase A + B): CalendarDomainStore + CelesteSyncAdapter + migración Calendar/Dashboard.
+Sprint 2.3 — Fitness 2.0 (score, recovery, activity rings, PR tracker, dashboard card).
 
 ## Archivos modificados
-- src/lib/calendarDomain/calendarDomainTypes.ts
-- src/lib/calendarDomain/calendarDomainStore.ts
-- src/lib/calendarDomain/calendarDomainHash.ts
-- src/lib/calendarDomain/calendarDomainSelectors.ts
-- src/services/celeste/CelesteSyncAdapter.ts
-- src/services/githubCalendarSync.ts
-- src/modules/calendar/page.tsx
-- src/components/calendar/CalendarMonthGrid.tsx
+- src/modules/fitness/fitnessMetrics.ts
+- src/components/fitness/FitnessActivityRings.tsx
+- src/components/fitness/FitnessPRTracker.tsx
+- src/modules/fitness/page.tsx
+- src/components/dashboard/FitnessWidget.tsx
 - src/modules/dashboard/page.tsx
-- src/services/sync/syncManager.ts
-- docs/CELESTE_PERSISTENCE_IMPLEMENTATION.md
+- docs/FITNESS_2_0.md
 - docs/STATUS.md
 - docs/CHANGELOG_AI.md
 
@@ -25,18 +21,19 @@ Implementación definitiva de persistencia celeste (Fase A + B): CalendarDomainS
 - npm run build - OK
 - npm run lint - OK
 - npm run typecheck - OK
-- npm run preview + capturas celeste persistence - OK
+- npm run preview + capturas sprint - OK
 
 ## Validación
 - Build: OK
 - Lint: OK
 - Typecheck: OK
 - Capturas:
-  - `calendar-domain-desktop.png` OK
-  - `dashboard-tete-domain.png` OK
+  - `fitness-2-desktop.png` OK
+  - `fitness-2-mobile.png` OK
+  - `dashboard-fitness-card.png` OK
 
 ## Errores o riesgos
-- Pendiente Supabase avanzado para reconciliación multi-dispositivo (fuera de alcance de Fase A+B).
+- Sin riesgos críticos. PR Tracker queda local-first (`localStorage`) por diseño MVP.
 
 ## Próximo paso sugerido
-- Fase C: replicación opcional dominio↔Supabase con resolución de conflictos por `sourceId + hash`.
+- Sprint 2.4: insights de fitness (sin tocar integración externa).

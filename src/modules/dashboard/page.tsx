@@ -12,15 +12,13 @@ import {
   mergeDomainWithManualEvents,
 } from "../../lib/calendarDomain/calendarDomainSelectors";
 import { getHealthDay, loadHealthState } from "../../lib/health/healthStore";
+import { toDateKey } from "../../lib/health/healthMetrics";
 import { listGoals } from "../../lib/goals";
 import { dashboardModules, quickActionModules } from "../../lib/navigation";
 import { db } from "../../lib/store";
 import { computeDailyScore, computeObjectiveDailyScore, loadTrackingState, toLocalDateKey } from "../../lib/tracking";
+import { computeFitnessHealthMetrics } from "../fitness/fitnessMetrics";
 import { getLastCalendarSyncAt } from "../../services/githubCalendarSync";
-
-function clampPct(value: number) {
-  return Math.min(100, Math.max(0, Math.round(value)));
-}
 
 export default function DashboardPage() {
   const data = db.load();
@@ -42,10 +40,15 @@ export default function DashboardPage() {
   const nextTeteEvent = getNextOwnerEvent("hers");
   const activeGoals = listGoals().filter((goal) => goal.status === "active");
   const fitness = data.fitnessState;
-  const fitnessPct = clampPct(fitness.adherencePct || (fitness.sessionsCompleted / 6) * 100);
-  const sleepPct = clampPct(((fitness.recovery.sleep || fitness.sleepAvg || 0) / 10) * 100);
-  const energyPct = clampPct(((fitness.recovery.energy || 0) / 10) * 100);
-  const recoveryScore = clampPct((sleepPct + energyPct) / 2);
+  const todayDateKey = toDateKey();
+  const workoutsToday = data.workouts.filter((workout) => workout.date === todayDateKey).length;
+  const fitnessMetrics = computeFitnessHealthMetrics(
+    loadHealthState(),
+    todayDateKey,
+    workoutsToday,
+    fitness.recovery.fatigue || 0,
+    Math.min(3, fitness.sessionsCompleted),
+  );
   const topPriority = todayTasks[0]?.title || activeGoals[0]?.title || "Dia despejado";
   const lastSyncAt = getLastCalendarSyncAt();
   const trackingState = loadTrackingState();
@@ -71,7 +74,7 @@ export default function DashboardPage() {
           topPriority={topPriority}
           nextEventStart={nextEvent?.start_time}
           nextEventTitle={nextEvent?.title}
-          recoveryScore={recoveryScore}
+          recoveryScore={fitnessMetrics.recoveryScore}
         />
         <TetePremiumWidget
           title={nextTeteEvent ? nextTeteEvent.title : "Sin bloque con Tete"}
@@ -83,11 +86,9 @@ export default function DashboardPage() {
       <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
         <FitnessWidget
           sessionName={todaySession.name}
-          sessionFocus={todaySession.focus}
-          sessionsCompleted={fitness.sessionsCompleted}
-          gymCompleted={fitness.gymCompleted}
-          homeCompleted={fitness.homeCompleted}
-          fitnessPct={fitnessPct}
+          fitnessScore={fitnessMetrics.fitnessScore}
+          recoveryScore={fitnessMetrics.recoveryScore}
+          routineLabel={todaySession.focus}
         />
         <CalendarWidget
           todayEvents={todayEvents}

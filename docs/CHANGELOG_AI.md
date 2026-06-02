@@ -1,5 +1,39 @@
 # CHANGELOG_AI.md
 
+## 2026-06-01 20:01
+
+### Sprint 2.3 — Fitness 2.0
+- Se fortaleció motor de métricas fitness:
+  - `src/modules/fitness/fitnessMetrics.ts`
+  - `Fitness Score` 0-100
+  - `Recovery Score` 0-100 (sueño + fatiga manual + entrenamiento reciente)
+- Nuevo componente de anillos:
+  - `src/components/fitness/FitnessActivityRings.tsx`
+  - anillos: Entreno, Nutrición, Recuperación
+- Nuevo PR Tracker con persistencia local:
+  - `src/components/fitness/FitnessPRTracker.tsx`
+  - key localStorage: `ebnjaos-fitness-pr-v1`
+  - ejercicios: Deadlift, Back Squat, Front Squat, Clean, Bench Press
+  - salida: último PR, variación mensual, tendencia simple
+- Reordenamiento de Fitness Home en pestaña principal:
+  1) Fitness Score
+  2) Recovery Score
+  3) Rutina de hoy
+  4) Activity Rings
+  5) PR Tracker
+  6) Historial/consistencia
+- Card de dashboard `Fitness` actualizada:
+  - `src/components/dashboard/FitnessWidget.tsx`
+  - muestra Fitness Score + Recovery Score + rutina de hoy
+  - integración en `src/modules/dashboard/page.tsx`
+- Documentación del sprint:
+  - `docs/FITNESS_2_0.md`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
 ## 2026-06-01 19:47
 
 ### Celeste Calendar Persistence — definitivo (Fase A + B)

@@ -8,6 +8,8 @@ import { Textarea } from "../../components/ui/textarea";
 import { Button } from "../../components/ui/button";
 import { Select } from "../../components/ui/select";
 import { QuickLogCard } from "../../components/fitness/QuickLogCard";
+import { FitnessActivityRings } from "../../components/fitness/FitnessActivityRings";
+import { FitnessPRTracker } from "../../components/fitness/FitnessPRTracker";
 import { RecoveryCard } from "../../components/fitness/RecoveryCard";
 import { StrengthProgressCard } from "../../components/fitness/StrengthProgressCard";
 import { WeeklyConsistencyCard } from "../../components/fitness/WeeklyConsistencyCard";
@@ -99,7 +101,19 @@ export default function FitnessPage() {
   const todayDateKey = toDateKey();
   const healthState = loadHealthState();
   const workoutsToday = workouts.filter((workout) => workout.date === todayDateKey).length;
-  const healthMetrics = computeFitnessHealthMetrics(healthState, todayDateKey, workoutsToday);
+  const recentWorkouts = workouts.filter((workout) => {
+    const d = new Date(`${workout.date}T12:00:00`);
+    const now = new Date();
+    const diff = Math.round((+now - +d) / 86400000);
+    return diff >= 0 && diff <= 3;
+  }).length;
+  const healthMetrics = computeFitnessHealthMetrics(
+    healthState,
+    todayDateKey,
+    workoutsToday,
+    state.recovery.fatigue || 0,
+    recentWorkouts,
+  );
   const currentWeek = getWeekKey();
   const gymSessions = useMemo(() => fitnessSessions.filter((s) => s.location === "Gym"), []);
   const homeSessions = useMemo(() => fitnessSessions.filter((s) => s.location === "Casa"), []);
@@ -520,6 +534,25 @@ export default function FitnessPage() {
       </section>}
 
       {fitnessTab === "rutina" && <section className="card">
+        <div className="mb-3">
+          <p className="eyebrow">Fitness Home</p>
+          <h3 className="text-sm font-semibold text-textp">Score diario y recuperación</h3>
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2">
+          <div className="inner-card">
+            <p className="text-xs text-texts">Fitness Score</p>
+            <p className="mt-1 text-xl font-semibold text-textp">{healthMetrics.fitnessScore}%</p>
+            <p className="text-xs text-texts">Entreno, sueño, proteína y recovery</p>
+          </div>
+          <div className="inner-card">
+            <p className="text-xs text-texts">Recovery Score</p>
+            <p className="mt-1 text-xl font-semibold text-textp">{healthMetrics.recoveryScore}%</p>
+            <p className="text-xs text-texts">Sueño, fatiga manual y entrenamiento reciente</p>
+          </div>
+        </div>
+      </section>}
+
+      {fitnessTab === "rutina" && <section className="card">
         <div className="mb-2 flex items-center justify-between">
           <h3 className="text-sm font-semibold text-textp">Rutina visible hoy</h3>
           <span className="text-xs text-texts">{suggestedSession?.location ?? "Descanso"}</span>
@@ -538,6 +571,40 @@ export default function FitnessPage() {
       </section>}
 
       {fitnessTab === "rutina" && <WorkoutTodayCard session={suggestedSession} onStart={markWorkoutDone} />}
+
+      {fitnessTab === "rutina" && (
+        <FitnessActivityRings
+          workoutScore={healthMetrics.workoutScore}
+          nutritionScore={healthMetrics.nutritionScore}
+          recoveryScore={healthMetrics.recoveryScore}
+        />
+      )}
+
+      {fitnessTab === "rutina" && <FitnessPRTracker />}
+
+      {fitnessTab === "rutina" && (
+        <div className="grid gap-2.5 sm:grid-cols-2">
+          <WeeklyConsistencyCard
+            completed={completedThisWeek}
+            pending={Math.max(0, WEEK_TARGET - completedThisWeek)}
+            streak={state.weeklyStreak}
+          />
+          <section className="card">
+            <h3 className="text-sm font-semibold text-textp">Historial reciente</h3>
+            {monthlyWeightProgress.length ? (
+              <div className="mt-2 space-y-1.5">
+                {monthlyWeightProgress.slice(-3).map((month) => (
+                  <p key={month.month} className="text-xs text-texts">
+                    {month.month}: <span className="font-semibold text-textp">{month.avg} kg promedio</span> · pico {month.best} kg
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-2 text-xs text-texts">Sin historial suficiente aún. Registra cargas para activar tendencia.</p>
+            )}
+          </section>
+        </div>
+      )}
 
       {fitnessTab === "rutina" && <section className="card">
         <div className="mb-2 flex items-center justify-between">
