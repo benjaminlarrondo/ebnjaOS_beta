@@ -13,6 +13,14 @@ type HealthStateRow = {
   created_at?: string;
 };
 
+function getLocalHealthUpdatedAt(state: HealthFoundationState) {
+  const dailyUpdatedAt = Object.values(state.daily).reduce((latest, day) => {
+    if (!day.updatedAt) return latest;
+    return day.updatedAt > latest ? day.updatedAt : latest;
+  }, state.lastSyncAt || "1970-01-01T00:00:00.000Z");
+  return state.lastSyncAt && state.lastSyncAt > dailyUpdatedAt ? state.lastSyncAt : dailyUpdatedAt;
+}
+
 export async function pushHealthState(state: HealthFoundationState) {
   const payload: HealthStateRow = {
     id: SINGLE_RECORD_ID,
@@ -23,14 +31,30 @@ export async function pushHealthState(state: HealthFoundationState) {
   await upsertRows<HealthStateRow>(TABLE, [payload], "id");
 }
 
-export async function pullHealthState(): Promise<HealthFoundationState | null> {
+export async function pullHealthStateRow(): Promise<HealthStateRow | null> {
   const rows = await pullRows<HealthStateRow>(TABLE, getSingleUserId(), "id,user_id,state,updated_at,created_at");
-  return rows[0]?.state ?? null;
+  return rows[0] ?? null;
+}
+
+export async function pullHealthState(): Promise<HealthFoundationState | null> {
+  const row = await pullHealthStateRow();
+  return row?.state ?? null;
 }
 
 export async function syncHealthState(local: HealthFoundationState): Promise<HealthFoundationState> {
-  const remote = await pullHealthState();
-  if (remote) return remote;
-  await pushHealthState(local);
-  return local;
+  const remoteRow = await pullHealthStateRow();
+  if (!remoteRow) {
+    await pushHealthState(local);
+    return local;
+  }
+
+  const remoteUpdatedAt = remoteRow.updated_at || "1970-01-01T00:00:00.000Z";
+  const localUpdatedAt = getLocalHealthUpdatedAt(local);
+
+  if (localUpdatedAt > remoteUpdatedAt) {
+    await pushHealthState(local);
+    return local;
+  }
+
+  return remoteRow.state;
 }

@@ -42,10 +42,12 @@ function boolOrDefault(value: number | boolean | undefined) {
 }
 
 export function useTrackingEngine() {
-  const [state, setState] = useState<TrackingState>(loadTrackingState);
-  const [healthState, setHealthState] = useState(loadHealthState);
+  const [state, setState] = useState<TrackingState>(() => loadTrackingState());
+  const [healthState, setHealthState] = useState(() => loadHealthState());
   const healthMutationChainRef = useRef<Promise<void>>(Promise.resolve());
   const trackingMutationChainRef = useRef<Promise<void>>(Promise.resolve());
+  const trackingStateRef = useRef<TrackingState | null>(null);
+  const healthStateRef = useRef<ReturnType<typeof loadHealthState> | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -70,10 +72,12 @@ export function useTrackingEngine() {
 
   useEffect(() => {
     saveTrackingState(state);
+    trackingStateRef.current = state;
   }, [state]);
 
   useEffect(() => {
     saveHealthState(healthState);
+    healthStateRef.current = healthState;
   }, [healthState]);
 
   const today = toLocalDateKey();
@@ -112,20 +116,22 @@ export function useTrackingEngine() {
       const metric = healthHabitMap[habitId];
       await enqueueHealthMutation(async () => {
         try {
-          const base = await syncHealthState(loadHealthState());
+          const base = healthStateRef.current ?? healthState;
           const nextHealth = upsertHealthDay(base, date, { [metric]: Number(value) || 0 });
           await pushHealthState(nextHealth);
           const remote = await syncHealthState(nextHealth);
+          healthStateRef.current = remote;
           setHealthState(remote);
         } catch {
-          const nextHealth = upsertHealthDay(loadHealthState(), date, { [metric]: Number(value) || 0 });
+          const nextHealth = upsertHealthDay(healthStateRef.current ?? healthState, date, { [metric]: Number(value) || 0 });
+          healthStateRef.current = nextHealth;
           setHealthState(nextHealth);
         }
       });
       return;
     }
     await enqueueTrackingMutation(async () => {
-      const base = loadTrackingState();
+      const base = trackingStateRef.current ?? state;
       const nextTracking: TrackingState = {
         ...base,
         logs: {
@@ -140,25 +146,52 @@ export function useTrackingEngine() {
       try {
         await pushTrackingState(nextTracking);
         const remote = await syncTrackingState(nextTracking);
+        trackingStateRef.current = remote;
         setState(remote);
       } catch {
+        trackingStateRef.current = nextTracking;
         setState(nextTracking);
       }
     });
   };
 
+  const adjustHealthValue = async (habitId: "water" | "protein", delta: number, date = today) => {
+    const metric = healthHabitMap[habitId];
+    await enqueueHealthMutation(async () => {
+      try {
+        const base = healthStateRef.current ?? healthState;
+        const currentValue = Number(getHealthDay(base, date)[metric]) || 0;
+        const nextHealth = upsertHealthDay(base, date, { [metric]: Math.max(0, currentValue + delta) });
+        await pushHealthState(nextHealth);
+        const remote = await syncHealthState(nextHealth);
+        healthStateRef.current = remote;
+        setHealthState(remote);
+      } catch {
+        const base = healthStateRef.current ?? healthState;
+        const currentValue = Number(getHealthDay(base, date)[metric]) || 0;
+        const nextHealth = upsertHealthDay(base, date, { [metric]: Math.max(0, currentValue + delta) });
+        healthStateRef.current = nextHealth;
+        setHealthState(nextHealth);
+      }
+    });
+  };
+
   const setValueLocal = (habitId: TrackingHabitId, value: number | boolean, date = today) => {
-    setState((prev) => ({
-      ...prev,
-      logs: {
-        ...prev.logs,
-        [date]: {
-          ...prev.logs[date],
-          [habitId]: value,
+    setState((prev) => {
+      const next: TrackingState = {
+        ...prev,
+        logs: {
+          ...prev.logs,
+          [date]: {
+            ...prev.logs[date],
+            [habitId]: value,
+          },
         },
-      },
-      updatedAt: new Date().toISOString(),
-    }));
+        updatedAt: new Date().toISOString(),
+      };
+      trackingStateRef.current = next;
+      return next;
+    });
   };
 
   const toggleChecklist = (habit: TrackingHabitDefinition, date = today) => {
@@ -197,6 +230,7 @@ export function useTrackingEngine() {
     weekScores,
     weekDates,
     setValue,
+    adjustHealthValue,
     toggleChecklist,
     getLogValue,
     healthHabits,

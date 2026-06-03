@@ -18,6 +18,7 @@ export default function TrackingPage() {
     growthHabits,
     getLogValue,
     setValue,
+    adjustHealthValue,
     toggleChecklist,
   } = useTrackingEngine();
   const events = db.list("events");
@@ -133,10 +134,10 @@ export default function TrackingPage() {
                   <p className="font-medium">{habit.label}</p>
                   <p className="text-xs text-texts">{waterValue}ml / 3000ml</p>
                   <div className="mt-2 flex gap-2">
-                    <button type="button" className="btn-ghost min-h-0 px-2 py-1 text-xs" onClick={() => setValue("water", waterValue + 250, today)}>
+                    <button type="button" className="btn-ghost min-h-0 px-2 py-1 text-xs" onClick={() => void adjustHealthValue("water", 250, today)}>
                       +250ml
                     </button>
-                    <button type="button" className="btn-ghost min-h-0 px-2 py-1 text-xs" onClick={() => setValue("water", waterValue + 500, today)}>
+                    <button type="button" className="btn-ghost min-h-0 px-2 py-1 text-xs" onClick={() => void adjustHealthValue("water", 500, today)}>
                       +500ml
                     </button>
                   </div>
@@ -149,10 +150,10 @@ export default function TrackingPage() {
                   <p className="font-medium">{habit.label}</p>
                   <p className="text-xs text-texts">{proteinValue}g / 135g</p>
                   <div className="mt-2 flex gap-2">
-                    <button type="button" className="btn-ghost min-h-0 px-2 py-1 text-xs" onClick={() => setValue("protein", proteinValue + 25, today)}>
+                    <button type="button" className="btn-ghost min-h-0 px-2 py-1 text-xs" onClick={() => void adjustHealthValue("protein", 25, today)}>
                       +25g
                     </button>
-                    <button type="button" className="btn-ghost min-h-0 px-2 py-1 text-xs" onClick={() => setValue("protein", proteinValue + 50, today)}>
+                    <button type="button" className="btn-ghost min-h-0 px-2 py-1 text-xs" onClick={() => void adjustHealthValue("protein", 50, today)}>
                       +50g
                     </button>
                   </div>
