@@ -7,6 +7,29 @@ import { pullRows, upsertRows } from "./syncRepository";
 
 const TABLE = "calendar_events";
 
+function toDbCalendarEvent(event: CalendarEvent): Record<string, unknown> {
+  return {
+    id: event.id,
+    user_id: event.user_id,
+    title: event.title,
+    description: event.description,
+    start_time: event.start_time,
+    end_time: event.end_time,
+    location: event.location || "",
+    source: event.source,
+    google_event_id: event.google_event_id || null,
+    source_id: event.source_id || null,
+    source_repo: event.source_repo || null,
+    source_url: event.source_url || null,
+    external_updated_at: event.external_updated_at || null,
+    sync_status: event.sync_status || "synced",
+    event_type: event.event_type || "event",
+    metadata: event.metadata || {},
+    created_at: event.created_at,
+    updated_at: event.updated_at,
+  };
+}
+
 function toDomainStateFromEvents(
   current: CalendarDomainState,
   events: CalendarEvent[],
@@ -54,26 +77,19 @@ function toDomainStateFromEvents(
 
 export async function pushCalendarDomainToSupabase(state = loadCalendarDomainState()) {
   const events = listCalendarDomainEvents(state).map((event) => ({
-    id: event.id,
-    user_id: getSingleUserId(),
-    title: event.title,
-    description: event.description,
-    start_time: event.start_time,
-    end_time: event.end_time,
-    location: event.location || "",
-    source: "github",
-    source_id: event.source_id || event.id,
-    source_repo: event.source_repo || "benjaminlarrondo/celeste_calendar",
-    source_url: event.source_url || "",
-    external_updated_at: event.external_updated_at || event.updated_at,
-    sync_status: event.sync_status || "synced",
-    event_type: event.event_type || "event",
+    ...toDbCalendarEvent({
+      ...event,
+      user_id: getSingleUserId(),
+      source: "github",
+      source_id: event.source_id || event.id,
+      source_repo: event.source_repo || "benjaminlarrondo/celeste_calendar",
+      source_url: event.source_url || "",
+      external_updated_at: event.external_updated_at || event.updated_at,
+    }),
     metadata: {
       ...(event.metadata || {}),
       domainHash: event.domainHash,
     },
-    created_at: event.created_at,
-    updated_at: event.updated_at,
   }));
   await upsertRows(TABLE, events, "id");
 }
@@ -104,6 +120,17 @@ export async function syncCalendarDomainState() {
     if (incomingTs >= existingTs) bySourceId.set(sourceId, row as CalendarEvent);
   }
 
-  await upsertRows<CalendarEvent>(TABLE, Array.from(bySourceId.values()), "id");
+  const dbRows = Array.from(bySourceId.values()).map((row) =>
+    toDbCalendarEvent({
+      ...row,
+      user_id: row.user_id || getSingleUserId(),
+      source: row.source || "github",
+      source_id: row.source_id || row.id,
+      source_repo: row.source_repo || "benjaminlarrondo/celeste_calendar",
+      source_url: row.source_url || "",
+      external_updated_at: row.external_updated_at || row.updated_at,
+    }),
+  );
+  await upsertRows(TABLE, dbRows, "id");
   return pullCalendarDomainFromSupabase();
 }
