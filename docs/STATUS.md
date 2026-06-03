@@ -126,3 +126,30 @@ Sprint 2.3B.2 — Fitness Consistency Layer: heatmap, streaks, weekly progress y
 
 ## Próximo paso sugerido
 - Ejecutar build/lint/typecheck y revisar capturas de Fitness con la nueva capa de consistencia.
+
+## Fecha
+2026-06-02 22:11
+
+## Tarea ejecutada
+Fix de producción para `calendar_events`: se eliminó `domainHash` del payload enviado a Supabase y se mantuvo solo como metadato local.
+
+## Archivos modificados
+- src/lib/repositories/calendarRepository.ts
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+
+## Validación
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+
+## Errores o riesgos
+- El 400 de `calendar_events` debería desaparecer tras el deploy; si persiste, el esquema remoto podría estar desalineado con la migración.
+
+## Próximo paso sugerido
+- Push a `main` y revalidar GitHub Pages para confirmar que el console error 400 quedó resuelto.

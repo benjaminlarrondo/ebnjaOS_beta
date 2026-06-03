@@ -22,6 +22,19 @@
 - `npm run lint`: OK
 - `npm run typecheck`: OK
 
+## 2026-06-02 22:11
+
+### Fix — CalendarDomain payload cleanup
+- Se corrigió el payload de `calendar_events` para no enviar el campo `domainHash` al esquema de Supabase.
+- `domainHash` queda como metadato local del dominio, pero no se escribe como columna remota.
+- Archivo afectado:
+  - `src/lib/repositories/calendarRepository.ts`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
 # CHANGELOG_AI.md
 
 ## 2026-06-02 01:30
