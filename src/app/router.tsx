@@ -18,6 +18,7 @@ export const buildRouter = () =>
           { path: "resources", lazy: async () => ({ Component: (await import("../modules/resources/page")).default }) },
           { path: "daily-log", lazy: async () => ({ Component: (await import("../modules/daily-log/page")).default }) },
           { path: "projects", lazy: async () => ({ Component: (await import("../modules/projects/page")).default }) },
+          { path: "workspace", lazy: async () => ({ Component: (await import("../modules/workspace/page")).default }) },
           { path: "search", lazy: async () => ({ Component: (await import("../modules/search/page")).default }) },
           { path: "review", lazy: async () => ({ Component: (await import("../modules/review/page")).default }) },
           { path: "tracking", lazy: async () => ({ Component: (await import("../modules/tracking/page")).default }) },

@@ -1,5 +1,5 @@
 import { PanelLeft, Search, Settings2 } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { IS_MOCK } from "../../lib/constants";
 import { appModules } from "../../lib/navigation";
 import { PlatformStatusBadge } from "../system/PlatformStatusBadge";
@@ -36,9 +36,13 @@ export function AppHeader({ onToggleSidebar }: { onToggleSidebar?: () => void })
           <Search className="h-3.5 w-3.5" />
           ⌘K
         </button>
-        <button aria-label="Ajustes visuales" className="grid h-8 w-8 place-items-center rounded-full border border-borderc bg-surface text-textp shadow-sm">
+        <Link
+          to="/settings"
+          aria-label="Ajustes visuales"
+          className="grid h-8 w-8 place-items-center rounded-full border border-borderc bg-surface text-textp shadow-sm"
+        >
           <Settings2 className="h-4 w-4" />
-        </button>
+        </Link>
         <PlatformStatusBadge />
         {IS_MOCK && <StatusPill tone="accent">Mock</StatusPill>}
       </div>

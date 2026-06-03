@@ -15,12 +15,16 @@ import { StrengthProgressCard } from "../../components/fitness/StrengthProgressC
 import { WeeklyConsistencyCard } from "../../components/fitness/WeeklyConsistencyCard";
 import { WorkoutPlanList } from "../../components/fitness/WorkoutPlanList";
 import { WorkoutTodayCard } from "../../components/fitness/WorkoutTodayCard";
+import { FitnessHomePremium } from "../../components/fitness/FitnessHomePremium";
+import { FitnessConsistencyLayer } from "../../components/fitness/FitnessConsistencyLayer";
 import { fitnessSessions, progressionPhases, strengthProgress } from "../../data/fitnessPlan";
 import { toDateKey } from "../../lib/health/healthMetrics";
 import { db } from "../../lib/store";
 import { useHealthState } from "../../hooks/useHealthState";
 import { computeFitnessHealthMetrics } from "./fitnessMetrics";
+import { computeFitnessConsistencySummary } from "./fitnessConsistency";
 import type { WorkoutSession } from "../../data/fitnessPlan";
+import type { FitnessWorkout } from "../../types/fitness";
 
 function toStatus(value: number): "good" | "mid" | "low" {
   if (value >= 7) return "good";
@@ -82,6 +86,48 @@ function getSessionNotes(session: WorkoutSession) {
   return session.exercises.map((e) => `${e.name}: ${e.prescription}${e.rest ? `, ${e.rest}` : ""}`).join(" | ");
 }
 
+function formatDateLabel(dateKey: string) {
+  const date = new Date(`${dateKey}T12:00:00`);
+  return new Intl.DateTimeFormat("es-CL", { day: "2-digit", month: "short" }).format(date);
+}
+
+function compareRecentWorkouts(a: FitnessWorkout, b: FitnessWorkout) {
+  const dateDiff = b.date.localeCompare(a.date);
+  if (dateDiff !== 0) return dateDiff;
+  return b.updated_at.localeCompare(a.updated_at);
+}
+
+function getMostRecentWorkout(workouts: FitnessWorkout[]) {
+  return [...workouts].sort(compareRecentWorkouts)[0];
+}
+
+function getWorkoutStreak(workouts: FitnessWorkout[]) {
+  const uniqueDates = [...new Set(workouts.map((workout) => workout.date))].sort((a, b) => b.localeCompare(a));
+  if (!uniqueDates.length) return 0;
+
+  let streak = 1;
+  let previous = new Date(`${uniqueDates[0]}T12:00:00`);
+
+  for (const date of uniqueDates.slice(1)) {
+    const current = new Date(`${date}T12:00:00`);
+    const diffDays = Math.round((+previous - +current) / 86400000);
+    if (diffDays !== 1) break;
+    streak += 1;
+    previous = current;
+  }
+
+  return streak;
+}
+
+function getRecentWorkoutCount(workouts: FitnessWorkout[], rangeDays = 7) {
+  const today = new Date();
+  return workouts.filter((workout) => {
+    const day = new Date(`${workout.date}T12:00:00`);
+    const diffDays = Math.round((+today - +day) / 86400000);
+    return diffDays >= 0 && diffDays < rangeDays;
+  }).length;
+}
+
 export default function FitnessPage() {
   const { healthState } = useHealthState();
   const [fitnessTab, setFitnessTab] = useState<"resumen" | "rutina" | "recovery" | "historial">("rutina");
@@ -127,6 +173,58 @@ export default function FitnessPage() {
   const adherencePct = Math.round((completedThisWeek / WEEK_TARGET) * 100);
   const weekStatus =
     completedThisWeek >= WEEK_TARGET ? "Semana completa" : completedThisWeek >= 4 ? "Muy bien encaminado" : completedThisWeek >= 2 ? "En progreso" : "Arranque pendiente";
+  const mostRecentWorkout = getMostRecentWorkout(workouts);
+  const workoutStreak = getWorkoutStreak(workouts);
+  const recentWorkoutCount = getRecentWorkoutCount(workouts);
+  const nextScheduleEntry = [...state.weeklySchedule]
+    .filter((entry) => entry.completed === false && entry.sessionId)
+    .sort((a, b) => a.date.localeCompare(b.date))[0];
+  const nextWorkoutSession =
+    (nextScheduleEntry ? fitnessSessions.find((session) => session.id === nextScheduleEntry.sessionId) : null) ??
+    suggestedSession ??
+    nextGym ??
+    nextHome;
+  const nextWorkoutDate = nextScheduleEntry?.date ?? todayDateKey;
+  const nextWorkoutStatus =
+    !nextWorkoutSession
+      ? "Descanso"
+      : nextWorkoutDate === todayDateKey
+        ? "Hoy"
+        : nextScheduleEntry
+          ? "Programado"
+          : "Listo";
+  const nextWorkoutSnapshot = {
+    name: nextWorkoutSession?.name ?? "Descanso",
+    focus: nextWorkoutSession?.focus ?? "Recuperación activa o pausa total",
+    dateLabel: nextWorkoutDate === todayDateKey ? "Hoy" : formatDateLabel(nextWorkoutDate),
+    status: nextWorkoutStatus,
+    durationLabel: `${nextWorkoutSession?.durationMin ?? 45} min`,
+    location: nextWorkoutSession?.location ?? "Recovery",
+    exerciseCount: nextWorkoutSession?.exercises.length ?? 0,
+  };
+  const premiumLastWorkoutLabel = mostRecentWorkout
+    ? `${formatDateLabel(mostRecentWorkout.date)} · ${mostRecentWorkout.duration_minutes} min`
+    : "Sin registro";
+  const premiumLastWorkoutTitle = mostRecentWorkout?.title ?? "Sin entrenamiento";
+  const premiumRecentWorkoutLabel = mostRecentWorkout
+    ? `${mostRecentWorkout.title} · ${formatDateLabel(mostRecentWorkout.date)}`
+    : "Sin entrenamientos recientes";
+  const premiumHero = {
+    fitnessScore: healthMetrics.fitnessScore,
+    recoveryScore: healthMetrics.recoveryScore,
+    streak: workoutStreak,
+    lastWorkoutLabel: premiumLastWorkoutLabel,
+    lastWorkoutTitle: premiumLastWorkoutTitle,
+    totalWorkouts: workouts.length,
+    prsCount: state.prsThisCycle,
+  };
+  const premiumRecovery = {
+    sleepHours: healthMetrics.sleepHours,
+    recentWorkoutLabel: premiumRecentWorkoutLabel,
+    recentWorkoutCount: recentWorkoutCount,
+    recoveryScore: healthMetrics.recoveryScore,
+  };
+  const consistencySummary = computeFitnessConsistencySummary(healthState, workouts);
 
   useEffect(() => {
     if (state.resetMode !== "auto") return;
@@ -434,6 +532,8 @@ export default function FitnessPage() {
   return (
     <div className="page-shell">
       <PageTitle title="Fitness" subtitle={`Score ${healthMetrics.fitnessScore}% · Recovery ${healthMetrics.recoveryScore}%`} />
+      <FitnessHomePremium hero={premiumHero} recovery={premiumRecovery} nextWorkout={nextWorkoutSnapshot} />
+      <FitnessConsistencyLayer summary={consistencySummary} />
       <section className="card">
         <div className="grid grid-cols-4 gap-1">
           {[

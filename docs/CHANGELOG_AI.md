@@ -24,6 +24,42 @@
 
 # CHANGELOG_AI.md
 
+## 2026-06-02 01:30
+
+### Sprint 2.2E — Navigation Simplification
+- Se simplificó la navegación principal:
+  - sidebar final: `Dashboard`, `Calendar`, `Goals`, `Fitness`, `Workspace`, `Settings`
+  - `Tracking` cambió su label visible a `Goals` manteniendo la ruta `/tracking`
+- Se creó `Workspace` como espacio contenedor para módulos operativos:
+  - `Projects`
+  - `Tasks`
+  - `Notes`
+  - `Resources`
+- Se actualizó el acceso de configuración:
+  - el icono del header ahora navega a `/settings`
+  - en mobile, la navegación principal se redujo para priorizar las vistas core
+- Archivos nuevos/modificados:
+  - `src/lib/navigation.ts`
+  - `src/components/layout/Sidebar.tsx`
+  - `src/components/layout/AppHeader.tsx`
+  - `src/app/router.tsx`
+  - `src/modules/workspace/page.tsx`
+  - `src/modules/tracking/page.tsx`
+  - `src/components/dashboard/TrackingTodayWidget.tsx`
+  - `docs/NAVIGATION_SIMPLIFICATION.md`
+- Capturas generadas:
+  - `~/Desktop/ebnjaOS_AUDIT_rev_06/screenshots/desktop/dashboard-desktop.png`
+  - `~/Desktop/ebnjaOS_AUDIT_rev_06/screenshots/desktop/goals-desktop.png`
+  - `~/Desktop/ebnjaOS_AUDIT_rev_06/screenshots/desktop/workspace-desktop.png`
+  - `~/Desktop/ebnjaOS_AUDIT_rev_06/screenshots/mobile/dashboard-mobile.png`
+  - `~/Desktop/ebnjaOS_AUDIT_rev_06/screenshots/mobile/goals-mobile.png`
+  - `~/Desktop/ebnjaOS_AUDIT_rev_06/screenshots/mobile/workspace-mobile.png`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
 ## 2026-06-02 00:00
 
 ### Sprint 2.2D — Root Cause Fix
@@ -614,3 +650,47 @@
 - `npm run lint`: OK
 - `npm run typecheck`: OK
 - `preview` localhost: `/`, `/calendar`, `/tracking` OK en desktop/iPhone
+
+## 2026-06-02 21:45
+
+### Sprint 2.3B.1 — Fitness Home Premium
+- Se agregó una nueva portada premium para Fitness en `src/modules/fitness/page.tsx`.
+- Nuevo componente reusable:
+  - `src/components/fitness/FitnessHomePremium.tsx`
+- La portada muestra:
+  - Fitness Score
+  - Recovery Score
+  - Streak actual
+  - Último entrenamiento
+  - Sueño
+  - Entrenamiento reciente
+  - Próximo workout
+- La implementación usa estado real ya persistido por ebnjaOS, sin mock data.
+- Se documentó en `docs/FITNESS_HOME_PREMIUM.md`.
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-02 22:00
+
+### Sprint 2.3B.2 — Fitness Consistency Layer
+- Se integró una capa de consistencia visual para Fitness reutilizando componentes ya existentes de `Tracking`.
+- Nuevos archivos:
+  - `src/modules/fitness/fitnessConsistency.ts`
+  - `src/components/fitness/FitnessConsistencyLayer.tsx`
+- La capa muestra:
+  - Heatmap 30 días
+  - Streak actual
+  - Mejor streak
+  - Consistencia 30 días
+  - Weekly Progress
+  - Trend 30 días
+- La implementación usa datos reales de `health_states` y `fitness_workouts` sin duplicar lógica.
+- Se documentó en `docs/FITNESS_CONSISTENCY_LAYER.md`.
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
