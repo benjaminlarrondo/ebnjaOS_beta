@@ -7,18 +7,16 @@ import type { FitnessConsistencySummary } from "../../modules/fitness/fitnessCon
 export function FitnessConsistencyLayer({ summary }: { summary: FitnessConsistencySummary }) {
   return (
     <section className="space-y-2.5">
+      <TrackingHeatmap days={summary.days} />
       <div className="grid gap-2.5 lg:grid-cols-2">
-        <TrackingHeatmap days={summary.days} />
         <TrackingStreakStats
           currentStreak={summary.currentStreak}
           bestStreak={summary.bestStreak}
           consistency30d={summary.consistency30d}
         />
-      </div>
-      <div className="grid gap-2.5 lg:grid-cols-[1fr_1.2fr]">
         <TrackingWeeklyProgress weeklyPct={summary.weeklyPct} />
-        <TrackingTrendChart days={summary.days} />
       </div>
+      <TrackingTrendChart days={summary.days} />
     </section>
   );
 }

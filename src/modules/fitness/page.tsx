@@ -17,20 +17,16 @@ import { WorkoutPlanList } from "../../components/fitness/WorkoutPlanList";
 import { WorkoutTodayCard } from "../../components/fitness/WorkoutTodayCard";
 import { FitnessHomePremium } from "../../components/fitness/FitnessHomePremium";
 import { FitnessConsistencyLayer } from "../../components/fitness/FitnessConsistencyLayer";
+import { FitnessTrendCards } from "../../components/fitness/FitnessTrendCards";
 import { fitnessSessions, progressionPhases, strengthProgress } from "../../data/fitnessPlan";
 import { toDateKey } from "../../lib/health/healthMetrics";
 import { db } from "../../lib/store";
 import { useHealthState } from "../../hooks/useHealthState";
-import { computeFitnessHealthMetrics } from "./fitnessMetrics";
+import { computeFitnessHealthMetrics, computeRecoveryIntelligence } from "./fitnessMetrics";
 import { computeFitnessConsistencySummary } from "./fitnessConsistency";
+import { buildFitnessTrendCards } from "./fitnessTrends";
 import type { WorkoutSession } from "../../data/fitnessPlan";
 import type { FitnessWorkout } from "../../types/fitness";
-
-function toStatus(value: number): "good" | "mid" | "low" {
-  if (value >= 7) return "good";
-  if (value >= 4) return "mid";
-  return "low";
-}
 
 type TrainingMode = "Gym" | "Casa" | "Descanso";
 type PendingCompletion = { session: WorkoutSession; date: string; source: "today" | "week" };
@@ -128,6 +124,33 @@ function getRecentWorkoutCount(workouts: FitnessWorkout[], rangeDays = 7) {
   }).length;
 }
 
+function getRecentProgressLogCount(logs: Array<{ date: string }>, rangeDays = 30) {
+  const today = new Date();
+  return logs.filter((log) => {
+    const day = new Date(`${log.date}T12:00:00`);
+    const diffDays = Math.round((+today - +day) / 86400000);
+    return diffDays >= 0 && diffDays < rangeDays;
+  }).length;
+}
+
+function sleepStatus(value: number): "good" | "mid" | "low" {
+  if (value >= 7.5) return "good";
+  if (value >= 6.5) return "mid";
+  return "low";
+}
+
+function loadStatus(value: number): "good" | "mid" | "low" {
+  if (value <= 1) return "good";
+  if (value <= 2) return "mid";
+  return "low";
+}
+
+function pctStatus(value: number): "good" | "mid" | "low" {
+  if (value >= 80) return "good";
+  if (value >= 60) return "mid";
+  return "low";
+}
+
 export default function FitnessPage() {
   const { healthState } = useHealthState();
   const [fitnessTab, setFitnessTab] = useState<"resumen" | "rutina" | "recovery" | "historial">("rutina");
@@ -145,20 +168,21 @@ export default function FitnessPage() {
 
   const state = db.getFitnessState();
   const workouts = db.list("workouts");
+  const recentProgressLogs = getRecentProgressLogCount(state.exerciseWeightLogs);
   const todayDateKey = toDateKey();
   const workoutsToday = workouts.filter((workout) => workout.date === todayDateKey).length;
   const recentWorkouts = workouts.filter((workout) => {
     const d = new Date(`${workout.date}T12:00:00`);
     const now = new Date();
     const diff = Math.round((+now - +d) / 86400000);
-    return diff >= 0 && diff <= 3;
+    return diff >= 0 && diff < 7;
   }).length;
   const healthMetrics = computeFitnessHealthMetrics(
     healthState,
     todayDateKey,
     workoutsToday,
-    state.recovery.fatigue || 0,
     recentWorkouts,
+    recentProgressLogs,
   );
   const currentWeek = getWeekKey();
   const gymSessions = useMemo(() => fitnessSessions.filter((s) => s.location === "Gym"), []);
@@ -209,6 +233,16 @@ export default function FitnessPage() {
   const premiumRecentWorkoutLabel = mostRecentWorkout
     ? `${mostRecentWorkout.title} · ${formatDateLabel(mostRecentWorkout.date)}`
     : "Sin entrenamientos recientes";
+  const consistencySummary = computeFitnessConsistencySummary(healthState, workouts);
+  const recoveryIntelligence = computeRecoveryIntelligence({
+    sleepHours: healthMetrics.sleepHours,
+    recentWorkouts: recentWorkoutCount,
+    workoutsToday,
+    waterMl: healthMetrics.waterMl,
+    proteinG: healthMetrics.proteinG,
+    progressLogsCount: recentProgressLogs,
+  });
+  const trendCards = buildFitnessTrendCards(healthState, state, todayDateKey);
   const premiumHero = {
     fitnessScore: healthMetrics.fitnessScore,
     recoveryScore: healthMetrics.recoveryScore,
@@ -223,8 +257,9 @@ export default function FitnessPage() {
     recentWorkoutLabel: premiumRecentWorkoutLabel,
     recentWorkoutCount: recentWorkoutCount,
     recoveryScore: healthMetrics.recoveryScore,
+    statusLabel: recoveryIntelligence.status,
+    recommendation: recoveryIntelligence.recommendation,
   };
-  const consistencySummary = computeFitnessConsistencySummary(healthState, workouts);
 
   useEffect(() => {
     if (state.resetMode !== "auto") return;
@@ -252,7 +287,7 @@ export default function FitnessPage() {
     return () => window.clearTimeout(timer);
   }, [currentWeek, state.resetMode, state.weekKey, state.weeklyTracking]);
 
-  const monthTracking = useMemo(() => {
+  const monthTracking = (() => {
     const now = new Date();
     const year = now.getFullYear();
     const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
@@ -291,9 +326,9 @@ export default function FitnessPage() {
         streak: bestStreak,
       };
     });
-  }, [workouts]);
+  })();
 
-  const monthlyWeightProgress = useMemo(() => {
+  const monthlyWeightProgress = (() => {
     const months = new Map<string, { month: string; entries: number; total: number; best: number }>();
     for (const log of state.exerciseWeightLogs) {
       const total = log.exercises.reduce((sum, exercise) => sum + exercise.weightKg, 0);
@@ -307,7 +342,7 @@ export default function FitnessPage() {
       .sort((a, b) => a.month.localeCompare(b.month))
       .slice(-6)
       .map((m) => ({ ...m, avg: m.entries ? Math.round(m.total / m.entries) : 0 }));
-  }, [state.exerciseWeightLogs]);
+  })();
 
   const maxMonthlyLoad = Math.max(1, ...monthlyWeightProgress.map((m) => m.avg));
 
@@ -523,17 +558,24 @@ export default function FitnessPage() {
   };
 
   const recoveryMetrics = {
-    sleep: { label: "Sueño", value: state.recovery.sleep, status: toStatus(state.recovery.sleep) },
-    energy: { label: "Energía", value: state.recovery.energy, status: toStatus(state.recovery.energy) },
-    fatigue: { label: "Fatiga", value: state.recovery.fatigue, status: toStatus(10 - state.recovery.fatigue) },
-    mobility: { label: "Movilidad", value: state.recovery.mobility, status: toStatus(state.recovery.mobility) },
+    sleep: { label: "Sueño", value: healthMetrics.sleepHours, status: sleepStatus(healthMetrics.sleepHours) },
+    load: { label: "Carga", value: recentWorkouts, status: loadStatus(recentWorkouts) },
+    nutrition: { label: "Nutrición", value: recoveryIntelligence.breakdown.nutrition, status: pctStatus(recoveryIntelligence.breakdown.nutrition) },
+    consistency: { label: "Consistencia", value: recoveryIntelligence.breakdown.consistency, status: pctStatus(recoveryIntelligence.breakdown.consistency) },
   };
   const latestLoadAvg = monthlyWeightProgress[monthlyWeightProgress.length - 1]?.avg ?? 0;
   return (
     <div className="page-shell">
       <PageTitle title="Fitness" subtitle={`Score ${healthMetrics.fitnessScore}% · Recovery ${healthMetrics.recoveryScore}%`} />
       <FitnessHomePremium hero={premiumHero} recovery={premiumRecovery} nextWorkout={nextWorkoutSnapshot} />
+      <FitnessActivityRings
+        workoutScore={healthMetrics.workoutScore}
+        nutritionScore={healthMetrics.nutritionScore}
+        recoveryScore={healthMetrics.recoveryScore}
+        consistencyScore={consistencySummary.consistency30d}
+      />
       <FitnessConsistencyLayer summary={consistencySummary} />
+      <FitnessTrendCards cards={trendCards} />
       <section className="card">
         <div className="grid grid-cols-4 gap-1">
           {[
@@ -673,16 +715,6 @@ export default function FitnessPage() {
       {fitnessTab === "rutina" && <WorkoutTodayCard session={suggestedSession} onStart={markWorkoutDone} />}
 
       {fitnessTab === "rutina" && (
-        <FitnessActivityRings
-          workoutScore={healthMetrics.workoutScore}
-          nutritionScore={healthMetrics.nutritionScore}
-          recoveryScore={healthMetrics.recoveryScore}
-        />
-      )}
-
-      {fitnessTab === "rutina" && <FitnessPRTracker />}
-
-      {fitnessTab === "rutina" && (
         <div className="grid gap-2.5 sm:grid-cols-2">
           <WeeklyConsistencyCard
             completed={completedThisWeek}
@@ -726,7 +758,13 @@ export default function FitnessPage() {
       </section>}
 
       {fitnessTab === "recovery" && <div className="grid gap-2.5 sm:grid-cols-2">
-        <RecoveryCard metrics={recoveryMetrics} />
+        <RecoveryCard
+          metrics={recoveryMetrics}
+          recoveryScore={healthMetrics.recoveryScore}
+          statusLabel={recoveryIntelligence.status}
+          recommendation={recoveryIntelligence.recommendation}
+          badge={recoveryIntelligence.badge}
+        />
         <WeeklyConsistencyCard
           completed={completedThisWeek}
           pending={Math.max(0, WEEK_TARGET - completedThisWeek)}
@@ -920,10 +958,6 @@ export default function FitnessPage() {
         )}
       </section>}
 
-      {fitnessTab === "historial" && <StrengthProgressCard rows={strengthProgress} />}
-
-      {fitnessTab === "historial" && <QuickLogCard onAction={openQuickLog} />}
-
       {fitnessTab === "historial" && <SectionCard title="Progresión (6 semanas)">
         <ul className="space-y-1 text-sm text-texts">
           {progressionPhases.map((phase) => (
@@ -932,7 +966,13 @@ export default function FitnessPage() {
         </ul>
       </SectionCard>}
 
+      {fitnessTab === "historial" && <StrengthProgressCard rows={strengthProgress} />}
+
+      {fitnessTab === "historial" && <QuickLogCard onAction={openQuickLog} />}
+
       {fitnessTab === "historial" && <WorkoutPlanList sessions={fitnessSessions} highlightedId={suggestedSession?.id} />}
+
+      {fitnessTab === "historial" && <FitnessPRTracker />}
 
       <Modal open={modalOpen}>
         <h3 className="mb-2 text-sm font-semibold">
