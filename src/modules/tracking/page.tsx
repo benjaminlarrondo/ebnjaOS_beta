@@ -93,7 +93,7 @@ export default function TrackingPage() {
 
   return (
     <div className="page-shell">
-      <PageTitle title="Objetivos" subtitle={`Score semanal ${objectiveWeek.average}%`} />
+      <PageTitle title="Goals" subtitle={`Score semanal ${objectiveWeek.average}%`} />
 
       <TrackingWeeklyScore
         daily={objectiveToday.overall}

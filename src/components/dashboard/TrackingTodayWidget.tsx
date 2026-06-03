@@ -10,11 +10,11 @@ export function TrackingTodayWidget({
   completed: number;
   total: number;
   health: number;
-}) {
+  }) {
   return (
     <Link to="/tracking" className="card block transition hover:border-primary/35">
       <div className="mb-2 flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-primary">Objetivos</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-primary">Goals</p>
         <span className="text-xs text-texts">Ver módulo</span>
       </div>
       <div className="grid grid-cols-3 gap-2 text-sm">

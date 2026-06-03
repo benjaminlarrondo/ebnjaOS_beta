@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { sidebarModules } from "../../lib/navigation";
 
 const groups = [
-  { title: "OPERACION", ids: ["home", "calendar", "fitness", "tracking", "tasks", "projects", "notes", "resources", "settings"] },
+  { title: "OPERATION", ids: ["home", "calendar", "tracking", "fitness", "workspace", "settings"] },
 ];
 
 export function Sidebar({ collapsed = false }: { collapsed?: boolean }) {
