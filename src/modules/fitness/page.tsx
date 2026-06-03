@@ -16,9 +16,9 @@ import { WeeklyConsistencyCard } from "../../components/fitness/WeeklyConsistenc
 import { WorkoutPlanList } from "../../components/fitness/WorkoutPlanList";
 import { WorkoutTodayCard } from "../../components/fitness/WorkoutTodayCard";
 import { fitnessSessions, progressionPhases, strengthProgress } from "../../data/fitnessPlan";
-import { loadHealthState } from "../../lib/health/healthStore";
 import { toDateKey } from "../../lib/health/healthMetrics";
 import { db } from "../../lib/store";
+import { useHealthState } from "../../hooks/useHealthState";
 import { computeFitnessHealthMetrics } from "./fitnessMetrics";
 import type { WorkoutSession } from "../../data/fitnessPlan";
 
@@ -83,6 +83,7 @@ function getSessionNotes(session: WorkoutSession) {
 }
 
 export default function FitnessPage() {
+  const { healthState } = useHealthState();
   const [fitnessTab, setFitnessTab] = useState<"resumen" | "rutina" | "recovery" | "historial">("rutina");
   const [trainingMode, setTrainingMode] = useState<TrainingMode>("Gym");
   const [modalOpen, setModalOpen] = useState(false);
@@ -99,7 +100,6 @@ export default function FitnessPage() {
   const state = db.getFitnessState();
   const workouts = db.list("workouts");
   const todayDateKey = toDateKey();
-  const healthState = loadHealthState();
   const workoutsToday = workouts.filter((workout) => workout.date === todayDateKey).length;
   const recentWorkouts = workouts.filter((workout) => {
     const d = new Date(`${workout.date}T12:00:00`);

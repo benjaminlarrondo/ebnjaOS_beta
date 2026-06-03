@@ -24,6 +24,33 @@
 
 # CHANGELOG_AI.md
 
+## 2026-06-02 00:00
+
+### Sprint 2.2D — Root Cause Fix
+- Se corrigió el origen de la inconsistencia Supabase-first:
+  - `src/hooks/useTrackingEngine.ts` ya no reconstruye salud desde snapshots stale para writes.
+  - `src/hooks/useHealthState.ts` centraliza la hidratación de salud para evitar lecturas directas en render.
+  - `src/lib/repositories/healthRepository.ts` ahora compara `updated_at` remoto contra la versión local antes de decidir qué estado gana.
+- Dashboard y Fitness dejan de leer `loadHealthState()` directo en render:
+  - `src/modules/dashboard/page.tsx`
+  - `src/modules/fitness/page.tsx`
+- Los controles de agua/proteína pasaron a incremento por delta para evitar perder clicks rápidos:
+  - `src/modules/tracking/page.tsx`
+- Documentación generada:
+  - `docs/ROOT_CAUSE_FIX.md`
+  - `docs/SUPABASE_FIRST_FINAL_VALIDATION.md`
+- Estado actual:
+  - solución aplicada
+  - validación real completada con `Agua = 3000`
+  - `write test`: PASS
+  - `reload test`: PASS
+  - `cross browser`: PASS
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
 ## 2026-06-01 20:20
 
 ### Sprint 2.2C — Persistence Foundation

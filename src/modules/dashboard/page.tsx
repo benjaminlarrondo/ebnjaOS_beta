@@ -11,16 +11,18 @@ import {
   isOwnerAtDate,
   mergeDomainWithManualEvents,
 } from "../../lib/calendarDomain/calendarDomainSelectors";
-import { getHealthDay, loadHealthState } from "../../lib/health/healthStore";
+import { getHealthDay } from "../../lib/health/healthStore";
 import { toDateKey } from "../../lib/health/healthMetrics";
 import { listGoals } from "../../lib/goals";
 import { dashboardModules, quickActionModules } from "../../lib/navigation";
 import { db } from "../../lib/store";
 import { computeDailyScore, computeObjectiveDailyScore, loadTrackingState, toLocalDateKey } from "../../lib/tracking";
+import { useHealthState } from "../../hooks/useHealthState";
 import { computeFitnessHealthMetrics } from "../fitness/fitnessMetrics";
 import { getLastCalendarSyncAt } from "../../services/githubCalendarSync";
 
 export default function DashboardPage() {
+  const { healthState } = useHealthState();
   const data = db.load();
   const mergedEvents = mergeDomainWithManualEvents(data.events.filter((event) => event.source !== "github"));
   const now = new Date();
@@ -43,7 +45,7 @@ export default function DashboardPage() {
   const todayDateKey = toDateKey();
   const workoutsToday = data.workouts.filter((workout) => workout.date === todayDateKey).length;
   const fitnessMetrics = computeFitnessHealthMetrics(
-    loadHealthState(),
+    healthState,
     todayDateKey,
     workoutsToday,
     fitness.recovery.fatigue || 0,
@@ -62,7 +64,7 @@ export default function DashboardPage() {
     dailyScore: trackingToday,
     isFamilyDone,
   });
-  const healthToday = getHealthDay(loadHealthState(), todayIso);
+  const healthToday = getHealthDay(healthState, todayIso);
   const primaryActions = quickActionModules.slice(0, 4);
   const secondaryModules = dashboardModules.filter((module) => !primaryActions.some((action) => action.id === module.id)).slice(0, 6);
 

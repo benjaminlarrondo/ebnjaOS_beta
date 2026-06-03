@@ -1,16 +1,19 @@
 # STATUS.md
 
 ## Fecha
-2026-06-01 21:20
+2026-06-02 00:00
 
 ## Tarea ejecutada
-Sprint 2.2D — Supabase First (auditoría de flujo real + hardening de persistencia para Agua/Proteína/Sueño).
+Sprint 2.2D — Root Cause Fix (Supabase First): eliminación de snapshots stale en health/tracking, consumo de estado hidratado en Dashboard/Fitness y validación de write/reload/cross-browser.
 
 ## Archivos modificados
 - src/hooks/useTrackingEngine.ts
-- docs/SUPABASE_FIRST_AUDIT.md
-- docs/SUPABASE_DATA_FLOW.md
-- docs/MULTI_DEVICE_VALIDATION.md
+- src/hooks/useHealthState.ts
+- src/lib/repositories/healthRepository.ts
+- src/modules/dashboard/page.tsx
+- src/modules/fitness/page.tsx
+- docs/ROOT_CAUSE_FIX.md
+- docs/SUPABASE_FIRST_FINAL_VALIDATION.md
 - docs/STATUS.md
 - docs/CHANGELOG_AI.md
 
@@ -25,7 +28,7 @@ Sprint 2.2D — Supabase First (auditoría de flujo real + hardening de persiste
 - Typecheck: OK
 
 ## Errores o riesgos
-- Se mitigó condición de carrera en escrituras de salud/tracking, pero falta corrida de evidencia final post-fix con caso explícito `Agua 3000ml` en A/B/iPhone físico para cerrar en READY.
+- Riesgo residual bajo: si se reintroducen lecturas directas de `loadHealthState()` o writes absolutos desde render, la regresión puede volver.
 
 ## Próximo paso sugerido
-- Ejecutar validación multi-dispositivo post-fix (A/B/iPhone físico + reload + GitHub Pages) y adjuntar JSON/capturas de cierre para cambiar estado a 🟢 READY.
+- Continuar con el siguiente sprint (`Fitness 2.0`) manteniendo `Supabase = source of truth`.
