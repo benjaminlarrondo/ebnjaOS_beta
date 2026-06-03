@@ -4,10 +4,33 @@ function statusClasses(status: "good" | "mid" | "low") {
   return "border-borderc text-textm";
 }
 
-export function RecoveryCard({ metrics }: { metrics: Record<string, { label: string; value: number; status: "good" | "mid" | "low" }> }) {
+export function RecoveryCard({
+  metrics,
+  recoveryScore,
+  statusLabel,
+  recommendation,
+  badge,
+}: {
+  metrics: Record<string, { label: string; value: number; status: "good" | "mid" | "low" }>;
+  recoveryScore: number;
+  statusLabel: string;
+  recommendation: string;
+  badge: "good" | "mid" | "low";
+}) {
   return (
     <section className="card">
-      <h3 className="mb-3 text-sm font-semibold">Recovery</h3>
+      <div className="mb-3 flex items-start justify-between gap-2">
+        <div>
+          <p className="eyebrow">Recovery Intelligence</p>
+          <h3 className="text-sm font-semibold text-textp">Estado y recomendación</h3>
+        </div>
+        <span className={`rounded-full border px-2 py-1 text-[10px] ${statusClasses(badge)}`}>{statusLabel}</span>
+      </div>
+      <div className="mb-3 rounded-2xl border border-borderc bg-surface px-3 py-2">
+        <p className="text-xs text-texts">Recovery Score</p>
+        <p className="metric-value mt-1">{recoveryScore}%</p>
+        <p className="mt-1 text-xs text-texts">{recommendation}</p>
+      </div>
       <div className="grid grid-cols-2 gap-2">
         {Object.values(metrics).map((metric) => (
           <div key={metric.label} className="inner-card">

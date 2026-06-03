@@ -30,6 +30,8 @@ export type FitnessHomePremiumProps = {
     recentWorkoutLabel: string;
     recentWorkoutCount: number;
     recoveryScore: number;
+    statusLabel: string;
+    recommendation: string;
   };
   nextWorkout: {
     name: string;
@@ -88,7 +90,7 @@ export function FitnessHomePremium({ hero, recovery, nextWorkout }: FitnessHomeP
               <p className="eyebrow">Recovery Card</p>
               <h3 className="text-sm font-semibold text-textp">Estado de recuperación</h3>
             </div>
-            <span className="pill-soft text-primary">{recovery.recoveryScore}%</span>
+            <span className="pill-soft text-primary">{recovery.statusLabel}</span>
           </div>
 
           <div className="mt-4 grid gap-2">
@@ -103,6 +105,7 @@ export function FitnessHomePremium({ hero, recovery, nextWorkout }: FitnessHomeP
             <div className="inner-card">
               <p className="text-xs text-texts">Recovery Score</p>
               <p className="metric-value mt-2">{recovery.recoveryScore}%</p>
+              <p className="mt-1 text-xs text-texts">{recovery.recommendation}</p>
             </div>
           </div>
         </article>

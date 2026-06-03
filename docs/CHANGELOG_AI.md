@@ -22,6 +22,50 @@
 - `npm run lint`: OK
 - `npm run typecheck`: OK
 
+## 2026-06-02 22:24
+
+### Sprint 2.3C.2 — Recovery Intelligence
+- `Recovery Score` se transformó en un sistema accionable 40/30/15/15:
+  - 40% sueño
+  - 30% carga de entrenamiento
+  - 15% nutrición
+  - 15% consistencia
+- Estados:
+  - `Recuperado`
+  - `Moderado`
+  - `Fatigado`
+- La nueva Recovery Card muestra:
+  - score
+  - estado
+  - recomendación
+  - sueño
+  - carga
+  - nutrición
+  - consistencia
+- La portada premium reutiliza la misma inteligencia.
+- Documentación añadida:
+  - `docs/RECOVERY_INTELLIGENCE.md`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-02 22:31
+
+### Ajuste — Recovery Intelligence final
+- Se alineó la documentación con la fórmula final `40/30/15/15`.
+- Se añadió cálculo real de consistencia desde `fitness_progress_logs`/progreso histórico disponible.
+- Se conectó la recuperación a:
+  - `health_states`
+  - `fitness_workouts`
+  - `fitness_progress_logs`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
 ## 2026-06-02 22:11
 
 ### Fix — CalendarDomain payload cleanup
@@ -29,6 +73,54 @@
 - `domainHash` queda como metadato local del dominio, pero no se escribe como columna remota.
 - Archivo afectado:
   - `src/lib/repositories/calendarRepository.ts`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-02 22:21
+
+### Sprint 2.3C.1A — Fitness Information Architecture
+- Se reordenó la jerarquía visual de Fitness para priorizar:
+  - Fitness Score
+  - Rings
+  - Streak
+  - Heatmap
+  - Trends
+  - PR Tracker
+- Los rings ahora muestran cuatro señales:
+  - Training
+  - Nutrition
+  - Recovery
+  - Consistency
+- Heatmap quedó por encima de Trends.
+- PR Tracker se movió al final de la página.
+- Se documentó en `docs/FITNESS_INFORMATION_ARCHITECTURE.md`.
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-02 22:24
+
+### Sprint 2.3C.2 — Recovery Intelligence
+- Se convirtió `Recovery Score` en un sistema de recomendación basado en:
+  - `sleepHours`
+  - `fitness_workouts`
+  - `health_states`
+- Nuevos estados:
+  - `Recuperado`
+  - `Moderado`
+  - `Fatigado`
+- La card de Recovery ahora muestra:
+  - score
+  - estado
+  - recomendación
+- La portada premium también usa la misma inteligencia.
+- Documentación añadida:
+  - `docs/RECOVERY_INTELLIGENCE.md`
 
 ### Validación
 - `npm run build`: OK
@@ -702,6 +794,51 @@
   - Trend 30 días
 - La implementación usa datos reales de `health_states` y `fitness_workouts` sin duplicar lógica.
 - Se documentó en `docs/FITNESS_CONSISTENCY_LAYER.md`.
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-02 22:52
+
+### Sprint 2.3C.3 — Trend Cards Premium
+- Se añadió un bloque ejecutivo de 5 Trend Cards para Fitness:
+  - Peso
+  - Sueño
+  - Proteína
+  - Agua
+  - Fuerza
+- Cada card muestra:
+  - valor actual
+  - tendencia 30 días
+  - variación
+  - sparkline
+- La implementación consume datos reales de:
+  - `health_states`
+  - `fitness_progress_logs`
+  - `fitness_prs`
+  - `fitness_body_metrics`
+- Documentación añadida en `docs/TREND_CARDS_PREMIUM.md`.
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-02 22:46
+
+### Sprint 2.3D — Fitness UX Audit
+- Se realizó una auditoría visual completa del módulo Fitness para preparar UI Freeze v1.
+- Se documentaron capturas y hallazgos en `docs/FITNESS_UX_AUDIT.md`.
+- Resultado general:
+  - Desktop: buena jerarquía, pero con scroll alto.
+  - Mobile: sin overflow horizontal, pero con densidad elevada.
+- Bloques marcados para revisión:
+  - Recovery Intelligence
+  - Heatmap
+  - Trend Cards
+  - PR Tracker
 
 ### Validación
 - `npm run build`: OK

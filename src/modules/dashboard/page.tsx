@@ -44,12 +44,22 @@ export default function DashboardPage() {
   const fitness = data.fitnessState;
   const todayDateKey = toDateKey();
   const workoutsToday = data.workouts.filter((workout) => workout.date === todayDateKey).length;
+  const recentWorkouts = data.workouts.filter((workout) => {
+    const day = new Date(`${workout.date}T12:00:00`);
+    const diff = Math.round((+now - +day) / 86400000);
+    return diff >= 0 && diff < 7;
+  }).length;
+  const recentProgressLogs = fitness.exerciseWeightLogs.filter((log) => {
+    const day = new Date(`${log.date}T12:00:00`);
+    const diff = Math.round((+now - +day) / 86400000);
+    return diff >= 0 && diff < 30;
+  }).length;
   const fitnessMetrics = computeFitnessHealthMetrics(
     healthState,
     todayDateKey,
     workoutsToday,
-    fitness.recovery.fatigue || 0,
-    Math.min(3, fitness.sessionsCompleted),
+    recentWorkouts,
+    recentProgressLogs,
   );
   const topPriority = todayTasks[0]?.title || activeGoals[0]?.title || "Dia despejado";
   const lastSyncAt = getLastCalendarSyncAt();

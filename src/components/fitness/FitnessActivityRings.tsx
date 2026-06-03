@@ -40,23 +40,25 @@ export function FitnessActivityRings({
   workoutScore,
   nutritionScore,
   recoveryScore,
+  consistencyScore,
 }: {
   workoutScore: number;
   nutritionScore: number;
   recoveryScore: number;
+  consistencyScore: number;
 }) {
   return (
     <section className="card">
       <div className="mb-3">
         <p className="eyebrow">Activity Rings</p>
-        <h3 className="text-sm font-semibold text-textp">Entreno, nutrición y recuperación</h3>
+        <h3 className="text-sm font-semibold text-textp">Training, Nutrition, Recovery, Consistency</h3>
       </div>
-      <div className="grid grid-cols-3 gap-2">
-        <Ring label="Entreno" value={workoutScore} tone="rgba(229,199,107,.9)" />
-        <Ring label="Nutrición" value={nutritionScore} tone="rgba(214,167,177,.85)" />
-        <Ring label="Recuperación" value={recoveryScore} tone="rgba(139,145,155,.9)" />
+      <div className="mx-auto grid max-w-xl grid-cols-2 gap-4 place-items-center sm:grid-cols-4">
+        <Ring label="Training" value={workoutScore} tone="rgba(229,199,107,.9)" />
+        <Ring label="Nutrition" value={nutritionScore} tone="rgba(214,167,177,.85)" />
+        <Ring label="Recovery" value={recoveryScore} tone="rgba(139,145,155,.9)" />
+        <Ring label="Consistency" value={consistencyScore} tone="rgba(133,197,183,.9)" />
       </div>
     </section>
   );
 }
-

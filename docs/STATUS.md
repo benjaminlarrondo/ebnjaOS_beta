@@ -153,3 +153,153 @@ Fix de producción para `calendar_events`: se eliminó `domainHash` del payload 
 
 ## Próximo paso sugerido
 - Push a `main` y revalidar GitHub Pages para confirmar que el console error 400 quedó resuelto.
+
+## Fecha
+2026-06-02 22:21
+
+## Tarea ejecutada
+Sprint 2.3C.1A — Fitness Information Architecture: reorden visual de Fitness priorizando Score, Rings, Streak, Heatmap, Trends y PR Tracker.
+
+## Archivos modificados
+- src/modules/fitness/page.tsx
+- src/components/fitness/FitnessActivityRings.tsx
+- src/components/fitness/FitnessConsistencyLayer.tsx
+- docs/FITNESS_INFORMATION_ARCHITECTURE.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+
+## Validación
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+
+## Errores o riesgos
+- El PR Tracker queda al final del historial, por lo que su visibilidad inicial baja a favor de las métricas principales.
+
+## Próximo paso sugerido
+- Correr validación y revisar la composición visual en producción si hace falta ajustar contraste o espaciado.
+
+## Fecha
+2026-06-02 22:24
+
+## Tarea ejecutada
+Sprint 2.3C.2 — Recovery Intelligence: Recovery Score convertido en recomendación basada en sueño y carga reciente.
+
+## Archivos modificados
+- src/modules/fitness/fitnessMetrics.ts
+- src/components/fitness/RecoveryCard.tsx
+- src/components/fitness/FitnessHomePremium.tsx
+- src/modules/fitness/page.tsx
+- docs/RECOVERY_INTELLIGENCE.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+
+## Validación
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+
+## Errores o riesgos
+- La recomendación depende de la calidad del estado de `health_states` y del histórico de `fitness_workouts`; si faltan datos, el sistema tiende a degradar a `Fatigado`.
+
+## Próximo paso sugerido
+- Validar build/lint/typecheck y revisar el bloque de Recovery en Fitness.
+
+## Fecha
+2026-06-02 22:31
+
+## Tarea ejecutada
+Sprint 2.3C.2 — Recovery Intelligence: score accionable 40/30/15/15 con estado, recomendación y métricas de sueño/carga/nutrición/consistencia.
+
+## Archivos modificados
+- src/modules/fitness/fitnessMetrics.ts
+- src/components/fitness/RecoveryCard.tsx
+- src/components/fitness/FitnessHomePremium.tsx
+- src/modules/dashboard/page.tsx
+- src/modules/fitness/page.tsx
+- docs/RECOVERY_INTELLIGENCE.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+
+## Validación
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+
+## Errores o riesgos
+- La consistencia depende del histórico real de workouts y logs; si falta historia, la recomendación tiende a ser conservadora.
+
+## Próximo paso sugerido
+- Revisar visualmente Recovery en producción para confirmar el estado/recomendación.
+
+## Fecha
+2026-06-02 22:52
+
+## Tarea ejecutada
+Sprint 2.3C.3 — Trend Cards Premium: 5 tarjetas ejecutivas para Peso, Sueño, Proteína, Agua y Fuerza con tendencia 30 días y sparkline real.
+
+## Archivos modificados
+- src/modules/fitness/fitnessTrends.ts
+- src/components/fitness/FitnessTrendCards.tsx
+- src/modules/fitness/page.tsx
+- docs/TREND_CARDS_PREMIUM.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+
+## Validación
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+
+## Errores o riesgos
+- La card de Fuerza depende de que existan PRs en `ebnjaos-fitness-pr-v1`; si no hay historial, cae a cargas registradas y puede mostrarse más conservadora.
+
+## Próximo paso sugerido
+- Hacer un pase visual en Fitness para ajustar densidad y asegurar que las Trend Cards se leen bien en mobile.
+
+## Fecha
+2026-06-02 22:46
+
+## Tarea ejecutada
+Sprint 2.3D — Fitness UX Audit: auditoría visual completa para preparar UI Freeze v1.
+
+## Archivos modificados
+- docs/FITNESS_UX_AUDIT.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+
+## Validación
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+
+## Errores o riesgos
+- La densidad de Fitness sigue siendo alta en mobile; Heatmap, Trend Cards y PR Tracker requieren compactación antes del freeze.
+
+## Próximo paso sugerido
+- Reducir duplicidad entre portada premium y tabs, y compactar los bloques más largos para UI Freeze v1.
