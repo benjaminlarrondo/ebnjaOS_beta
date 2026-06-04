@@ -230,9 +230,6 @@ export default function FitnessPage() {
     ? `${formatDateLabel(mostRecentWorkout.date)} · ${mostRecentWorkout.duration_minutes} min`
     : "Sin registro";
   const premiumLastWorkoutTitle = mostRecentWorkout?.title ?? "Sin entrenamiento";
-  const premiumRecentWorkoutLabel = mostRecentWorkout
-    ? `${mostRecentWorkout.title} · ${formatDateLabel(mostRecentWorkout.date)}`
-    : "Sin entrenamientos recientes";
   const consistencySummary = computeFitnessConsistencySummary(healthState, workouts);
   const recoveryIntelligence = computeRecoveryIntelligence({
     sleepHours: healthMetrics.sleepHours,
@@ -245,21 +242,13 @@ export default function FitnessPage() {
   const trendCards = buildFitnessTrendCards(healthState, state, todayDateKey);
   const premiumHero = {
     fitnessScore: healthMetrics.fitnessScore,
-    recoveryScore: healthMetrics.recoveryScore,
     streak: workoutStreak,
     lastWorkoutLabel: premiumLastWorkoutLabel,
     lastWorkoutTitle: premiumLastWorkoutTitle,
     totalWorkouts: workouts.length,
     prsCount: state.prsThisCycle,
   };
-  const premiumRecovery = {
-    sleepHours: healthMetrics.sleepHours,
-    recentWorkoutLabel: premiumRecentWorkoutLabel,
-    recentWorkoutCount: recentWorkoutCount,
-    recoveryScore: healthMetrics.recoveryScore,
-    statusLabel: recoveryIntelligence.status,
-    recommendation: recoveryIntelligence.recommendation,
-  };
+  const compactHeatmap = consistencySummary.days.filter((day) => day.overall > 0).length < 14;
 
   useEffect(() => {
     if (state.resetMode !== "auto") return;
@@ -567,14 +556,14 @@ export default function FitnessPage() {
   return (
     <div className="page-shell">
       <PageTitle title="Fitness" subtitle={`Score ${healthMetrics.fitnessScore}% · Recovery ${healthMetrics.recoveryScore}%`} />
-      <FitnessHomePremium hero={premiumHero} recovery={premiumRecovery} nextWorkout={nextWorkoutSnapshot} />
+      <FitnessHomePremium hero={premiumHero} nextWorkout={nextWorkoutSnapshot} />
       <FitnessActivityRings
         workoutScore={healthMetrics.workoutScore}
         nutritionScore={healthMetrics.nutritionScore}
         recoveryScore={healthMetrics.recoveryScore}
         consistencyScore={consistencySummary.consistency30d}
       />
-      <FitnessConsistencyLayer summary={consistencySummary} />
+      <FitnessConsistencyLayer summary={consistencySummary} compactHeatmap={compactHeatmap} />
       <FitnessTrendCards cards={trendCards} />
       <section className="card">
         <div className="grid grid-cols-4 gap-1">

@@ -50,11 +50,11 @@ export function FitnessTrendCards({ cards }: { cards: FitnessTrendCardModel[] })
 
       <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
         {cards.map((card) => (
-          <article key={card.key} className="rounded-2xl border border-borderc bg-surface p-3">
+          <article key={card.key} className="rounded-2xl border border-borderc bg-surface p-2.5 sm:p-3">
             <div className="flex items-start justify-between gap-2">
               <div>
-                <p className="text-xs uppercase tracking-[0.18em] text-texts">{card.label}</p>
-                <p className="mt-1 text-lg font-semibold text-textp">{card.currentLabel}</p>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-texts sm:text-xs">{card.label}</p>
+                <p className="mt-1 text-base font-semibold text-textp sm:text-lg">{card.currentLabel}</p>
               </div>
               <span className={`rounded-full border border-borderc px-2 py-1 text-[10px] ${trendTone(card.trendLabel)}`}>
                 {card.trendLabel}
@@ -64,9 +64,9 @@ export function FitnessTrendCards({ cards }: { cards: FitnessTrendCardModel[] })
             <div className="mt-2 flex items-end justify-between gap-2">
               <div>
                 <p className="text-[11px] text-texts">Variación</p>
-                <p className="text-xs font-medium text-textp">{card.variationLabel}</p>
+                <p className="text-[11px] font-medium text-textp sm:text-xs">{card.variationLabel}</p>
               </div>
-              <p className="text-[11px] text-texts">{card.sourceLabel}</p>
+              <p className="hidden text-[11px] text-texts sm:block">{card.sourceLabel}</p>
             </div>
 
             <div className={`mt-3 rounded-xl border border-borderc bg-bg px-2 py-1.5 ${card.tone === "primary" ? "text-primary" : card.tone === "accent" ? "text-textp" : "text-textm"}`}>
