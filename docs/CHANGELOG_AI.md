@@ -1,3 +1,25 @@
+## 2026-06-04 20:05
+
+### Sprint 2.4F — Apple Health Remote Repository
+- Se conectó `AppleHealthImportRepository` a Supabase.
+- La importación Apple Health ahora escribe remotamente en:
+  - `health_states`
+  - `fitness_body_metrics`
+  - `fitness_workouts`
+- `localStorage` quedó solo como cache offline.
+- Se agregaron lectores de snapshot remoto para validación:
+  - `pullAppleHealthRemoteSnapshot()`
+  - `hydrateAppleHealthFromRemote()`
+- Se añadieron índices únicos recomendados para deduplicar por:
+  - `user_id + external_id`
+- Documentación añadida:
+  - `docs/APPLE_HEALTH_REMOTE_REPOSITORY.md`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
 ## 2026-06-04 19:55
 
 ### Sprint 2.4E — Supabase Apple Health Audit

@@ -62,4 +62,10 @@ on fitness_body_metrics(external_id);
 create index if not exists idx_fitness_workouts_external_id
 on fitness_workouts(external_id);
 
+create unique index if not exists uidx_fitness_body_metrics_user_external_id
+on fitness_body_metrics(user_id, external_id);
+
+create unique index if not exists uidx_fitness_workouts_user_external_id
+on fitness_workouts(user_id, external_id);
+
 commit;

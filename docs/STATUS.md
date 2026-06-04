@@ -1,6 +1,37 @@
 # STATUS.md
 
 ## Fecha
+2026-06-04 20:05
+
+## Tarea ejecutada
+Sprint 2.4F — Apple Health Remote Repository: conexión de `AppleHealthImportRepository` a Supabase con `upsert` remoto y cache local solo como respaldo offline.
+
+## Archivos modificados
+- src/lib/health/appleHealth/AppleHealthImportRepository.ts
+- src/lib/health/appleHealth/AppleHealthBackfillService.ts
+- supabase/apple_health_metrics_persistence.sql
+- docs/APPLE_HEALTH_REMOTE_REPOSITORY.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+
+## Validación
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+
+## Errores o riesgos
+- La validación remota real depende de que la migración SQL con los índices únicos esté aplicada en Supabase.
+- `fitness_workouts` recibe filas derivadas por día cuando `workoutsCount > 0`; son import rows de Apple Health, no sesiones manuales reales.
+
+## Próximo paso sugerido
+- Ejecutar validación contra Supabase y revisar si conviene separar aún más las filas Apple Health de las filas manuales de entrenamiento.
+
+## Fecha
 2026-06-04 19:55
 
 ## Tarea ejecutada

@@ -103,7 +103,7 @@ export async function runAppleHealthBackfill(range: AppleHealthBackfillRange): P
   };
 
   const cached = cacheAppleHealthImport(batch);
-  const state = applyAppleHealthImportToFoundation(batch);
+  const state = await applyAppleHealthImportToFoundation(batch);
 
   return {
     range,
