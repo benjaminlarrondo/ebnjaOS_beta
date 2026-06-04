@@ -336,3 +336,31 @@ Sprint 2.3E — Fitness UI Freeze V1: Recovery único, heatmap adaptativo, Trend
 
 ## Próximo paso sugerido
 - Revisar GitHub Pages con el freeze v1 y preparar el siguiente paquete de auditoría si hace falta.
+
+## Fecha
+2026-06-04 19:08
+
+## Tarea ejecutada
+Sprint 2.4A — Apple Health Readiness Audit: evaluación de soporte actual para Sleep, Weight, Steps, HRV, Resting HR y Workouts.
+
+## Archivos modificados
+- docs/APPLE_HEALTH_READINESS_AUDIT.md
+- docs/APPLE_HEALTH_BRIDGE.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+
+## Validación
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+
+## Errores o riesgos
+- `health_states` todavía no existe como tabla remota; HRV y resting HR tampoco tienen columnas persistentes.
+
+## Próximo paso sugerido
+- Aplicar las migraciones SQL mínimas y definir el bridge Apple Health canónico antes de implementar iOS/HealthKit.
