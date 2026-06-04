@@ -9,6 +9,8 @@ export const healthMetricDefinitions: HealthMetricDefinition[] = [
   { entity: "Weight", key: "weight_kg", label: "Peso", unit: "kg", dailyTarget: 0 },
   { entity: "Workout", key: "workouts_count", label: "Entrenamientos", unit: "count", dailyTarget: 1 },
   { entity: "Activity", key: "steps_count", label: "Pasos", unit: "steps", dailyTarget: 8000 },
+  { entity: "HRV", key: "hrv_ms", label: "HRV", unit: "ms", dailyTarget: 60 },
+  { entity: "RestingHR", key: "resting_hr", label: "FC Reposo", unit: "bpm", dailyTarget: 55 },
 ];
 
 export function nowIso() {
@@ -31,6 +33,8 @@ export function makeEmptyHealthDay(date: string): HealthDailyRecord {
     weight_kg: 0,
     workouts_count: 0,
     steps_count: 0,
+    hrv_ms: 0,
+    resting_hr: 0,
     source: "manual",
     updatedAt: nowIso(),
   };

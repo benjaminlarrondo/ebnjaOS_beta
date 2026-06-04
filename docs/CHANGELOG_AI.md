@@ -1,3 +1,28 @@
+## 2026-06-04 19:44
+
+### Sprint 2.4D — Health Metrics Persistence
+- Se extendió el modelo Apple Health para soportar:
+  - `steps_count`
+  - `hrv_ms`
+  - `resting_hr`
+- Se actualizó el snapshot de salud para aceptar:
+  - `stepsCount`
+  - `hrvMs`
+  - `restingHr`
+- Se reforzó el bridge Apple Health con:
+  - `externalId`
+  - `externalUpdatedAt`
+  - merge por fecha con preservación de métricas parciales
+- Se agregó el modelo de datos:
+  - `docs/APPLE_HEALTH_DATA_MODEL.md`
+- Se agregó la migración SQL:
+  - `supabase/apple_health_metrics_persistence.sql`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
 ## 2026-06-01 21:20
 
 ### Sprint 2.2D — Supabase First

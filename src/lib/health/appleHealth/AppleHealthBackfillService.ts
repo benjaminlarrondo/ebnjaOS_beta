@@ -49,16 +49,21 @@ function buildSample(
   unit: string,
   suffix: string,
 ): AppleHealthMetricSample {
+  const externalId = `apple_health:${key}:${date}${suffix}`;
   return {
     key,
     date,
     value,
     unit,
-    sourceId: `apple_health:${key}:${date}${suffix}`,
+    externalId,
+    sourceId: externalId,
     externalUpdatedAt: `${date}T23:59:59.000Z`,
     metadata: {
       source: "apple_health",
       date,
+      metric: key,
+      unit,
+      externalId,
     },
   };
 }

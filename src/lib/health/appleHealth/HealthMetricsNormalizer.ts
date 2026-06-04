@@ -20,6 +20,10 @@ function toNumber(value: unknown) {
   return undefined;
 }
 
+function toText(value: unknown) {
+  return typeof value === "string" && value.trim().length ? value : undefined;
+}
+
 function normalizeDailyImport(input: AppleHealthRawDay): AppleHealthDailyImport {
   return {
     date: input.date,
@@ -32,8 +36,9 @@ function normalizeDailyImport(input: AppleHealthRawDay): AppleHealthDailyImport 
     restingHr: toNumber(input.restingHr ?? input.metadata?.restingHr),
     workoutsCount: toNumber(input.workoutsCount ?? input.metadata?.workoutsCount),
     source: "apple_health",
+    externalId: toText(input.externalId ?? input.sourceId ?? input.metadata?.externalId),
     sourceId: input.sourceId,
-    externalUpdatedAt: input.externalUpdatedAt,
+    externalUpdatedAt: toText(input.externalUpdatedAt ?? input.metadata?.externalUpdatedAt),
     metadata: input.metadata ?? {},
   };
 }
@@ -42,8 +47,9 @@ export function normalizeAppleHealthMetricSample(sample: AppleHealthMetricSample
   const base: AppleHealthDailyImport = {
     date: sample.date,
     source: "apple_health",
+    externalId: toText(sample.externalId ?? sample.sourceId ?? sample.metadata?.externalId),
     sourceId: sample.sourceId,
-    externalUpdatedAt: sample.externalUpdatedAt,
+    externalUpdatedAt: toText(sample.externalUpdatedAt ?? sample.metadata?.externalUpdatedAt),
     metadata: sample.metadata ?? {},
   };
 
