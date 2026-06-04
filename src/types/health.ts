@@ -4,9 +4,11 @@ export type HealthMetricKey =
   | "sleep_hours"
   | "weight_kg"
   | "workouts_count"
-  | "steps_count";
+  | "steps_count"
+  | "hrv_ms"
+  | "resting_hr";
 
-export type HealthMetricUnit = "ml" | "g" | "hours" | "kg" | "count" | "steps";
+export type HealthMetricUnit = "ml" | "g" | "hours" | "kg" | "count" | "steps" | "ms" | "bpm";
 
 export type HealthMetricDefinition = {
   key: HealthMetricKey;
@@ -23,6 +25,8 @@ export type HealthDailyRecord = {
   weight_kg: number;
   workouts_count: number;
   steps_count: number;
+  hrv_ms: number;
+  resting_hr: number;
   source: "manual" | "derived" | "mixed";
   updatedAt: string;
 };
@@ -46,6 +50,8 @@ export type HealthImportPayload = {
   weightKg?: number;
   workoutsCount?: number;
   stepsCount?: number;
+  hrvMs?: number;
+  restingHr?: number;
 };
 
 export type AppleHealthPort = {

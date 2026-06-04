@@ -12,8 +12,39 @@ import type {
   HealthDailyRecord,
   HealthFoundationState,
   HealthImportPayload,
+  HealthMetricDefinition,
   HealthMetricKey,
 } from "./healthTypes";
+
+function mergeMetricDefinitions(metricDefinitions?: HealthMetricDefinition[]) {
+  const merged = new Map<string, HealthMetricDefinition>();
+  for (const definition of healthMetricDefinitions) {
+    merged.set(definition.key, definition);
+  }
+  for (const definition of metricDefinitions ?? []) {
+    merged.set(definition.key, definition);
+  }
+  return Array.from(merged.values());
+}
+
+function normalizeDailyRecord(date: string, record?: Partial<HealthDailyRecord>): HealthDailyRecord {
+  const empty = makeEmptyHealthDay(date);
+  return {
+    ...empty,
+    ...record,
+    date,
+    water_ml: typeof record?.water_ml === "number" ? record.water_ml : empty.water_ml,
+    protein_g: typeof record?.protein_g === "number" ? record.protein_g : empty.protein_g,
+    sleep_hours: typeof record?.sleep_hours === "number" ? record.sleep_hours : empty.sleep_hours,
+    weight_kg: typeof record?.weight_kg === "number" ? record.weight_kg : empty.weight_kg,
+    workouts_count: typeof record?.workouts_count === "number" ? record.workouts_count : empty.workouts_count,
+    steps_count: typeof record?.steps_count === "number" ? record.steps_count : empty.steps_count,
+    hrv_ms: typeof record?.hrv_ms === "number" ? record.hrv_ms : empty.hrv_ms,
+    resting_hr: typeof record?.resting_hr === "number" ? record.resting_hr : empty.resting_hr,
+    source: record?.source === "derived" || record?.source === "mixed" ? record.source : "manual",
+    updatedAt: typeof record?.updatedAt === "string" && record.updatedAt.length ? record.updatedAt : empty.updatedAt,
+  };
+}
 
 function defaultState(): HealthFoundationState {
   return {
@@ -39,10 +70,13 @@ export function loadHealthState(): HealthFoundationState {
   if (!raw) return defaultState();
   try {
     const parsed = JSON.parse(raw) as Partial<HealthFoundationState>;
+    const daily = Object.fromEntries(
+      Object.entries(parsed.daily ?? {}).map(([date, record]) => [date, normalizeDailyRecord(date, record)]),
+    );
     return {
       version: "v1",
-      metrics: parsed.metrics?.length ? parsed.metrics : healthMetricDefinitions,
-      daily: parsed.daily ?? {},
+      metrics: mergeMetricDefinitions(parsed.metrics),
+      daily,
       dashboardModels: {
         sleepScore: parsed.dashboardModels?.sleepScore ?? 0,
         proteinProgress: parsed.dashboardModels?.proteinProgress ?? 0,
@@ -153,6 +187,8 @@ export function applyHealthImportPayload(state: HealthFoundationState, payload: 
     weight_kg: payload.weightKg,
     workouts_count: payload.workoutsCount,
     steps_count: payload.stepsCount,
+    hrv_ms: payload.hrvMs,
+    resting_hr: payload.restingHr,
     source: "mixed",
   });
 }

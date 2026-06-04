@@ -1,6 +1,43 @@
 # STATUS.md
 
 ## Fecha
+2026-06-04 19:44
+
+## Tarea ejecutada
+Sprint 2.4D — Health Metrics Persistence: extensión del snapshot Apple Health con `stepsCount`, `hrvMs` y `restingHr`, más normalización y deduplicación por `externalId`/`externalUpdatedAt`.
+
+## Archivos modificados
+- src/lib/health/healthTypes.ts
+- src/types/health.ts
+- src/lib/health/healthMetrics.ts
+- src/lib/health/healthStore.ts
+- src/lib/health/appleHealth/AppleHealthImportPayload.ts
+- src/lib/health/appleHealth/HealthMetricsNormalizer.ts
+- src/lib/health/appleHealth/AppleHealthImportRepository.ts
+- src/lib/health/appleHealth/AppleHealthBackfillService.ts
+- docs/APPLE_HEALTH_DATA_MODEL.md
+- supabase/apple_health_metrics_persistence.sql
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+
+## Validación
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+
+## Errores o riesgos
+- La persistencia remota de Apple Health sigue dependiendo de que se aplique la migración SQL de `supabase/apple_health_metrics_persistence.sql`.
+- `health_states` sigue siendo un snapshot JSON; no se agregó una tabla nueva para el modelo diario.
+
+## Próximo paso sugerido
+- Aplicar la migración SQL, volver a validar la lectura/escritura y preparar la capa de importación Apple Health real.
+
+## Fecha
 2026-06-02 01:30
 
 ## Tarea ejecutada

@@ -13,6 +13,7 @@ export type AppleHealthMetricSample = {
   value: number;
   unit: string;
   date: string;
+  externalId?: string;
   sourceId?: string;
   externalUpdatedAt?: string;
   metadata?: Record<string, unknown>;
@@ -29,6 +30,7 @@ export type AppleHealthDailyImport = {
   restingHr?: number;
   workoutsCount?: number;
   source: "apple_health";
+  externalId?: string;
   sourceId?: string;
   externalUpdatedAt?: string;
   metadata?: Record<string, unknown>;

@@ -53,6 +53,44 @@ function safeTimestamp(value: unknown) {
   return typeof value === "string" && value.length ? value : "1970-01-01T00:00:00.000Z";
 }
 
+function getTimestamp(day: AppleHealthDailyImport) {
+  return new Date(safeTimestamp(day.externalUpdatedAt || day.metadata?.updatedAt)).getTime();
+}
+
+function pickString(existing: string | undefined, incoming: string | undefined, incomingWins: boolean) {
+  if (incomingWins) return incoming ?? existing;
+  return existing ?? incoming;
+}
+
+function pickNumber(existing: number | undefined, incoming: number | undefined, incomingWins: boolean) {
+  if (incomingWins) return typeof incoming === "number" ? incoming : existing;
+  return typeof existing === "number" ? existing : incoming;
+}
+
+function mergeDailyImport(existing: AppleHealthDailyImport, incoming: AppleHealthDailyImport): AppleHealthDailyImport {
+  const incomingWins = getTimestamp(incoming) >= getTimestamp(existing);
+  const mergedMetadata = incomingWins
+    ? { ...(existing.metadata ?? {}), ...(incoming.metadata ?? {}) }
+    : { ...(incoming.metadata ?? {}), ...(existing.metadata ?? {}) };
+
+  return {
+    date: incoming.date,
+    waterMl: pickNumber(existing.waterMl, incoming.waterMl, incomingWins),
+    proteinG: pickNumber(existing.proteinG, incoming.proteinG, incomingWins),
+    sleepHours: pickNumber(existing.sleepHours, incoming.sleepHours, incomingWins),
+    weightKg: pickNumber(existing.weightKg, incoming.weightKg, incomingWins),
+    stepsCount: pickNumber(existing.stepsCount, incoming.stepsCount, incomingWins),
+    hrvMs: pickNumber(existing.hrvMs, incoming.hrvMs, incomingWins),
+    restingHr: pickNumber(existing.restingHr, incoming.restingHr, incomingWins),
+    workoutsCount: pickNumber(existing.workoutsCount, incoming.workoutsCount, incomingWins),
+    source: "apple_health",
+    sourceId: pickString(existing.sourceId, incoming.sourceId, incomingWins),
+    externalId: pickString(existing.externalId, incoming.externalId, incomingWins),
+    externalUpdatedAt: pickString(existing.externalUpdatedAt, incoming.externalUpdatedAt, incomingWins),
+    metadata: mergedMetadata,
+  };
+}
+
 function mergeDays(existing: AppleHealthDailyImport[], incoming: AppleHealthDailyImport[]) {
   const byDate = new Map<string, AppleHealthDailyImport>();
   for (const day of [...existing, ...incoming]) {
@@ -62,9 +100,7 @@ function mergeDays(existing: AppleHealthDailyImport[], incoming: AppleHealthDail
       continue;
     }
 
-    const currentTs = new Date(safeTimestamp(current.externalUpdatedAt || current.metadata?.updatedAt)).getTime();
-    const incomingTs = new Date(safeTimestamp(day.externalUpdatedAt || day.metadata?.updatedAt)).getTime();
-    if (incomingTs >= currentTs) byDate.set(day.date, day);
+    byDate.set(day.date, mergeDailyImport(current, day));
   }
   return Array.from(byDate.values()).sort((a, b) => a.date.localeCompare(b.date));
 }
