@@ -364,3 +364,88 @@ Sprint 2.4A — Apple Health Readiness Audit: evaluación de soporte actual para
 
 ## Próximo paso sugerido
 - Aplicar las migraciones SQL mínimas y definir el bridge Apple Health canónico antes de implementar iOS/HealthKit.
+
+## Fecha
+2026-06-04 19:31
+
+## Tarea ejecutada
+Sprint 2.4B — Apple Health data foundation: nueva capa `src/lib/health/appleHealth/` con payload, normalizer y repository.
+
+## Archivos modificados
+- src/lib/health/appleHealth/AppleHealthImportPayload.ts
+- src/lib/health/appleHealth/HealthMetricsNormalizer.ts
+- src/lib/health/appleHealth/AppleHealthImportRepository.ts
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+
+## Validación
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+
+## Errores o riesgos
+- La capa Apple Health todavía no persiste `hrv_ms`/`resting_hr` en la salud unificada; esas métricas quedan listas para la siguiente iteración del modelo.
+
+## Próximo paso sugerido
+- Conectar esta capa con el health foundation y decidir si `hrv_ms`/`resting_hr` se normalizan en `health_states` o solo en el bridge.
+
+## Fecha
+2026-06-04 19:37
+
+## Tarea ejecutada
+Sprint 2.4C — Historical backfill foundation: servicio de backfill Apple Health para rango arbitrario.
+
+## Archivos modificados
+- src/lib/health/appleHealth/AppleHealthBackfillService.ts
+- docs/APPLE_HEALTH_BACKFILL.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - pendiente
+- npm run lint - pendiente
+- npm run typecheck - pendiente
+
+## Validación
+- Build: pendiente
+- Lint: pendiente
+- Typecheck: pendiente
+
+## Errores o riesgos
+- El backfill genera datos de demostración estructurados; todavía no se conecta a una fuente Apple Health real.
+
+## Próximo paso sugerido
+- Conectar el backfill a un proveedor real y revisar la reconciliación con `health_states`, `fitness_body_metrics` y `fitness_workouts`.
+
+## Fecha
+2026-06-04 19:37
+
+## Tarea ejecutada
+Sprint 2.4C — Historical backfill foundation: servicio de backfill Apple Health para rango arbitrario.
+
+## Archivos modificados
+- src/lib/health/appleHealth/AppleHealthBackfillService.ts
+- docs/APPLE_HEALTH_BACKFILL.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+
+## Validación
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+
+## Errores o riesgos
+- El backfill genera datos de demostración estructurados; todavía no se conecta a una fuente Apple Health real.
+
+## Próximo paso sugerido
+- Conectar el backfill a un proveedor real y revisar la reconciliación con `health_states`, `fitness_body_metrics` y `fitness_workouts`.

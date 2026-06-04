@@ -884,3 +884,44 @@
 - `npm run build`: OK
 - `npm run lint`: OK
 - `npm run typecheck`: OK
+
+## 2026-06-04 19:31
+
+### Sprint 2.4B — Apple Health Data Foundation
+- Se creó la capa `src/lib/health/appleHealth/` con:
+  - `AppleHealthImportPayload.ts`
+  - `HealthMetricsNormalizer.ts`
+  - `AppleHealthImportRepository.ts`
+- La capa deja listo el contrato de importación para Apple Health sin tocar Swift/iOS/HealthKit todavía.
+- Permite:
+  - normalizar payloads diarios
+  - cachear imports en localStorage
+  - aplicar la importación a la Health Foundation existente
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-04 19:37
+
+### Sprint 2.4C — Historical Backfill Foundation
+- Se creó `src/lib/health/appleHealth/AppleHealthBackfillService.ts`.
+- El servicio soporta rango arbitrario:
+  - `startDate`
+  - `endDate`
+- Prepara datasets para:
+  - Sleep
+  - Weight
+  - Steps
+  - HRV
+  - Resting HR
+  - Workouts
+- La importación evita duplicados con `sourceId` y `externalUpdatedAt`.
+- Nueva documentación:
+  - `docs/APPLE_HEALTH_BACKFILL.md`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
