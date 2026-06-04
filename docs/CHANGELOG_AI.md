@@ -860,3 +860,27 @@
 - `npm run build`: OK
 - `npm run lint`: OK
 - `npm run typecheck`: OK
+
+## 2026-06-04 19:08
+
+### Sprint 2.4A — Apple Health Readiness
+- Se auditó el soporte actual para Apple Health sin refactorizar la app.
+- Resultado:
+  - Sleep: parcialmente soportado
+  - Weight: parcialmente soportado
+  - Steps: soportado en modelo local, no en persistencia remota
+  - HRV: faltante
+  - Resting HR: faltante
+  - Workouts: soportado
+- Se documentaron:
+  - gaps
+  - migraciones SQL necesarias
+  - bridge Apple Health futuro
+- Nuevos docs:
+  - `docs/APPLE_HEALTH_READINESS_AUDIT.md`
+  - `docs/APPLE_HEALTH_BRIDGE.md`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
