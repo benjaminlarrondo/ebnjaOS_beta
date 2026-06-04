@@ -1,6 +1,34 @@
 # STATUS.md
 
 ## Fecha
+2026-06-04 19:55
+
+## Tarea ejecutada
+Sprint 2.4E — Supabase Apple Health Audit: validación del contrato de persistencia para `fitness_body_metrics`, `fitness_workouts` y `health_states`.
+
+## Archivos modificados
+- docs/SUPABASE_APPLE_HEALTH_AUDIT.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+
+## Validación
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+
+## Errores o riesgos
+- El bridge Apple Health sigue siendo local-first; no hay un repository que haga upsert remoto hacia Supabase todavía.
+- El resultado remoto real depende de aplicar la migración SQL y conectar un writer Supabase para Apple Health.
+
+## Próximo paso sugerido
+- Implementar el repository Apple Health remoto y validar el ciclo read/write/upsert en Supabase.
+
+## Fecha
 2026-06-04 19:44
 
 ## Tarea ejecutada
