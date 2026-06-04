@@ -844,3 +844,19 @@
 - `npm run build`: OK
 - `npm run lint`: OK
 - `npm run typecheck`: OK
+
+## 2026-06-04 18:54
+
+### Sprint 2.3E — Fitness UI Freeze V1
+- Se cerraron los hallazgos abiertos de la auditoría visual de Fitness.
+- Cambios aplicados:
+  - Recovery Intelligence quedó unificado en una sola experiencia dedicada.
+  - Heatmap adaptativo: compacto en historiales cortos y completo en historiales suficientes.
+  - Trend Cards responsive: menos texto secundario en mobile.
+  - PR Tracker colapsable para reducir densidad y scroll.
+- Nueva documentación en `docs/FITNESS_UI_FREEZE_V1.md`.
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK

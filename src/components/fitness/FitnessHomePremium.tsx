@@ -18,20 +18,11 @@ function MetricPill({
 export type FitnessHomePremiumProps = {
   hero: {
     fitnessScore: number;
-    recoveryScore: number;
     streak: number;
     lastWorkoutLabel: string;
     lastWorkoutTitle: string;
     totalWorkouts: number;
     prsCount: number;
-  };
-  recovery: {
-    sleepHours: number;
-    recentWorkoutLabel: string;
-    recentWorkoutCount: number;
-    recoveryScore: number;
-    statusLabel: string;
-    recommendation: string;
   };
   nextWorkout: {
     name: string;
@@ -44,10 +35,10 @@ export type FitnessHomePremiumProps = {
   };
 };
 
-export function FitnessHomePremium({ hero, recovery, nextWorkout }: FitnessHomePremiumProps) {
+export function FitnessHomePremium({ hero, nextWorkout }: FitnessHomePremiumProps) {
   return (
     <section className="space-y-2.5">
-      <div className="grid gap-2.5 lg:grid-cols-[1.65fr_1fr]">
+      <div className="grid gap-2.5 lg:grid-cols-[1.55fr_1fr]">
         <article className="card">
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -62,12 +53,12 @@ export function FitnessHomePremium({ hero, recovery, nextWorkout }: FitnessHomeP
             <div className="surface-tile">
               <p className="text-xs text-texts">Fitness Score</p>
               <p className="metric-value-xl mt-2 text-primary">{hero.fitnessScore}%</p>
-              <p className="mt-1 text-xs text-texts">Entreno + nutrición + recovery</p>
+              <p className="mt-1 text-xs text-texts">Entreno + nutrición + consistencia</p>
             </div>
             <div className="surface-tile">
-              <p className="text-xs text-texts">Recovery Score</p>
-              <p className="metric-value-xl mt-2 text-textp">{hero.recoveryScore}%</p>
-              <p className="mt-1 text-xs text-texts">Sueño + fatiga + carga reciente</p>
+              <p className="text-xs text-texts">Workout Momentum</p>
+              <p className="metric-value-xl mt-2 text-textp">{hero.totalWorkouts}</p>
+              <p className="mt-1 text-xs text-texts">Sesiones acumuladas</p>
             </div>
           </div>
 
@@ -80,32 +71,32 @@ export function FitnessHomePremium({ hero, recovery, nextWorkout }: FitnessHomeP
 
           <div className="mt-3 flex flex-wrap gap-2">
             <span className="pill-soft">Entrenos: {hero.totalWorkouts}</span>
-            <span className="pill-soft">{recovery.recentWorkoutCount} recientes</span>
+            <span className="pill-soft">PRs activos: {hero.prsCount}</span>
           </div>
         </article>
 
         <article className="card">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="eyebrow">Recovery Card</p>
-              <h3 className="text-sm font-semibold text-textp">Estado de recuperación</h3>
+              <p className="eyebrow">Daily Snapshot</p>
+              <h3 className="text-sm font-semibold text-textp">Resumen ejecutivo</h3>
             </div>
-            <span className="pill-soft text-primary">{recovery.statusLabel}</span>
+            <span className="pill-soft text-primary">{nextWorkout.status}</span>
           </div>
 
           <div className="mt-4 grid gap-2">
             <div className="inner-card">
-              <p className="text-xs text-texts">Sueño</p>
-              <p className="metric-value mt-2">{recovery.sleepHours} h</p>
+              <p className="text-xs text-texts">Rutina actual</p>
+              <p className="mt-2 text-sm font-semibold text-textp">{nextWorkout.name}</p>
             </div>
             <div className="inner-card">
-              <p className="text-xs text-texts">Entrenamiento reciente</p>
-              <p className="mt-2 text-sm font-semibold text-textp">{recovery.recentWorkoutLabel}</p>
+              <p className="text-xs text-texts">Ubicación</p>
+              <p className="mt-2 text-sm font-semibold text-textp">{nextWorkout.location}</p>
             </div>
             <div className="inner-card">
-              <p className="text-xs text-texts">Recovery Score</p>
-              <p className="metric-value mt-2">{recovery.recoveryScore}%</p>
-              <p className="mt-1 text-xs text-texts">{recovery.recommendation}</p>
+              <p className="text-xs text-texts">Duración estimada</p>
+              <p className="metric-value mt-2">{nextWorkout.durationLabel}</p>
+              <p className="mt-1 text-xs text-texts">{nextWorkout.exerciseCount} ejercicios visibles</p>
             </div>
           </div>
         </article>

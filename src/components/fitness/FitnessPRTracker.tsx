@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { ChevronDown } from "lucide-react";
 
 const KEY = "ebnjaos-fitness-pr-v1";
 
@@ -103,12 +104,19 @@ export function FitnessPRTracker() {
   };
 
   return (
-    <section className="card">
-      <div className="mb-3">
-        <p className="eyebrow">PR Tracker</p>
-        <h3 className="text-sm font-semibold text-textp">Seguimiento de levantamientos clave</h3>
-      </div>
-      <div className="space-y-2">
+    <details className="card group">
+      <summary className="flex cursor-pointer list-none items-start justify-between gap-3">
+        <div>
+          <p className="eyebrow">PR Tracker</p>
+          <h3 className="text-sm font-semibold text-textp">Seguimiento de levantamientos clave</h3>
+          <p className="mt-1 text-xs text-texts">Bloque colapsable para mantener la portada ligera.</p>
+        </div>
+        <span className="flex items-center gap-1 rounded-full border border-borderc bg-surface px-2 py-1 text-[10px] text-texts">
+          {rows.length} movimientos
+          <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" />
+        </span>
+      </summary>
+      <div className="mt-3 space-y-2">
         {rows.map((row) => (
           <div key={row.key} className="rounded-xl border border-borderc bg-surface p-2.5">
             <div className="flex items-center justify-between text-sm">
@@ -131,7 +139,6 @@ export function FitnessPRTracker() {
           </div>
         ))}
       </div>
-    </section>
+    </details>
   );
 }
-
