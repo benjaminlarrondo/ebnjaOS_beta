@@ -1,3 +1,26 @@
+## 2026-06-04 19:55
+
+### Sprint 2.4E — Supabase Apple Health Audit
+- Se auditó la migración Apple Health para:
+  - `fitness_body_metrics`
+  - `fitness_workouts`
+  - `health_states`
+- Se confirmó que el contrato de datos está listo en el repo:
+  - `steps_count`
+  - `hrv_ms`
+  - `resting_hr`
+  - `source`
+  - `external_id`
+  - `external_updated_at`
+  - `metadata`
+- Se documentó la validación en:
+  - `docs/SUPABASE_APPLE_HEALTH_AUDIT.md`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
 ## 2026-06-04 19:44
 
 ### Sprint 2.4D — Health Metrics Persistence
