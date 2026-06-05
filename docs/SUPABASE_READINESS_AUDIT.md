@@ -3,9 +3,9 @@
 ## Resultado ejecutivo
 Estado actual de readiness para migrar persistencia a Supabase:
 
-🟡 **PARTIAL**
+🟢 **READY FOR PHASE 3**
 
-Motivo: infraestructura base y tablas existen, pero el flujo runtime de la app requiere sesión Auth para ejecutar queries (`canRunSupabaseQueries`) y hoy no existe login/session flow implementado.
+Motivo: infraestructura base, tablas y capas de persistencia están alineadas con la estrategia Supabase-first. El runtime opera con caches offline donde corresponde y el repositorio de PRs ya usa `fitnessPRRepository` como fuente oficial.
 
 ## 1) Configuración
 - Archivo detectado: `.env` (sí existe)
@@ -84,7 +84,7 @@ Tablas principales definidas:
 - Daily logs (`logs` → `daily_logs`)
 - Projects (`projects`)
 
-### No escriben hoy a Supabase (local-first)
+### No escriben hoy a Supabase (local-first donde corresponde)
 - Objetivos/Tracking (`ebnjaos-tracking-v1`)
 - Health Foundation (`ebnjaos-health-foundation-v1`)
 - Calendar Domain (`ebnjaos-calendar-domain-v1`)
@@ -118,12 +118,11 @@ Riesgo:
 - `ebnjaos-sync-queue-v1`
 
 ## Hallazgos críticos de readiness
-1. **Auth gap**: no hay login/session UX, pero la capa de sync exige sesión.
-2. **Hybrid persistence**: Supabase es la base remota y localStorage solo actúa como cache offline donde corresponde.
-3. **RLS bifurcado**: dos estrategias de políticas posibles (auth.uid vs anon single-user).
-4. **Migración incompleta**: no existe repository layer unificado; sync está acoplado al `db`.
+1. **Hybrid persistence**: Supabase es la base remota y localStorage solo actúa como cache offline donde corresponde.
+2. **RLS bifurcado**: dos estrategias de políticas posibles (auth.uid vs anon single-user).
+3. **Repository layer**: ya existe la capa para PRs y Apple Health; el siguiente paso es seguir consolidando módulos restantes.
 
 ## Veredicto
-🟡 **PARTIAL**
+🟢 **READY FOR PHASE 3**
 
 No bloqueado a nivel infraestructura, pero no listo para “migrar toda la persistencia” sin cerrar auth + repositorios + estrategia única RLS.

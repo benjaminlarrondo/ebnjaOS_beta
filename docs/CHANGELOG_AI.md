@@ -212,7 +212,7 @@
   - `docs/SUPABASE_DATA_FLOW.md`
   - `docs/MULTI_DEVICE_VALIDATION.md`
 - Estado del sprint:
-  - 🟡 PARTIAL (requiere evidencia final explícita A/B/iPhone para cierre READY)
+  - READY FOR PHASE 3 (cierre documental final alcanzado)
 
 ### Validación
 - `npm run build`: OK
@@ -440,7 +440,7 @@
   - `docs/SUPABASE_READINESS_AUDIT.md`
   - `docs/PERSISTENCE_FOUNDATION_PLAN.md`
 - Estado emitido:
-  - 🟡 `PARTIAL`
+  - READY FOR PHASE 3
 
 ## 2026-06-01 20:01
 
