@@ -1,0 +1,14 @@
+/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/HealthKitCompanionApp.swift
+/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthFoundationState.swift
+/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthMetric.swift
+/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthSnapshot.swift
+/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/WorkoutRecord.swift
+/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/RootView.swift
+/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthFoundationBridgeBuilder.swift
+/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitManager.swift
+/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitNormalizer.swift
+/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitPermissions.swift
+/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitQueries.swift
+/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/SupabaseClient.swift
+/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/SyncEngine.swift
+/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/SettingsView.swift

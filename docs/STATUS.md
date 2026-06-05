@@ -1,6 +1,429 @@
 # STATUS.md
 
 ## Fecha
+2026-06-04 22:40
+
+## Tarea ejecutada
+Se implementó `HealthBaselineEngine` y se agregó la card `Personal Baselines` en `Health_ebnjaOS`, comparando HRV, Resting HR y Sleep contra el comportamiento histórico de 30 días. Además, `HealthRecoveryEngine` ahora usa deltas sobre baselines para HRV y Resting HR.
+
+## Archivos modificados
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/BaselineCalculator.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/BaselineModels.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthBaselineEngine.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthRecoveryEngine.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthKitManager.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/ContentView.swift
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- Ninguno detectado.
+
+## Próximo paso sugerido
+- Validar los baselines en iPhone físico con datos reales de 30 días.
+
+## Fecha
+2026-06-04 22:30
+
+## Tarea ejecutada
+Se implementó `ReadinessEngine` y se agregó la capa de coaching diario con `Today's Readiness`, `Why?` y `Risk Factors` en `Health_ebnjaOS`.
+
+## Archivos modificados
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/ReadinessModels.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/ReadinessEngine.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthKitManager.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/ContentView.swift
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- Ninguno detectado.
+
+## Próximo paso sugerido
+- Validar la recomendación diaria en iPhone físico.
+
+## Fecha
+2026-06-04 22:24
+
+## Tarea ejecutada
+Se implementó `HealthRecoveryEngine` y se integró Recovery Intelligence en `Health_ebnjaOS` con cards de Recovery Score, Readiness, Training Load y Weekly Trend.
+
+## Archivos modificados
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthRecoveryEngine.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthKitManager.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/ContentView.swift
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- Ninguno detectado.
+
+## Próximo paso sugerido
+- Probar el motor de Recovery en iPhone físico para verificar los valores reales y el estado semanal.
+
+## Fecha
+2026-06-04 21:57
+
+## Tarea ejecutada
+Se extendió `Health_ebnjaOS` para leer HRV, Resting Heart Rate, Active Energy Burned y Workouts de HealthKit, manteniendo Weight, Sleep y Steps.
+
+## Archivos modificados
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthKitManager.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthKitTypes.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/ContentView.swift
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- Ninguno detectado.
+
+## Próximo paso sugerido
+- Validar la lectura real de las nuevas métricas en iPhone físico.
+
+## Fecha
+2026-06-04 21:49
+
+## Tarea ejecutada
+Se conectó el estado real de autorización de HealthKit a `permissions.authorizationStatus`, mostrando `Pending`, `Authorized` o `Denied` en `Health_ebnjaOS`.
+
+## Archivos modificados
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthKitPermissions.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/ContentView.swift
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- Ninguno detectado.
+
+## Próximo paso sugerido
+- Validar el flujo real en iPhone físico para confirmar Pending / Authorized / Denied.
+
+## Fecha
+2026-06-04 21:44
+
+## Tarea ejecutada
+Phase 3.0E: se agregaron consultas reales de HealthKit para peso, pasos y sueño, y la UI ahora muestra valores vivos desde Apple Health.
+
+## Archivos modificados
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/ContentView.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthKitManager.swift
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- La prueba real en iPhone físico sigue pendiente para confirmar los permisos y la lectura con datos del usuario.
+
+## Próximo paso sugerido
+- Probar la app en un iPhone real y verificar que Weight, Sleep y Steps se llenen con Apple Health.
+
+## Fecha
+2026-06-04 21:36
+
+## Tarea ejecutada
+Se habilitó y validó la capability HealthKit en el target `Health_ebnjaOS`, con entitlements correctos y `Info.plist` actualizado para el acceso a Apple Health.
+
+## Archivos modificados
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj/project.pbxproj
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- La validación real en iPhone físico sigue pendiente, pero la configuración del proyecto quedó lista para HealthKit.
+
+## Próximo paso sugerido
+- Ejecutar el flujo de autorización en dispositivo físico.
+
+## Fecha
+2026-06-04 21:34
+
+## Tarea ejecutada
+Se conectó explícitamente el botón `Request Health Access` a `permissions.requestAuthorization()` en `Health_ebnjaOS`.
+
+## Archivos modificados
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/ContentView.swift
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- pendiente de validación
+
+## Validación
+- Build: pendiente
+- Lint: pendiente
+- Typecheck: pendiente
+
+## Errores o riesgos
+- Ninguno detectado todavía; el flujo de permisos ya existía y solo se simplificó el disparo del botón.
+
+## Próximo paso sugerido
+- Validar el comportamiento del botón en un dispositivo físico con HealthKit habilitado.
+
+## Fecha
+2026-06-04 21:32
+
+## Tarea ejecutada
+Se reorganizó la app nativa `Health_ebnjaOS` para ubicar `HealthKitManager.swift`, `HealthKitPermissions.swift` y `HealthKitTypes.swift` dentro de `HealthKit/` sin cambiar el comportamiento.
+
+## Archivos modificados
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthKitManager.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthKitPermissions.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthKitTypes.swift
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `mkdir -p Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit`
+- `mv Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKitPermissions.swift Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/`
+- `mv Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKitManager.swift Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/`
+- `mv Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKitTypes.swift Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/`
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- La validación en iPhone físico sigue pendiente; aquí solo se comprobó que la reubicación no rompe compilación.
+
+## Próximo paso sugerido
+- Seguir con la validación real del permiso HealthKit en un dispositivo físico.
+
+## Fecha
+2026-06-04 21:30
+
+## Tarea ejecutada
+Phase 3.0D: se conectó la app nativa `Health_ebnjaOS` a HealthKit real para solicitar permisos, leer el estado de autorización y reflejar `Pending Authorization`, `Authorized` o `Denied`.
+
+## Archivos modificados
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/ContentView.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKitManager.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKitPermissions.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKitTypes.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.entitlements
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOSApp.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj/project.pbxproj
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- La validación en este entorno solo pudo confirmarse con destino macOS; la prueba real en iPhone físico sigue pendiente.
+- HealthKit requiere dispositivo físico para autorizar datos reales, por lo que el estado final en iPhone aún debe verificarse allí.
+
+## Próximo paso sugerido
+- Probar `Health_ebnjaOS` en un iPhone real y confirmar el cambio entre `Pending Authorization`, `Authorized` y `Denied`.
+
+## Fecha
+2026-06-04 21:23
+
+## Tarea ejecutada
+Phase 3.0C: se conectó el companion nativo de HealthKit a Supabase con `SupabaseClient` real, `pushMetrics()`, `pushWorkouts()`, `pullLastSync()`, `SnapshotUpload` y `SyncReport` canónico.
+
+## Archivos modificados
+- HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthFoundationState.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthSnapshot.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Models/WorkoutRecord.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthFoundationBridgeBuilder.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitManager.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitNormalizer.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitPermissions.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitQueries.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/SyncEngine.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/SupabaseClient.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/RootView.swift
+- docs/HEALTHKIT_SUPABASE_BRIDGE.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `cd HealthKitCompanion && swift build`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- El companion sigue siendo un scaffold Swift Package; falta convertirlo a un target iOS/Xcode runnable para validar en dispositivo físico.
+- El bridge depende de que las variables Supabase estén disponibles en el entorno/Info.plist del companion.
+
+## Próximo paso sugerido
+- Validar el build del companion en Xcode/iPhone y probar un import de 30 días contra Supabase.
+
+## Fecha
+2026-06-04 21:06
+
+## Tarea ejecutada
+Phase 3.0B: se implementó la lectura real de Apple Health desde HealthKit con `HKAnchoredObjectQuery`, normalización canónica y exportación local de snapshot JSON.
+
+## Archivos modificados
+- HealthKitCompanion/Package.swift
+- HealthKitCompanion/README.md
+- HealthKitCompanion/Sources/HealthKitCompanion/HealthKitCompanionApp.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/RootView.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/SettingsView.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthMetric.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Models/WorkoutRecord.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthSnapshot.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitManager.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitPermissions.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitQueries.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitNormalizer.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/SyncEngine.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/SupabaseClient.swift
+- docs/HEALTHKIT_COMPANION_IMPLEMENTATION_PLAN.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- El companion aún es un scaffold Swift Package y no un `.xcodeproj` de iPhone listo para Simulator/device.
+- Supabase write, background delivery y observer queries siguen fuera de alcance de esta fase.
+
+## Próximo paso sugerido
+- Convertir el scaffold en un target iOS/Xcode runnable y conectar el export JSON al bridge futuro.
+
+## Fecha
+2026-06-04 20:57
+
+## Tarea ejecutada
+Se creó el scaffold nativo `HealthKitCompanion/` para iPhone con HealthKitManager, permissions, queries, SyncEngine, SupabaseClient, modelos y SettingsView.
+
+## Archivos modificados
+- HealthKitCompanion/Package.swift
+- HealthKitCompanion/README.md
+- HealthKitCompanion/Sources/HealthKitCompanion/HealthKitCompanionApp.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/RootView.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/SettingsView.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthMetric.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Models/WorkoutRecord.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitPermissions.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitManager.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitQueries.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/SyncEngine.swift
+- HealthKitCompanion/Sources/HealthKitCompanion/Services/SupabaseClient.swift
+- docs/HEALTHKIT_COMPANION_IMPLEMENTATION_PLAN.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- pendiente de validación
+
+## Validación
+- Build: pendiente
+- Lint: pendiente
+- Typecheck: pendiente
+
+## Errores o riesgos
+- El scaffold aún no está empaquetado como proyecto Xcode completo; por ahora es una base Swift Package/lista para convertirse en app nativa.
+
+## Próximo paso sugerido
+- Crear el proyecto iOS/Xcode que consuma esta base o conectar el bridge a un target de app existente.
+
+## Fecha
 2026-06-04 20:43
 
 ## Tarea ejecutada
