@@ -1173,3 +1173,40 @@ Sprint 2.4C — Historical backfill foundation: servicio de backfill Apple Healt
 
 ## Próximo paso sugerido
 - Conectar el backfill a un proveedor real y revisar la reconciliación con `health_states`, `fitness_body_metrics` y `fitness_workouts`.
+# STATUS.md
+
+## Fecha
+2026-06-05 10:37
+
+## Tarea ejecutada
+PHASE 3.3A — Supabase DEV Sync: conexión del companion Health_ebnjaOS a Supabase DEV con SyncManager, SupabaseService y configuración vía Environment / Info.plist.
+
+## Archivos modificados
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/SupabaseConfig.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/SupabaseService.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/SyncManager.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthSyncModels.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthSyncNormalizer.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/HealthKit/HealthKitManager.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/ContentView.swift
+- Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj/project.pbxproj
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- xcodebuild -project Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build - OK
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+
+## Validación
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+
+## Errores o riesgos
+- La sincronización Supabase depende de `SUPABASE_URL` y `SUPABASE_ANON_KEY`; si no están configuradas, el UI muestra estado de error controlado sin bloquear la app.
+- El flujo es DEV-first; no se ha conectado producción ni Background Sync.
+
+## Próximo paso sugerido
+- Validar el sync real con credenciales DEV y comprobar upserts en `health_states`, `fitness_body_metrics` y `fitness_workouts`.

@@ -1363,6 +1363,35 @@
 - `npm run lint`: OK
 - `npm run typecheck`: OK
 
+## 2026-06-05 10:37
+
+### Sprint 3.3A — Supabase DEV Sync
+- Se agregó la capa `Health_ebnjaOS/HealthKit/` para sincronización DEV con Supabase:
+  - `SupabaseConfig.swift`
+  - `SupabaseService.swift`
+  - `SyncManager.swift`
+  - `HealthSyncModels.swift`
+  - `HealthSyncNormalizer.swift`
+- `HealthKitManager` ahora expone un `HealthSyncSnapshot` listo para normalización y sync remoto.
+- `ContentView` incorporó un bloque de `Sync Status` con:
+  - `Never Synced`
+  - `Syncing`
+  - `Success`
+  - `Error`
+- La configuración de Supabase se resuelve desde:
+  - Environment
+  - Info.plist
+  - sin hardcodear credenciales
+- El sync usa upsert idempotente con:
+  - `external_id`
+  - `external_updated_at`
+
+### Validación
+- `xcodebuild ... build`: OK
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
 ## 2026-06-04 19:31
 
 ### Sprint 2.4B — Apple Health Data Foundation
