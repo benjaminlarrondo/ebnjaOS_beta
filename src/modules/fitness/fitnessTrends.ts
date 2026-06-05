@@ -1,6 +1,7 @@
 import { db } from "../../lib/store";
 import { toDateKey } from "../../lib/health/healthMetrics";
 import type { HealthFoundationState } from "../../lib/health/healthTypes";
+import { loadFitnessPRState } from "../../lib/repositories/fitnessPRRepository";
 
 type FitnessState = ReturnType<typeof db.getFitnessState>;
 
@@ -18,8 +19,6 @@ export type FitnessTrendCardModel = {
   sourceLabel: string;
   tone: "primary" | "text" | "accent";
 };
-
-type PrState = Partial<Record<string, Array<{ date: string; value: number }>>>;
 
 function getDateRange(days: number, today = new Date()) {
   const base = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -80,18 +79,8 @@ function getHealthSeries(healthState: HealthFoundationState, key: "weight_kg" | 
   });
 }
 
-function loadPrState(): PrState {
-  const raw = localStorage.getItem("ebnjaos-fitness-pr-v1");
-  if (!raw) return {};
-  try {
-    return JSON.parse(raw) as PrState;
-  } catch {
-    return {};
-  }
-}
-
 function buildPrSeries(today = new Date()) {
-  const prState = loadPrState();
+  const prState = loadFitnessPRState();
   const dates = getDateRange(30, today);
   const movementAverages = dates.map((date) => {
     const latestValues = Object.values(prState).map((entries) => {

@@ -48,7 +48,10 @@ Sprint 2.3 implementa Fitness 2.0 sobre Health Foundation existente, sin tocar C
   - Último PR
   - Variación mensual
   - Tendencia simple (↗ / → / ↘)
-- Persistencia localStorage:
+- Persistencia oficial:
+  - `src/lib/repositories/fitnessPRRepository.ts`
+  - `fitness_prs` como source of truth
+- `localStorage` queda solo como cache offline con key legacy:
   - `ebnjaos-fitness-pr-v1`
 
 ### 6) Dashboard Fitness Card

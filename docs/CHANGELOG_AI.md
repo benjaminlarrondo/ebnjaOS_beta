@@ -1,3 +1,130 @@
+## 2026-06-04 20:43
+
+### Final Alignment Cleanup — Phase 3 Ready
+- Se limpiaron referencias obsoletas de documentación para reflejar el estado actual:
+  - `fitnessPRRepository` como persistencia oficial de PRs
+  - `fitness_prs` como source of truth
+  - `localStorage` solo como cache offline
+- Se dejó preparado el reporte formal:
+  - `docs/PHASE3_READINESS_REPORT.md`
+- Estado global objetivo:
+  - `READY FOR PHASE 3`
+
+### Validación
+- `npm run build`: PASS
+- `npm run lint`: PASS
+- `npm run typecheck`: PASS
+
+## 2026-06-04 20:39
+
+### Roadmap Consolidation
+- Se creó `docs/ROADMAP.md` como fuente única de roadmap por fases:
+  - Fase 1
+  - Fase 2
+  - Fase 2.5
+  - Fase 3
+  - Fase 4
+  - Fase 5
+
+### Validación
+- pendiente de ejecución
+
+## 2026-06-04 20:36
+
+### Supabase Production Audit
+- Se validaron en Supabase:
+  - `fitness_prs`
+  - `fitness_workouts`
+  - `fitness_body_metrics`
+  - `health_states`
+  - `tracking_states`
+  - `calendar_events`
+- Se documentó el estado real de:
+  - índices
+  - upserts
+  - deduplicación
+  - `external_id`
+  - `external_updated_at`
+- Se agregó:
+  - `docs/SUPABASE_PRODUCTION_AUDIT.md`
+
+### Validación
+- pruebas live con Supabase anon select: OK
+- `npm run build`: pendiente
+- `npm run lint`: pendiente
+- `npm run typecheck`: pendiente
+
+## 2026-06-04 20:34
+
+### Fitness Persistence Final Audit
+- Se validó el estado real de la persistencia de Fitness:
+  - `FitnessPRTracker` ya usa `fitnessPRRepository`
+  - `fitnessTrends.ts` ya lee desde el repository
+  - `fitness_prs` es la fuente remota
+  - `localStorage` quedó como cache offline
+- Se documentó la deuda de alineación en:
+  - `docs/FITNESS_PERSISTENCE_FINAL_AUDIT.md`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-04 20:23
+
+### Fitness PR Repository
+- Se creó `src/lib/repositories/fitnessPRRepository.ts`.
+- `FitnessPRTracker` dejó de depender de `localStorage` como fuente principal.
+- `fitnessTrends.ts` ahora lee el estado PR desde el repository.
+- `FitnessPage` hidrata PR state desde Supabase en background.
+- La persistencia quedó con:
+  - Supabase como fuente principal
+  - cache local como respaldo offline
+
+### Validación
+- `npm run build`: pendiente
+- `npm run lint`: pendiente
+- `npm run typecheck`: pendiente
+
+## 2026-06-04 20:02
+
+### Master Alignment Audit — Pre HealthKit Companion
+- Se auditaron:
+  - estado del git repository
+  - tablas y contrato de Supabase
+  - Fitness y dependencias de persistencia
+  - Apple Health Foundation
+  - deduplicación por `external_id`
+  - documentación y build integrity
+- Resultado:
+  - `READY FOR PHASE 3`
+- Documento agregado:
+  - `docs/MASTER_ALIGNMENT_AUDIT.md`
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
+## 2026-06-04 20:18
+
+### Sprint 2.5A — HealthKit Companion Architecture
+- Se diseñó el flujo completo:
+  - HealthKit → Companion App → JSON canónico → Supabase → UI
+- Se definió la importación inicial de 30 días.
+- Se definió delta sync diario y estrategia background sync.
+- Se documentó la resolución de conflictos por:
+  - `external_id`
+  - `external_updated_at`
+- Se definió el mapeo HealthKit → tablas actuales.
+- Documento agregado:
+  - `docs/HEALTHKIT_COMPANION_ARCHITECTURE.md`
+
+### Validación
+- `npm run build`: pendiente
+- `npm run lint`: pendiente
+- `npm run typecheck`: pendiente
+
 ## 2026-06-04 20:05
 
 ### Sprint 2.4F — Apple Health Remote Repository

@@ -88,7 +88,7 @@ Tablas principales definidas:
 - Objetivos/Tracking (`ebnjaos-tracking-v1`)
 - Health Foundation (`ebnjaos-health-foundation-v1`)
 - Calendar Domain (`ebnjaos-calendar-domain-v1`)
-- Fitness PR Tracker (`ebnjaos-fitness-pr-v1`)
+- Fitness PR Tracker (`fitnessPRRepository` → `fitness_prs`; `localStorage` solo como cache offline)
 
 ## 6) RLS / Policies
 - `supabase/schema.sql` habilita RLS en tablas principales.
@@ -108,18 +108,18 @@ Riesgo:
 ### Viaja a Supabase hoy (solo si `canRunSupabaseQueries()` true)
 - collections de `db`: tasks, events, workouts, notes, prompts, resources, logs, projects
 
-### Permanece localStorage
+### Permanece localStorage como cache offline
 - `ebnjaos-db-v1`
 - `ebnjaos-calendar-domain-v1`
 - `ebnjaos-health-foundation-v1`
 - `ebnjaos-tracking-v1`
 - `ebnjaos-goals-v1`
-- `ebnjaos-fitness-pr-v1`
+- `ebnjaos-fitness-pr-v1` (legacy cache key del repository de PRs)
 - `ebnjaos-sync-queue-v1`
 
 ## Hallazgos críticos de readiness
 1. **Auth gap**: no hay login/session UX, pero la capa de sync exige sesión.
-2. **Dual persistence**: base funcional sigue siendo localStorage para módulos core.
+2. **Hybrid persistence**: Supabase es la base remota y localStorage solo actúa como cache offline donde corresponde.
 3. **RLS bifurcado**: dos estrategias de políticas posibles (auth.uid vs anon single-user).
 4. **Migración incompleta**: no existe repository layer unificado; sync está acoplado al `db`.
 

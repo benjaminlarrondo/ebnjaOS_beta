@@ -1,6 +1,211 @@
 # STATUS.md
 
 ## Fecha
+2026-06-04 20:43
+
+## Tarea ejecutada
+Cleanup final de alineación: se actualizó la documentación para dejar `fitnessPRRepository` como persistencia oficial de PRs, `fitness_prs` como source of truth y `localStorage` solo como cache offline. Estado global objetivo: READY FOR PHASE 3.
+
+## Estado final
+READY FOR PHASE 3
+
+## Archivos modificados
+- docs/MASTER_ALIGNMENT_AUDIT.md
+- docs/SUPABASE_READINESS_AUDIT.md
+- docs/FITNESS_2_0.md
+- docs/PHASE3_READINESS_REPORT.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- Persisten algunas referencias históricas en el changelog antiguo sobre la etapa previa del PR tracker, pero el runtime ya no depende de ellas.
+
+## Próximo paso sugerido
+- Ejecutar validación final y commit/push para cerrar oficialmente Phase 2.5.
+
+## Fecha
+2026-06-04 20:39
+
+## Tarea ejecutada
+Se añadió `docs/ROADMAP.md` como fuente única de roadmap por fases para ebnjaOS.
+
+## Archivos modificados
+- docs/ROADMAP.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- pendiente de validación
+
+## Validación
+- Build: pendiente
+- Lint: pendiente
+- Typecheck: pendiente
+
+## Errores o riesgos
+- Ninguno funcional; cambio documental.
+
+## Próximo paso sugerido
+- Mantener `docs/ROADMAP.md` como referencia única y alinear los demás docs con esta estructura.
+
+## Fecha
+2026-06-04 20:36
+
+## Tarea ejecutada
+Auditoría de producción de Supabase sobre `fitness_prs`, `fitness_workouts`, `fitness_body_metrics`, `health_states`, `tracking_states` y `calendar_events`.
+
+## Archivos modificados
+- docs/SUPABASE_PRODUCTION_AUDIT.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- pruebas live con Supabase anon select - OK
+- npm run build - pendiente de ejecución
+- npm run lint - pendiente de ejecución
+- npm run typecheck - pendiente de ejecución
+
+## Validación
+- Build: pendiente
+- Lint: pendiente
+- Typecheck: pendiente
+
+## Errores o riesgos
+- `fitness_prs` todavía no soporta `external_id` ni `external_updated_at`; deduplica por `id` determinístico.
+- Índices/policies no se pueden enumerar directamente desde el cliente `anon`, así que quedan como verificados por contrato de repo/migración, no por catálogo live.
+
+## Próximo paso sugerido
+- Si el roadmap exige external-id unificado para PRs, preparar la migración de `fitness_prs` en un sprint separado.
+
+## Fecha
+2026-06-04 20:34
+
+## Tarea ejecutada
+Fitness Persistence Final Audit: verificación del estado real de `fitnessPRRepository`, `FitnessPRTracker` y la alineación documental sobre la persistencia oficial de PRs.
+
+## Archivos modificados
+- src/lib/repositories/fitnessPRRepository.ts
+- src/components/fitness/FitnessPRTracker.tsx
+- src/modules/fitness/fitnessTrends.ts
+- src/modules/fitness/page.tsx
+- docs/FITNESS_PERSISTENCE_FINAL_AUDIT.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+
+## Validación
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+
+## Errores o riesgos
+- La documentación histórica todavía conserva menciones al key legacy `ebnjaos-fitness-pr-v1` como cache offline.
+- `localStorage` sigue existiendo como cache offline en el repository, lo cual es correcto por diseño pero debe quedar claramente documentado.
+
+## Próximo paso sugerido
+- Limpiar los docs históricos para que no contradigan la implementación Supabase-first actual.
+
+## Fecha
+2026-06-04 20:23
+
+## Tarea ejecutada
+Introducción de `src/lib/repositories/fitnessPRRepository.ts` para mover PR Tracker a Supabase con cache offline como respaldo.
+
+## Archivos modificados
+- src/lib/repositories/fitnessPRRepository.ts
+- src/components/fitness/FitnessPRTracker.tsx
+- src/modules/fitness/fitnessTrends.ts
+- src/modules/fitness/page.tsx
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - pendiente de ejecución
+- npm run lint - pendiente de ejecución
+- npm run typecheck - pendiente de ejecución
+
+## Validación
+- Build: pendiente
+- Lint: pendiente
+- Typecheck: pendiente
+
+## Errores o riesgos
+- El ID remoto de PR se genera de forma determinística a partir de movimiento/fecha/valor; si cambia el modelo de persistencia, habrá que revisar la estrategia de upsert.
+
+## Próximo paso sugerido
+- Validar que el PR Tracker ya lea y escriba correctamente desde Supabase y revisar si conviene un índice único adicional en `fitness_prs`.
+
+## Fecha
+2026-06-04 20:02
+
+## Tarea ejecutada
+Master Alignment Audit — pre HealthKit Companion: validación de repo, Supabase, Fitness, Apple Health Foundation, deduplicación, documentación y build integrity.
+
+## Archivos modificados
+- docs/MASTER_ALIGNMENT_AUDIT.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - OK
+- npm run lint - OK
+- npm run typecheck - OK
+
+## Validación
+- Build: OK
+- Lint: OK
+- Typecheck: OK
+
+## Errores o riesgos
+- `FitnessPRTracker` sigue dependiendo de `localStorage` como fuente de verdad para PRs.
+- RLS/policies/indexes de Supabase no pudieron inspeccionarse directamente con el cliente anon; solo se validó lectura de tablas y contrato de columnas.
+- No existe un `docs/ROADMAP.md` dedicado; la verdad de roadmap vive repartida entre `PROJECT_BRIEF.md` y `NEXT_TASK.md`.
+
+## Próximo paso sugerido
+- Resolver los gaps de Fitness PR persistence y cerrar validación SQL con acceso elevado antes de iniciar HealthKit Companion.
+
+## Fecha
+2026-06-04 20:18
+
+## Tarea ejecutada
+Sprint 2.5A — HealthKit Companion Architecture: diseño del flujo HealthKit → Supabase, importación inicial 30 días, delta sync diario y estrategia de conflictos/background sync.
+
+## Archivos modificados
+- docs/HEALTHKIT_COMPANION_ARCHITECTURE.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- npm run build - pendiente de ejecución
+- npm run lint - pendiente de ejecución
+- npm run typecheck - pendiente de ejecución
+
+## Validación
+- Build: pendiente
+- Lint: pendiente
+- Typecheck: pendiente
+
+## Errores o riesgos
+- Ninguno funcional por ahora; el sprint es documental/arquitectónico y no altera runtime.
+
+## Próximo paso sugerido
+- Validar el documento con la ruta de implementación nativa cuando arranque el sprint Swift.
+
+## Fecha
 2026-06-04 20:05
 
 ## Tarea ejecutada
@@ -368,7 +573,7 @@ Sprint 2.3C.3 — Trend Cards Premium: 5 tarjetas ejecutivas para Peso, Sueño, 
 - Typecheck: OK
 
 ## Errores o riesgos
-- La card de Fuerza depende de que existan PRs en `ebnjaos-fitness-pr-v1`; si no hay historial, cae a cargas registradas y puede mostrarse más conservadora.
+- La card de Fuerza depende de que existan PRs en el history de `fitness_prs`; si no hay historial, cae a cargas registradas y puede mostrarse más conservadora.
 
 ## Próximo paso sugerido
 - Hacer un pase visual en Fitness para ajustar densidad y asegurar que las Trend Cards se leen bien en mobile.
