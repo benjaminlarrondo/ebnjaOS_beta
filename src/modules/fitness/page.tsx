@@ -22,6 +22,7 @@ import { fitnessSessions, progressionPhases, strengthProgress } from "../../data
 import { toDateKey } from "../../lib/health/healthMetrics";
 import { db } from "../../lib/store";
 import { useHealthState } from "../../hooks/useHealthState";
+import { hydrateFitnessPRStateFromRemote } from "../../lib/repositories/fitnessPRRepository";
 import { computeFitnessHealthMetrics, computeRecoveryIntelligence } from "./fitnessMetrics";
 import { computeFitnessConsistencySummary } from "./fitnessConsistency";
 import { buildFitnessTrendCards } from "./fitnessTrends";
@@ -165,6 +166,9 @@ export default function FitnessPage() {
   const [monthlyOpen, setMonthlyOpen] = useState(false);
   const [, setTick] = useState(0);
   const [status, setStatus] = useState("");
+  useEffect(() => {
+    void hydrateFitnessPRStateFromRemote().catch(() => undefined);
+  }, []);
 
   const state = db.getFitnessState();
   const workouts = db.list("workouts");

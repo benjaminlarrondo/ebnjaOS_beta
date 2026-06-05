@@ -1,54 +1,14 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
-
-const KEY = "ebnjaos-fitness-pr-v1";
-
-type PRKey = "deadlift" | "back_squat" | "front_squat" | "clean" | "bench_press";
-type PREntry = { date: string; value: number };
-type PRState = Record<PRKey, PREntry[]>;
-
-const labels: Record<PRKey, string> = {
-  deadlift: "Deadlift",
-  back_squat: "Back Squat",
-  front_squat: "Front Squat",
-  clean: "Clean",
-  bench_press: "Bench Press",
-};
-
-function loadState(): PRState {
-  const raw = localStorage.getItem(KEY);
-  if (!raw) {
-    return {
-      deadlift: [],
-      back_squat: [],
-      front_squat: [],
-      clean: [],
-      bench_press: [],
-    };
-  }
-  try {
-    const parsed = JSON.parse(raw) as Partial<PRState>;
-    return {
-      deadlift: parsed.deadlift ?? [],
-      back_squat: parsed.back_squat ?? [],
-      front_squat: parsed.front_squat ?? [],
-      clean: parsed.clean ?? [],
-      bench_press: parsed.bench_press ?? [],
-    };
-  } catch {
-    return {
-      deadlift: [],
-      back_squat: [],
-      front_squat: [],
-      clean: [],
-      bench_press: [],
-    };
-  }
-}
-
-function saveState(state: PRState) {
-  localStorage.setItem(KEY, JSON.stringify(state));
-}
+import {
+  appendFitnessPREntry,
+  fitnessPRLabels,
+  hydrateFitnessPRStateFromRemote,
+  loadFitnessPRState,
+  type PRKey,
+  type PREntry,
+  type PRState,
+} from "../../lib/repositories/fitnessPRRepository";
 
 function monthlyDelta(logs: PREntry[]) {
   const currentMonth = new Date().toISOString().slice(0, 7);
@@ -66,7 +26,7 @@ function trend(logs: PREntry[]) {
 }
 
 export function FitnessPRTracker() {
-  const [state, setState] = useState<PRState>(loadState);
+  const [state, setState] = useState<PRState>(loadFitnessPRState());
   const [inputs, setInputs] = useState<Record<PRKey, string>>({
     deadlift: "",
     back_squat: "",
@@ -75,14 +35,24 @@ export function FitnessPRTracker() {
     bench_press: "",
   });
 
+  useEffect(() => {
+    let cancelled = false;
+    void hydrateFitnessPRStateFromRemote().then((remote) => {
+      if (!cancelled) setState(remote);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const rows = useMemo(
     () =>
-      (Object.keys(labels) as PRKey[]).map((key) => {
+      (Object.keys(fitnessPRLabels) as PRKey[]).map((key) => {
         const logs = state[key];
         const last = logs[logs.length - 1]?.value ?? 0;
         return {
           key,
-          label: labels[key],
+          label: fitnessPRLabels[key],
           last,
           delta: monthlyDelta(logs),
           trend: trend(logs),
@@ -94,13 +64,10 @@ export function FitnessPRTracker() {
   const savePR = (key: PRKey) => {
     const value = Number(inputs[key]);
     if (!value || Number.isNaN(value) || value <= 0) return;
-    const next: PRState = {
-      ...state,
-      [key]: [...state[key], { date: new Date().toISOString().slice(0, 10), value }],
-    };
-    setState(next);
-    saveState(next);
-    setInputs((prev) => ({ ...prev, [key]: "" }));
+    void appendFitnessPREntry(key, value).then((next) => {
+      setState(next);
+      setInputs((prev) => ({ ...prev, [key]: "" }));
+    });
   };
 
   return (
