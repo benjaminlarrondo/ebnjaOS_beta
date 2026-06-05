@@ -1,3 +1,284 @@
+## 2026-06-04 22:40
+
+### Phase 3.2B — Personal Baseline Engine
+- Se agregaron:
+  - `BaselineCalculator.swift`
+  - `BaselineModels.swift`
+  - `HealthBaselineEngine.swift`
+- La app ahora calcula baselines personales de 30 días para:
+  - HRV
+  - Resting HR
+  - Sleep
+- Se agregó la card `Personal Baselines` con:
+  - valor actual
+  - baseline 30d
+  - delta %
+  - clasificación
+- `HealthRecoveryEngine` ahora usa deltas contra baseline para HRV y Resting HR en vez de valores absolutos.
+
+### Validación
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`: PASS
+- `npm run build`: PASS
+- `npm run lint`: PASS
+- `npm run typecheck`: PASS
+
+## 2026-06-04 22:30
+
+### Phase 3.2A — Readiness Coach
+- Se crearon:
+  - `ReadinessModels.swift`
+  - `ReadinessEngine.swift`
+- Se agregó una capa de coaching diario que transforma `Recovery Score` en:
+  - `ReadinessLevel`
+  - `TrainingRecommendation`
+  - `Why?`
+  - `Risk Factors`
+- La UI ahora muestra:
+  - `Today's Readiness`
+  - `Why?`
+  - `Risk Factors`
+- Se mantuvo intacta la arquitectura existente de:
+  - `HealthKitManager`
+  - `HealthRecoveryEngine`
+
+### Validación
+- Pendiente de ejecución
+
+## 2026-06-04 22:30
+
+### Phase 3.2A — Readiness Coach
+- Se crearon:
+  - `ReadinessModels.swift`
+  - `ReadinessEngine.swift`
+- Se agregó una capa de coaching diario que transforma `Recovery Score` en:
+  - `ReadinessLevel`
+  - `TrainingRecommendation`
+  - `Why?`
+  - `Risk Factors`
+- La UI ahora muestra:
+  - `Today's Readiness`
+  - `Why?`
+  - `Risk Factors`
+- Se mantuvo intacta la arquitectura existente de:
+  - `HealthKitManager`
+  - `HealthRecoveryEngine`
+
+### Validación
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`: PASS
+- `npm run build`: PASS
+- `npm run lint`: PASS
+- `npm run typecheck`: PASS
+
+## 2026-06-04 22:24
+
+### Phase 3.1B — Recovery Intelligence Engine
+- Se creó `HealthRecoveryEngine` para calcular:
+  - `Recovery Score` con pesos de Sleep, Training Load, HRV y Resting HR
+  - `Readiness` con estados `Recovered`, `Moderate` y `Fatigued`
+  - `Training Load` a partir de workouts, active calories y frecuencia semanal
+  - `Weekly Trend` como promedio móvil de 7 días
+- La UI de `Health_ebnjaOS` ahora muestra cards dedicadas para:
+  - Recovery Score
+  - Readiness
+  - Training Load
+  - Weekly Trend
+
+### Validación
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`: PASS
+- `npm run build`: PASS
+- `npm run lint`: PASS
+- `npm run typecheck`: PASS
+
+## 2026-06-04 21:57
+
+### Phase 3.1A — Advanced Health Metrics
+- Se agregaron consultas reales a HealthKit para:
+  - `heartRateVariabilitySDNN`
+  - `restingHeartRate`
+  - `activeEnergyBurned`
+  - `workoutType`
+- La UI ahora muestra nuevas cards para:
+  - HRV
+  - Resting HR
+  - Active Calories
+  - Workouts Last 7 Days
+- Se mantuvo intacta la lectura existente de:
+  - Weight
+  - Sleep
+  - Steps
+
+### Validación
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`: PASS
+- `npm run build`: PASS
+- `npm run lint`: PASS
+- `npm run typecheck`: PASS
+
+## 2026-06-04 21:49
+
+### HealthKit authorization status binding
+- Se conectó el estado visible de HealthKit a `permissions.authorizationStatus`.
+- La UI ahora puede mostrar `Pending`, `Authorized` o `Denied` según el estado real del manager.
+
+### Validación
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`: PASS
+- `npm run build`: PASS
+- `npm run lint`: PASS
+- `npm run typecheck`: PASS
+
+## 2026-06-04 21:46
+
+### HealthKit authorization button wiring
+- Se simplificó el botón `Request Health Access` para que invoque únicamente `permissions.requestAuthorization()`.
+- Se eliminó el disparo adicional de carga desde UI para dejar la autorización como única responsabilidad del botón.
+
+### Validación
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`: PASS
+- `npm run build`: PASS
+- `npm run lint`: PASS
+- `npm run typecheck`: PASS
+
+## 2026-06-04 21:44
+
+### Phase 3.0E — First Real Health Data
+- Se agregaron consultas reales a HealthKit para:
+  - `bodyMass`
+  - `stepCount`
+  - `sleepAnalysis`
+- La UI de `Health_ebnjaOS` ahora muestra:
+  - Weight
+  - Sleep
+  - Steps
+- Se añadieron estados de carga, sin datos, éxito y error.
+- Se incorporó logging de inicio, éxito y falla para cada query.
+
+### Validación
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`: PASS
+- `npm run build`: PASS
+- `npm run lint`: PASS
+- `npm run typecheck`: PASS
+
+## 2026-06-04 21:16
+
+### Phase 3.0C — Supabase Bridge
+- Se conectó el companion de HealthKit al backend Supabase existente.
+- Se implementó:
+  - `SupabaseClient` real
+  - `pushMetrics()`
+  - `pushWorkouts()`
+  - `pullLastSync()`
+  - `SnapshotUpload`
+  - `SyncReport`
+- Se garantizó el patrón idempotente usando:
+  - `external_id`
+  - `external_updated_at`
+  - deduplicación previa al upsert
+- Se agregó documentación:
+  - `docs/HEALTHKIT_SUPABASE_BRIDGE.md`
+
+### Validación
+- `cd HealthKitCompanion && swift build`: PASS
+- `npm run build`: PASS
+- `npm run lint`: PASS
+- `npm run typecheck`: PASS
+
+## 2026-06-04 21:30
+
+### Phase 3.0D — HealthKit Authorization
+- Se conectó `Health_ebnjaOS` a HealthKit real.
+- Se agregaron:
+  - `HealthKitManager`
+  - `HealthKitPermissions`
+  - `HealthKitTypes`
+- Se conectó el botón `Request Health Access` al flujo real de autorización.
+- Se agregó soporte de estado:
+  - `Pending Authorization`
+  - `Authorized`
+  - `Denied`
+- Se añadió el entitlement de HealthKit y la descripción de uso en el proyecto Xcode.
+
+### Validación
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`: PASS
+- `npm run build`: PASS
+- `npm run lint`: PASS
+- `npm run typecheck`: PASS
+
+## 2026-06-04 21:34
+
+### HealthKit authorization button wiring
+- Se simplificó el botón `Request Health Access` para que llame directamente a `permissions.requestAuthorization()`.
+- No cambió la lógica de autorización; solo el punto de disparo desde UI.
+
+### Validación
+- pendiente de ejecución
+
+## 2026-06-04 21:36
+
+### HealthKit capability setup
+- Se verificó y dejó activo el entitlement de HealthKit para el target `Health_ebnjaOS`.
+- Se agregaron `NSHealthShareUsageDescription` y `NSHealthUpdateUsageDescription` al `Info.plist` generado por el proyecto.
+- El proyecto compila correctamente con la nueva configuración.
+
+### Validación
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`: PASS
+
+## 2026-06-04 21:32
+
+### HealthKit folder reorganization
+- Se movieron los archivos nativos de autorización de HealthKit a `HealthKit/` para mantener una estructura más clara:
+  - `HealthKitManager.swift`
+  - `HealthKitPermissions.swift`
+  - `HealthKitTypes.swift`
+- No hubo cambios funcionales; solo orden estructural.
+
+### Validación
+- `xcodebuild -project Health_ebnjaOS/Health_ebnjaOS/Health_ebnjaOS.xcodeproj -scheme Health_ebnjaOS -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build`: PASS
+- `npm run build`: PASS
+- `npm run lint`: PASS
+- `npm run typecheck`: PASS
+
+## 2026-06-04 21:06
+
+### Phase 3.0B — First Real HealthKit Data
+- Se conectó lectura real de Apple Health en el companion nativo con:
+  - `requestAuthorization()`
+  - `HealthKitManager`
+  - `HKAnchoredObjectQuery`
+  - `HealthKitNormalizer`
+- Se agregaron modelos canónicos:
+  - `HealthMetric`
+  - `WorkoutRecord`
+  - `HealthSnapshot`
+- Se agregó un `Debug Dashboard` y exportación local de snapshot JSON.
+- Alcance explícitamente excluido:
+  - Supabase write
+  - Background delivery
+  - Observer queries
+  - Apple Watch sync
+
+### Validación
+- `npm run build`: PASS
+- `npm run lint`: PASS
+- `npm run typecheck`: PASS
+
+## 2026-06-04 20:57
+
+### Phase 3.0A — HealthKit Companion Bootstrap
+- Se creó el scaffold nativo `HealthKitCompanion/` para iPhone.
+- Se agregaron los pilares solicitados:
+  - `HealthKitManager`
+  - `HealthKitPermissions`
+  - `HealthKitQueries`
+  - `SyncEngine`
+  - `SupabaseClient`
+  - `HealthMetric`
+  - `WorkoutRecord`
+  - `SettingsView`
+- Se documentó el plan de implementación:
+  - `docs/HEALTHKIT_COMPANION_IMPLEMENTATION_PLAN.md`
+
+### Validación
+- pendiente de ejecución
+
 ## 2026-06-04 20:43
 
 ### Final Alignment Cleanup — Phase 3 Ready

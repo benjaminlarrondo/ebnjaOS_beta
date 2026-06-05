@@ -1,0 +1,3 @@
+module HealthKitCompanion {
+    header "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/include/HealthKitCompanion-Swift.h"
+}

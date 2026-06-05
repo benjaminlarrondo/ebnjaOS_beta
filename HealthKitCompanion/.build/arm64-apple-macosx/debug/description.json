@@ -1,0 +1,418 @@
+{
+  "builtTestProducts" : [
+
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.HealthKitCompanion-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/sources",
+      "importPath" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/HealthKitCompanionApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthFoundationState.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthMetric.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthSnapshot.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/WorkoutRecord.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/RootView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthFoundationBridgeBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitNormalizer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitPermissions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitQueries.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/SupabaseClient.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/SyncEngine.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/SettingsView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "HealthKitCompanion",
+      "moduleOutputPath" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/Modules/HealthKitCompanion.swiftmodule",
+      "objects" : [
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthKitCompanionApp.swift.o",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthFoundationState.swift.o",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthMetric.swift.o",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthSnapshot.swift.o",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/WorkoutRecord.swift.o",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/RootView.swift.o",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthFoundationBridgeBuilder.swift.o",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthKitManager.swift.o",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthKitNormalizer.swift.o",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthKitPermissions.swift.o",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthKitQueries.swift.o",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/SupabaseClient.swift.o",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/SyncEngine.swift.o",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/SettingsView.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx13.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j8",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/include/HealthKitCompanion-Swift.h",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "healthkitcompanion"
+      ],
+      "outputFileMapPath" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthKitCompanionApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthFoundationState.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthMetric.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthSnapshot.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/WorkoutRecord.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/RootView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthFoundationBridgeBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthKitManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthKitNormalizer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthKitPermissions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/HealthKitQueries.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/SupabaseClient.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/SyncEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/SettingsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/Modules/HealthKitCompanion.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/HealthKitCompanionApp.swift",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthFoundationState.swift",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthMetric.swift",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthSnapshot.swift",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/WorkoutRecord.swift",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/RootView.swift",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthFoundationBridgeBuilder.swift",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitManager.swift",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitNormalizer.swift",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitPermissions.swift",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitQueries.swift",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/SupabaseClient.swift",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/SyncEngine.swift",
+        "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/SettingsView.swift"
+      ],
+      "tempsPath" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "HealthKitCompanion" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "HealthKitCompanion",
+      "-package-name",
+      "healthkitcompanion",
+      "-c",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/HealthKitCompanionApp.swift",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthFoundationState.swift",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthMetric.swift",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthSnapshot.swift",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/WorkoutRecord.swift",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/RootView.swift",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthFoundationBridgeBuilder.swift",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitManager.swift",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitNormalizer.swift",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitPermissions.swift",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitQueries.swift",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/SupabaseClient.swift",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/SyncEngine.swift",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/SettingsView.swift",
+      "-I",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx13.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j8",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/include/HealthKitCompanion-Swift.h",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "healthkitcompanion",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "HealthKitCompanion" : [
+
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/HealthKitCompanionApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthFoundationState.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthMetric.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/HealthSnapshot.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Models/WorkoutRecord.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/RootView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthFoundationBridgeBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitNormalizer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitPermissions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/HealthKitQueries.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/SupabaseClient.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/Services/SyncEngine.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/Sources/HealthKitCompanion/SettingsView.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/HealthKitCompanion.build/sources"
+    },
+    "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/benjaminlarrondo/Documents/ebnjaOS_beta/HealthKitCompanion/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}
