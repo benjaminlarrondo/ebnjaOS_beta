@@ -13,7 +13,7 @@ export function getCalendarDomainState() {
 }
 
 export function getOwnershipByDate(date: string, state = loadCalendarDomainState()): CalendarDomainDay | null {
-  return state.daysByDate[date] ?? null;
+  return state.daysByDate?.[date] ?? null;
 }
 
 export function listCalendarDomainEvents(state = loadCalendarDomainState()): CalendarDomainEvent[] {
@@ -25,12 +25,12 @@ export function listEventsByOwner(owner: CalendarOwner, state = loadCalendarDoma
 }
 
 export function isOwnerAtDate(owner: CalendarOwner, date: string, state = loadCalendarDomainState()) {
-  return state.daysByDate[date]?.owner === owner;
+  return state.daysByDate?.[date]?.owner === owner;
 }
 
 export function getTodayOwner(state = loadCalendarDomainState()) {
   const today = toDateKey();
-  return state.daysByDate[today]?.owner ?? "neutral";
+  return state.daysByDate?.[today]?.owner ?? "neutral";
 }
 
 export function getNextOwnerEvent(owner: CalendarOwner, state = loadCalendarDomainState()) {
@@ -57,4 +57,3 @@ export function mergeDomainWithManualEvents(
   }
   return Array.from(dedupe.values()).sort((a, b) => a.start_time.localeCompare(b.start_time));
 }
-

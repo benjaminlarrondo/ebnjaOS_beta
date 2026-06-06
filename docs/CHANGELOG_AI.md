@@ -1476,6 +1476,18 @@
 - `npm run lint`: OK
 - `npm run typecheck`: OK
 
+## 2026-06-05 23:04
+
+### Fix — GitHub Pages crash guard
+- Se endureció la normalización de `health_states` para aceptar payloads remotos incompletos o legacy sin romper el render.
+- Se protegieron accesos directos a `daily[...]` y `daysByDate[...]` con fallbacks seguros.
+- Se mantuvo la experiencia del dashboard y del fitness, evitando el `Unexpected Application Error` observado en GitHub Pages.
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
 ## 2026-06-05 10:37
 
 ### Sprint 3.3A — Supabase DEV Sync

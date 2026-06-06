@@ -1,5 +1,6 @@
 import { getSingleUserId } from "../supabaseSync";
 import type { HealthFoundationState } from "../health/healthTypes";
+import { normalizeHealthState } from "../health/healthStore";
 import { pullRows, upsertRows } from "./syncRepository";
 
 const TABLE = "health_states";
@@ -8,7 +9,7 @@ const SINGLE_RECORD_ID = "health-single-state-v1";
 type HealthStateRow = {
   id: string;
   user_id: string;
-  state: HealthFoundationState;
+  state: unknown;
   updated_at: string;
   created_at?: string;
 };
@@ -38,7 +39,7 @@ export async function pullHealthStateRow(): Promise<HealthStateRow | null> {
 
 export async function pullHealthState(): Promise<HealthFoundationState | null> {
   const row = await pullHealthStateRow();
-  return row?.state ?? null;
+  return row ? normalizeHealthState(row.state) : null;
 }
 
 export async function syncHealthState(local: HealthFoundationState): Promise<HealthFoundationState> {
@@ -50,11 +51,12 @@ export async function syncHealthState(local: HealthFoundationState): Promise<Hea
 
   const remoteUpdatedAt = remoteRow.updated_at || "1970-01-01T00:00:00.000Z";
   const localUpdatedAt = getLocalHealthUpdatedAt(local);
+  const normalizedRemote = normalizeHealthState(remoteRow.state);
 
   if (localUpdatedAt > remoteUpdatedAt) {
     await pushHealthState(local);
     return local;
   }
 
-  return remoteRow.state;
+  return normalizedRemote;
 }

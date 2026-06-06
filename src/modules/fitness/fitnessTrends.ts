@@ -74,7 +74,7 @@ function getWindowDelta(values: number[]) {
 
 function getHealthSeries(healthState: HealthFoundationState, key: "weight_kg" | "sleep_hours" | "protein_g" | "water_ml", dates: string[]) {
   return dates.map((date) => {
-    const day = healthState.daily[date];
+    const day = healthState.daily?.[date];
     return day ? day[key] : null;
   });
 }
