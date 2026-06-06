@@ -1,6 +1,384 @@
 # STATUS.md
 
 ## Fecha
+2026-06-05 22:47
+
+## Tarea ejecutada
+Se cerró el sprint de Security + Supabase Configuration: se centralizó la lectura de `SUPABASE_URL` y `SUPABASE_ANON_KEY` en iOS y web, se movieron las credenciales reales a archivos locales ignorados por Git, se eliminó cualquier fallback hardcoded de URL/key en runtime, se reactivó la generación automática de snapshot al abrir la app con permisos válidos y se validó que el dashboard móvil siga sin overflow horizontal.
+
+## Archivos modificados
+- .gitignore
+- .env
+- .env.example
+- .env.local
+- Health_ebnjaOS_v2/Config/Secrets.xcconfig
+- Health_ebnjaOS_v2/Supabase/Config.swift
+- Health_ebnjaOS_v2/Supabase/SupabaseConfig.swift
+- Health_ebnjaOS_v2/App/Health_ebnjaOSApp.swift
+- Health_ebnjaOS_v2/App/RootView.swift
+- Health_ebnjaOS_v2/project.yml
+- Health_ebnjaOS_v2/Resources/Info.plist
+- src/lib/config.ts
+- src/lib/constants.ts
+- src/lib/supabase.ts
+- docs/SUPABASE_CONFIGURATION.md
+- docs/IOS_SECRETS_SETUP.md
+- docs/HEALTHKIT_SYNC_FIX.md
+- docs/DASHBOARD_MOBILE_FIX.md
+
+## Comandos ejecutados
+- `xcodegen generate`
+- `xcodebuild -project Health_ebnjaOS_v2/Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+- iOS Build: PASS
+- Dashboard mobile layout: READY
+- Snapshot auto-generation: READY
+- Supabase config loading: READY
+- HealthKit sync flow: PARTIAL
+
+## Errores o riesgos
+- La verificación final de HealthKit real sigue requiriendo iPhone físico con permisos de usuario.
+- El warning de AppIntents metadata sigue siendo no bloqueante.
+
+## Próximo paso sugerido
+- Probar la app en un iPhone físico y confirmar autorización real de HealthKit con datos del usuario.
+
+# STATUS.md
+
+## Fecha
+2026-06-05 22:55
+
+## Tarea ejecutada
+Se cerró el sprint crítico de Dashboard + Health Sync: se corrigió el overflow móvil del dashboard, se agregó el generador de snapshots locales, se eliminó la dependencia de abrir Dashboard manualmente para habilitar Sync, se normalizó la configuración Supabase desde `xcconfig`/Info.plist/build settings y se validó el flujo real contra Supabase con read, write, upsert y reload exitosos.
+
+## Archivos modificados
+- Health_ebnjaOS_v2/Features/Dashboard/DashboardView.swift
+- Health_ebnjaOS_v2/HealthKit/HealthSnapshotService.swift
+- Health_ebnjaOS_v2/HealthKit/HealthKitManager.swift
+- Health_ebnjaOS_v2/HealthKit/HealthModels.swift
+- Health_ebnjaOS_v2/Supabase/HealthSyncNormalizer.swift
+- Health_ebnjaOS_v2/Supabase/SupabaseConfig.swift
+- Health_ebnjaOS_v2/Supabase/SupabaseService.swift
+- Health_ebnjaOS_v2/Supabase/SyncManager.swift
+- Health_ebnjaOS_v2/Config/Secrets.xcconfig
+- Health_ebnjaOS_v2/Resources/Info.plist
+- Health_ebnjaOS_v2/project.yml
+- Health_ebnjaOS_v2/HEALTHKIT_SYNC_FIX.md
+- Health_ebnjaOS_v2/DASHBOARD_MOBILE_FIX.md
+- Health_ebnjaOS_v2/STATUS.md
+- Health_ebnjaOS_v2/CHANGELOG.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodegen generate`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO clean build analyze`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'platform=iOS Simulator,id=3DEF8B62-4E9C-43A4-9E83-C32B0A83DDA5' -derivedDataPath /tmp/health_v2_sim3 CODE_SIGNING_ALLOWED=NO build`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+- `curl` validations against Supabase REST for `health_states`, `fitness_body_metrics`, and `fitness_workouts`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+- Clean build/analyze: PASS
+- Dashboard mobile layout: READY
+- Snapshot generator: READY
+- Auto snapshot: READY
+- Sync bridge: READY
+- Supabase validation: READY
+- HealthKit live device data: PARTIAL
+
+## Errores o riesgos
+- HealthKit live data remains partial until tested on a physical iPhone with the user’s Apple Health data.
+- The remaining AppIntents metadata warning is non-blocking.
+
+## Próximo paso sugerido
+- Run the companion on a physical iPhone and verify live HealthKit authorization plus real metric load.
+
+# STATUS.md
+
+## Fecha
+2026-06-05 21:11
+
+## Tarea ejecutada
+Se completó una auditoría y estabilización final de `Health_ebnjaOS_v2`: se dejó persistida la configuración HealthKit, se corrigió el entitlement en el target, se reforzó el dashboard para evitar clipping y se validó el build, el analyze y el launch del simulador iPhone 17 Pro Max.
+
+## Archivos modificados
+- Health_ebnjaOS_v2/project.yml
+- Health_ebnjaOS_v2/Resources/Health_ebnjaOS.entitlements
+- Health_ebnjaOS_v2/Features/Dashboard/DashboardView.swift
+- Health_ebnjaOS_v2/Shared/Utilities/HealthUIComponents.swift
+- Health_ebnjaOS_v2/STATUS.md
+- Health_ebnjaOS_v2/CHANGELOG.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodegen generate`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO clean build analyze`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'platform=iOS Simulator,id=3DEF8B62-4E9C-43A4-9E83-C32B0A83DDA5' -derivedDataPath /tmp/health_v2_sim CODE_SIGNING_ALLOWED=NO build`
+- `xcrun simctl install 3DEF8B62-4E9C-43A4-9E83-C32B0A83DDA5 /tmp/health_v2_sim/Build/Products/Debug-iphonesimulator/Health.app`
+- `xcrun simctl launch 3DEF8B62-4E9C-43A4-9E83-C32B0A83DDA5 com.ebnjaos.health`
+- `xcrun simctl io 3DEF8B62-4E9C-43A4-9E83-C32B0A83DDA5 screenshot`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -showBuildSettings`
+- `PlistBuddy` checks for HealthKit usage strings
+- `simctl list devices booted -j`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+- Clean build/analyze: PASS
+- Simulator launch: PASS
+- HealthKit capability: PASS
+- Entitlements attached: PASS
+- Info.plist health usage strings: PASS
+- Supabase config loading: PASS
+- HealthKit live device data: PARTIAL
+- Recovery/Readiness/Baselines in simulator: PARTIAL
+- Supabase runtime sync: FAIL (no runtime credentials in this session)
+- App Icon visual verification: PARTIAL
+
+## Errores o riesgos
+- HealthKit y Supabase todavía dependen de condiciones de runtime reales para una verificación completa.
+- La comprobación visual del icono en Home Screen del simulador sigue siendo parcial.
+- Existe un warning no bloqueante de AppIntents metadata extraction en el build.
+
+## Próximo paso sugerido
+- Ejecutar la app en un iPhone físico con HealthKit real y credenciales Supabase DEV para cerrar las verificaciones parciales restantes.
+
+## Fecha
+2026-06-05 21:18
+
+## Tarea ejecutada
+Se construyó y ejecutó `Health_ebnjaOS_v2` en el simulador de iPhone 17 Pro Max, se verificó el nuevo branding, se ajustó el dashboard para evitar la colisión del título y se registró el estado real de HealthKit y Supabase en simulador.
+
+## Archivos modificados
+- Health_ebnjaOS_v2/project.yml
+- Health_ebnjaOS_v2/Resources/Info.plist
+- Health_ebnjaOS_v2/Resources/Assets.xcassets/Logo.imageset/Contents.json
+- Health_ebnjaOS_v2/Resources/Assets.xcassets/Logo.imageset/Logo.png
+- Health_ebnjaOS_v2/Resources/Assets.xcassets/DashboardBackground.imageset/Contents.json
+- Health_ebnjaOS_v2/Resources/Assets.xcassets/DashboardBackground.imageset/DashboardBackground.png
+- Health_ebnjaOS_v2/App/BrandSplashView.swift
+- Health_ebnjaOS_v2/App/RootView.swift
+- Health_ebnjaOS_v2/Features/Dashboard/DashboardView.swift
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodegen generate`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'platform=iOS Simulator,id=3DEF8B62-4E9C-43A4-9E83-C32B0A83DDA5' CODE_SIGNING_ALLOWED=NO test`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+- Simulator launch: PASS
+- Home Screen icon: PARTIAL
+- HealthKit authorization: PARTIAL
+- Recovery Score load: PARTIAL
+- Supabase sync: FAIL
+
+## Errores o riesgos
+- Supabase no está activo en esta sesión porque faltan las credenciales runtime.
+- HealthKit en simulador sigue sin confirmar autorización real del usuario.
+- El icono de app es correcto en el asset catalog, pero el Home Screen del simulador sigue mostrando un tile de verificación/caché que hace que la validación visual completa sea parcial.
+
+## Próximo paso sugerido
+- Probar la app en un iPhone físico con HealthKit real y credenciales Supabase DEV para cerrar las verificaciones pendientes.
+
+## Fecha
+2026-06-05 21:12
+
+## Tarea ejecutada
+Se alineó `Assets.xcassets` con la estructura de branding solicitada para `Health_ebnjaOS_v2`, agregando `Logo.imageset` y `DashboardBackground.imageset` además del `AppIcon.appiconset` y `LaunchLogo.imageset`. También se aplicó el fondo visual del dashboard con el nuevo asset.
+
+## Archivos modificados
+- Health_ebnjaOS_v2/Resources/Assets.xcassets/Logo.imageset/Contents.json
+- Health_ebnjaOS_v2/Resources/Assets.xcassets/Logo.imageset/Logo.png
+- Health_ebnjaOS_v2/Resources/Assets.xcassets/DashboardBackground.imageset/Contents.json
+- Health_ebnjaOS_v2/Resources/Assets.xcassets/DashboardBackground.imageset/DashboardBackground.png
+- Health_ebnjaOS_v2/Features/Dashboard/DashboardView.swift
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `swift /tmp/make_dashboard_bg.swift`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- El asset `DashboardBackground` es visualmente sutil por diseño; en pantallas muy brillantes puede verse menos pronunciado.
+
+## Próximo paso sugerido
+- Hacer una revisión visual en Simulator/iPhone para confirmar la legibilidad del dashboard sobre el nuevo fondo.
+
+## Fecha
+2026-06-05 21:05
+
+## Tarea ejecutada
+Se actualizó el branding del proyecto `Health_ebnjaOS_v2`: nombre visible `Health`, bundle identifier `com.ebnjaos.health`, icono por defecto configurado y launch/splash branding con fondo negro, icono centrado y texto `ebnjaOS Health`.
+
+## Archivos modificados
+- Health_ebnjaOS_v2/project.yml
+- Health_ebnjaOS_v2/Resources/Info.plist
+- Health_ebnjaOS_v2/Resources/Assets.xcassets/LaunchLogo.imageset/Contents.json
+- Health_ebnjaOS_v2/Resources/Assets.xcassets/LaunchBackground.colorset/Contents.json
+- Health_ebnjaOS_v2/App/BrandSplashView.swift
+- Health_ebnjaOS_v2/App/RootView.swift
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodegen generate`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- El launch screen real del sistema es estático; la animación fade-in vive en el splash de la primera vista SwiftUI para mantener compatibilidad con iOS.
+
+## Próximo paso sugerido
+- Instalar la app en un iPhone y validar visualmente el nuevo branding en Home Screen y primer lanzamiento.
+
+## Fecha
+2026-06-05 21:05
+
+## Tarea ejecutada
+Se generó un set completo de App Icons para `Health_ebnjaOS_v2`, se configuró `AppIcon` como icono por defecto del target y se validó el build del proyecto con el asset catalog correcto.
+
+## Archivos modificados
+- Health_ebnjaOS_v2/project.yml
+- Health_ebnjaOS_v2/app_icon_master.png
+- Health_ebnjaOS_v2/Resources/Assets.xcassets/AppIcon.appiconset/Contents.json
+- Health_ebnjaOS_v2/Resources/Assets.xcassets/AppIcon.appiconset/*
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodegen generate`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- La apariencia final del icono en Home Screen/App Library/Spotlight/Settings solo puede verificarse en un iPhone real tras instalar la app.
+
+## Próximo paso sugerido
+- Instalar `Health_ebnjaOS_v2` en un dispositivo iPhone y validar la visualización del icono en producción.
+
+## Fecha
+2026-06-05 20:42
+
+## Tarea ejecutada
+Se generó el proyecto iOS nativo `Health_ebnjaOS_v2`, se verificó la integración de HealthKit y Supabase por configuración, se confirmó la capacidad de HealthKit en el target y se validó el build y la suite de tests.
+
+## Archivos modificados
+- Health_ebnjaOS_v2/project.yml
+- Health_ebnjaOS_v2/Resources/Info.plist
+- Health_ebnjaOS_v2/Resources/Health_ebnjaOS.entitlements
+- Health_ebnjaOS_v2/Tests/Health_ebnjaOS_v2Tests/Health_ebnjaOS_v2Tests.swift
+- Health_ebnjaOS_v2/STATUS.md
+- Health_ebnjaOS_v2/CHANGELOG.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodegen generate`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build-for-testing`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'platform=iOS Simulator,id=3DEF8B62-4E9C-43A4-9E83-C32B0A83DDA5' CODE_SIGNING_ALLOWED=NO test`
+
+## Validación
+- Build: PASS
+- Build-for-testing: PASS
+- Tests: PASS
+
+## Errores o riesgos
+- HealthKit requiere validación en dispositivo físico con permisos reales.
+- Supabase necesita credenciales reales para activar sincronización.
+
+## Próximo paso sugerido
+- Provisionar credenciales y probar HealthKit en un iPhone físico.
+
+## Fecha
+2026-06-05 20:37
+
+## Tarea ejecutada
+Se creó y dejó compilando correctamente el proyecto SwiftUI iOS `Health_ebnjaOS_v2` con HealthKit, Supabase, MVVM y estructura modular lista para producción. Se configuraron permisos, entitlements, Info.plist, servicios de HealthKit/Supabase, UI base y tests.
+
+## Archivos modificados
+- Health_ebnjaOS_v2/project.yml
+- Health_ebnjaOS_v2/Config/Debug.xcconfig
+- Health_ebnjaOS_v2/Config/Release.xcconfig
+- Health_ebnjaOS_v2/Resources/Info.plist
+- Health_ebnjaOS_v2/Resources/Health_ebnjaOS.entitlements
+- Health_ebnjaOS_v2/App/Health_ebnjaOSApp.swift
+- Health_ebnjaOS_v2/App/RootView.swift
+- Health_ebnjaOS_v2/Features/Dashboard/DashboardView.swift
+- Health_ebnjaOS_v2/Features/Recovery/RecoveryView.swift
+- Health_ebnjaOS_v2/Features/Readiness/ReadinessView.swift
+- Health_ebnjaOS_v2/Features/Sync/SyncView.swift
+- Health_ebnjaOS_v2/HealthKit/HealthModels.swift
+- Health_ebnjaOS_v2/HealthKit/HealthKitTypes.swift
+- Health_ebnjaOS_v2/HealthKit/HealthKitPermissions.swift
+- Health_ebnjaOS_v2/HealthKit/HealthKitQueries.swift
+- Health_ebnjaOS_v2/HealthKit/HealthKitNormalizer.swift
+- Health_ebnjaOS_v2/HealthKit/HealthBaselineEngine.swift
+- Health_ebnjaOS_v2/HealthKit/HealthRecoveryEngine.swift
+- Health_ebnjaOS_v2/HealthKit/ReadinessEngine.swift
+- Health_ebnjaOS_v2/HealthKit/HealthKitManager.swift
+- Health_ebnjaOS_v2/Supabase/SupabaseConfig.swift
+- Health_ebnjaOS_v2/Supabase/HealthSyncNormalizer.swift
+- Health_ebnjaOS_v2/Supabase/SupabaseService.swift
+- Health_ebnjaOS_v2/Supabase/SyncManager.swift
+- Health_ebnjaOS_v2/Shared/Extensions/Date+Formatting.swift
+- Health_ebnjaOS_v2/Shared/Utilities/HealthUIComponents.swift
+- Health_ebnjaOS_v2/Tests/Health_ebnjaOS_v2Tests/Health_ebnjaOS_v2Tests.swift
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodegen generate`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- `HealthKit` y `Supabase` quedan configurados con placeholders de entorno/Info.plist para credenciales reales.
+
+## Próximo paso sugerido
+- Conectar credenciales reales de Supabase y validar en un dispositivo iPhone físico.
+
+## Fecha
 2026-06-04 22:40
 
 ## Tarea ejecutada
@@ -1210,3 +1588,111 @@ PHASE 3.3A — Supabase DEV Sync: conexión del companion Health_ebnjaOS a Supab
 
 ## Próximo paso sugerido
 - Validar el sync real con credenciales DEV y comprobar upserts en `health_states`, `fitness_body_metrics` y `fitness_workouts`.
+# STATUS.md
+
+## Fecha
+2026-06-05 22:55
+
+## Tarea ejecutada
+Se cerró el sprint crítico de Dashboard + Health Sync: se corrigió el overflow móvil del dashboard, se agregó el generador de snapshots locales, se eliminó la dependencia de abrir Dashboard manualmente para habilitar Sync, se normalizó la configuración Supabase desde `xcconfig`/Info.plist/build settings y se validó el flujo real contra Supabase con read, write, upsert y reload exitosos.
+
+## Archivos modificados
+- Health_ebnjaOS_v2/Features/Dashboard/DashboardView.swift
+- Health_ebnjaOS_v2/HealthKit/HealthSnapshotService.swift
+- Health_ebnjaOS_v2/HealthKit/HealthKitManager.swift
+- Health_ebnjaOS_v2/HealthKit/HealthModels.swift
+- Health_ebnjaOS_v2/Supabase/HealthSyncNormalizer.swift
+- Health_ebnjaOS_v2/Supabase/SupabaseConfig.swift
+- Health_ebnjaOS_v2/Supabase/SupabaseService.swift
+- Health_ebnjaOS_v2/Supabase/SyncManager.swift
+- Health_ebnjaOS_v2/Config/Secrets.xcconfig
+- Health_ebnjaOS_v2/Resources/Info.plist
+- Health_ebnjaOS_v2/project.yml
+- Health_ebnjaOS_v2/HEALTHKIT_SYNC_FIX.md
+- Health_ebnjaOS_v2/DASHBOARD_MOBILE_FIX.md
+- Health_ebnjaOS_v2/STATUS.md
+- Health_ebnjaOS_v2/CHANGELOG.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodegen generate`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO clean build analyze`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'platform=iOS Simulator,id=3DEF8B62-4E9C-43A4-9E83-C32B0A83DDA5' -derivedDataPath /tmp/health_v2_sim3 CODE_SIGNING_ALLOWED=NO build`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+- `curl` validations against Supabase REST for `health_states`, `fitness_body_metrics`, and `fitness_workouts`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+- Clean build/analyze: PASS
+- Dashboard mobile layout: READY
+- Snapshot generator: READY
+- Auto snapshot: READY
+- Sync bridge: READY
+- Supabase validation: READY
+- HealthKit live device data: PARTIAL
+
+## Errores o riesgos
+- HealthKit live data remains partial until tested on a physical iPhone with the user’s Apple Health data.
+- The remaining AppIntents metadata warning is non-blocking.
+
+## Próximo paso sugerido
+- Run the companion on a physical iPhone and verify live HealthKit authorization plus real metric load.
+# STATUS.md
+
+## Fecha
+2026-06-05 22:55
+
+## Tarea ejecutada
+Se cerró el sprint crítico de Dashboard + Health Sync: se corrigió el overflow móvil del dashboard, se agregó el generador de snapshots locales, se eliminó la dependencia de abrir Dashboard manualmente para habilitar Sync, se normalizó la configuración Supabase desde `xcconfig`/Info.plist/build settings y se validó el flujo real contra Supabase con read, write, upsert y reload exitosos.
+
+## Archivos modificados
+- Health_ebnjaOS_v2/Features/Dashboard/DashboardView.swift
+- Health_ebnjaOS_v2/HealthKit/HealthSnapshotService.swift
+- Health_ebnjaOS_v2/HealthKit/HealthKitManager.swift
+- Health_ebnjaOS_v2/HealthKit/HealthModels.swift
+- Health_ebnjaOS_v2/Supabase/HealthSyncNormalizer.swift
+- Health_ebnjaOS_v2/Supabase/SupabaseConfig.swift
+- Health_ebnjaOS_v2/Supabase/SupabaseService.swift
+- Health_ebnjaOS_v2/Supabase/SyncManager.swift
+- Health_ebnjaOS_v2/Config/Secrets.xcconfig
+- Health_ebnjaOS_v2/Resources/Info.plist
+- Health_ebnjaOS_v2/project.yml
+- Health_ebnjaOS_v2/HEALTHKIT_SYNC_FIX.md
+- Health_ebnjaOS_v2/DASHBOARD_MOBILE_FIX.md
+- Health_ebnjaOS_v2/STATUS.md
+- Health_ebnjaOS_v2/CHANGELOG.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `xcodegen generate`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO clean build analyze`
+- `xcodebuild -project Health_ebnjaOS_v2.xcodeproj -scheme Health_ebnjaOS_v2 -destination 'platform=iOS Simulator,id=3DEF8B62-4E9C-43A4-9E83-C32B0A83DDA5' -derivedDataPath /tmp/health_v2_sim3 CODE_SIGNING_ALLOWED=NO build`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+- `curl` validations against Supabase REST for `health_states`, `fitness_body_metrics`, and `fitness_workouts`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+- Clean build/analyze: PASS
+- Dashboard mobile layout: READY
+- Snapshot generator: READY
+- Auto snapshot: READY
+- Sync bridge: READY
+- Supabase validation: READY
+- HealthKit live device data: PARTIAL
+
+## Errores o riesgos
+- HealthKit live data remains partial until tested on a physical iPhone with the user’s Apple Health data.
+- The remaining AppIntents metadata warning is non-blocking.
+
+## Próximo paso sugerido
+- Run the companion on a physical iPhone and verify live HealthKit authorization plus real metric load.
