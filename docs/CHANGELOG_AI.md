@@ -1476,6 +1476,17 @@
 - `npm run lint`: OK
 - `npm run typecheck`: OK
 
+## 2026-06-05 23:09
+
+### Fix — undefined health state guard
+- `getHealthDay()` now tolerates an undefined `HealthFoundationState` and returns a safe empty record instead of reading `daily[date]` directly.
+- This closes the remaining production crash path surfaced on GitHub Pages when the health snapshot is not fully hydrated yet.
+
+### Validación
+- `npm run build`: OK
+- `npm run lint`: OK
+- `npm run typecheck`: OK
+
 ## 2026-06-05 23:04
 
 ### Fix — GitHub Pages crash guard

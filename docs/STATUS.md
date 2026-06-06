@@ -1,6 +1,37 @@
 # STATUS.md
 
 ## Fecha
+2026-06-05 23:09
+
+## Tarea ejecutada
+Se corrigió el crash residual de GitHub Pages que seguía ocurriendo al leer `healthState.daily[date]` cuando el estado llegaba incompleto o indefinido en runtime. `getHealthDay()` ahora tolera `state` ausente y devuelve un día vacío seguro, manteniendo build/lint/typecheck en verde.
+
+## Archivos modificados
+- src/lib/health/healthStore.ts
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+- Runtime guard for undefined health state: READY
+
+## Errores o riesgos
+- La web publicada necesita redeploy para recibir este último guard.
+- El crash anterior estaba en un flujo de producción ya desplegado, por lo que el hard refresh por sí solo no basta hasta que GitHub Pages propague el nuevo bundle.
+
+## Próximo paso sugerido
+- Commit/push para forzar el redeploy de GitHub Pages y confirmar que el error desaparece en producción.
+
+# STATUS.md
+
+## Fecha
 2026-06-05 23:04
 
 ## Tarea ejecutada

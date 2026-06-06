@@ -156,7 +156,7 @@ export function saveHealthState(state: HealthFoundationState) {
 }
 
 export function getHealthDay(state: HealthFoundationState, date: string): HealthDailyRecord {
-  return state.daily?.[date] ?? makeEmptyHealthDay(date);
+  return state?.daily?.[date] ?? makeEmptyHealthDay(date);
 }
 
 export function upsertHealthDay(
