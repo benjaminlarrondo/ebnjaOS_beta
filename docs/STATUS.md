@@ -1,6 +1,41 @@
 # STATUS.md
 
 ## Fecha
+2026-06-05 23:04
+
+## Tarea ejecutada
+Se corrigió el crash de GitHub Pages provocado por estados de salud remotos incompletos. Se endureció la normalización de `health_states`, se protegieron accesos a `daily[...]` y `daysByDate[...]`, y se mantuvo la validación de build/lint/typecheck en verde.
+
+## Archivos modificados
+- src/lib/health/healthStore.ts
+- src/lib/repositories/healthRepository.ts
+- src/modules/fitness/fitnessTrends.ts
+- src/lib/calendarDomain/calendarDomainSelectors.ts
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+- Crash guard for missing `daily`: READY
+- Remote health normalization: READY
+
+## Errores o riesgos
+- La versión publicada en GitHub Pages necesita redeploy para reflejar este fix.
+- Si el backend remoto devuelve un payload legacy muy distinto, la app ahora cae en una normalización segura en lugar de romper el render.
+
+## Próximo paso sugerido
+- Hacer commit/push para disparar el redeploy de GitHub Pages y validar el dashboard en producción.
+
+# STATUS.md
+
+## Fecha
 2026-06-05 22:47
 
 ## Tarea ejecutada

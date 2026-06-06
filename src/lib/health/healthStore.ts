@@ -27,6 +27,14 @@ function mergeMetricDefinitions(metricDefinitions?: HealthMetricDefinition[]) {
   return Array.from(merged.values());
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function toNumber(value: unknown) {
+  return typeof value === "number" && Number.isFinite(value) ? value : undefined;
+}
+
 function normalizeDailyRecord(date: string, record?: Partial<HealthDailyRecord>): HealthDailyRecord {
   const empty = makeEmptyHealthDay(date);
   return {
@@ -43,6 +51,73 @@ function normalizeDailyRecord(date: string, record?: Partial<HealthDailyRecord>)
     resting_hr: typeof record?.resting_hr === "number" ? record.resting_hr : empty.resting_hr,
     source: record?.source === "derived" || record?.source === "mixed" ? record.source : "manual",
     updatedAt: typeof record?.updatedAt === "string" && record.updatedAt.length ? record.updatedAt : empty.updatedAt,
+  };
+}
+
+export function normalizeHealthState(input?: unknown): HealthFoundationState {
+  const base = defaultState();
+  if (!isRecord(input)) return base;
+
+  const parsed = input as Record<string, unknown>;
+  const parsedDaily = isRecord(parsed.daily) ? parsed.daily : {};
+  const normalizedDaily = Object.fromEntries(
+    Object.entries(parsedDaily).map(([date, record]) => [date, normalizeDailyRecord(date, isRecord(record) ? (record as Partial<HealthDailyRecord>) : undefined)]),
+  );
+
+  const snapshotMetrics = isRecord(parsed.metrics) ? (parsed.metrics as Record<string, unknown>) : null;
+  const snapshotSyncedAt = typeof parsed.syncedAt === "string" ? parsed.syncedAt : typeof parsed.updated_at === "string" ? parsed.updated_at : null;
+  const snapshotDate = snapshotSyncedAt ? snapshotSyncedAt.slice(0, 10) : null;
+
+  const fallbackDaily =
+    Object.keys(normalizedDaily).length > 0 || !snapshotMetrics || !snapshotDate
+      ? normalizedDaily
+      : {
+          [snapshotDate]: normalizeDailyRecord(snapshotDate, {
+            water_ml: toNumber(snapshotMetrics.waterMl),
+            protein_g: toNumber(snapshotMetrics.proteinG),
+            sleep_hours: toNumber(snapshotMetrics.sleepHours),
+            weight_kg: toNumber(snapshotMetrics.weightKg),
+            workouts_count: toNumber(snapshotMetrics.workoutsLast7Days),
+            steps_count: toNumber(snapshotMetrics.stepsLast7Days),
+            hrv_ms: toNumber(snapshotMetrics.hrvMs),
+            resting_hr: toNumber(snapshotMetrics.restingHr),
+            source: "mixed",
+            updatedAt: snapshotSyncedAt ?? base.lastSyncAt ?? nowIso(),
+          }),
+        };
+
+  const metrics = mergeMetricDefinitions(Array.isArray(parsed.metrics) ? (parsed.metrics as HealthMetricDefinition[]) : undefined);
+  const lastSyncAt = typeof parsed.lastSyncAt === "string" ? parsed.lastSyncAt : snapshotSyncedAt ?? null;
+  const dashboardModels = isRecord(parsed.dashboardModels)
+    ? {
+        sleepScore: toNumber(parsed.dashboardModels.sleepScore) ?? base.dashboardModels.sleepScore,
+        proteinProgress: toNumber(parsed.dashboardModels.proteinProgress) ?? base.dashboardModels.proteinProgress,
+        workoutLoad: toNumber(parsed.dashboardModels.workoutLoad) ?? base.dashboardModels.workoutLoad,
+        recoveryScore: toNumber(parsed.dashboardModels.recoveryScore) ?? base.dashboardModels.recoveryScore,
+      }
+    : buildDashboardModels({
+        ...base,
+        daily: fallbackDaily,
+        metrics,
+        lastSyncAt,
+      });
+
+  const provider = parsed.integration && isRecord(parsed.integration) && parsed.integration.provider === "apple_health"
+    ? "apple_health"
+    : snapshotMetrics
+      ? "apple_health"
+      : "none";
+
+  return {
+    version: "v1",
+    metrics,
+    daily: fallbackDaily,
+    dashboardModels,
+    lastSyncAt,
+    integration: {
+      appleHealthPrepared: true,
+      provider,
+    },
   };
 }
 
@@ -69,37 +144,19 @@ export function loadHealthState(): HealthFoundationState {
   const raw = localStorage.getItem(HEALTH_LAYER_KEY);
   if (!raw) return defaultState();
   try {
-    const parsed = JSON.parse(raw) as Partial<HealthFoundationState>;
-    const daily = Object.fromEntries(
-      Object.entries(parsed.daily ?? {}).map(([date, record]) => [date, normalizeDailyRecord(date, record)]),
-    );
-    return {
-      version: "v1",
-      metrics: mergeMetricDefinitions(parsed.metrics),
-      daily,
-      dashboardModels: {
-        sleepScore: parsed.dashboardModels?.sleepScore ?? 0,
-        proteinProgress: parsed.dashboardModels?.proteinProgress ?? 0,
-        workoutLoad: parsed.dashboardModels?.workoutLoad ?? 0,
-        recoveryScore: parsed.dashboardModels?.recoveryScore ?? 0,
-      },
-      lastSyncAt: parsed.lastSyncAt ?? null,
-      integration: {
-        appleHealthPrepared: true,
-        provider: parsed.integration?.provider === "apple_health" ? "apple_health" : "none",
-      },
-    };
+    const parsed = JSON.parse(raw) as unknown;
+    return normalizeHealthState(parsed);
   } catch {
     return defaultState();
   }
 }
 
 export function saveHealthState(state: HealthFoundationState) {
-  localStorage.setItem(HEALTH_LAYER_KEY, JSON.stringify(state));
+  localStorage.setItem(HEALTH_LAYER_KEY, JSON.stringify(normalizeHealthState(state)));
 }
 
 export function getHealthDay(state: HealthFoundationState, date: string): HealthDailyRecord {
-  return state.daily[date] ?? makeEmptyHealthDay(date);
+  return state.daily?.[date] ?? makeEmptyHealthDay(date);
 }
 
 export function upsertHealthDay(
@@ -153,7 +210,7 @@ export function hydrateFromCurrentModules(state?: HealthFoundationState): Health
   };
 
   const dates = new Set<string>([
-    ...Object.keys(tracking.logs),
+    ...Object.keys(tracking.logs ?? {}),
     ...currentDb.workouts.map((item) => item.date),
   ]);
 
@@ -194,7 +251,7 @@ export function applyHealthImportPayload(state: HealthFoundationState, payload: 
 }
 
 export function buildDashboardModels(state: HealthFoundationState) {
-  const days = Object.values(state.daily).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 7);
+  const days = Object.values(state.daily ?? {}).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 7);
   if (!days.length) {
     return {
       sleepScore: 0,
