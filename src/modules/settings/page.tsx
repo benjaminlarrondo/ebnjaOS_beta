@@ -12,7 +12,7 @@ import { PlatformStatusBadge } from "../../components/system/PlatformStatusBadge
 
 const hubGroups = [
   { title: "Operar", ids: ["tracking", "projects"] },
-  { title: "Capturar", ids: ["notes"] },
+  { title: "Capturar", ids: ["brain"] },
   { title: "Consultar", ids: ["resources"] },
 ];
 
@@ -101,9 +101,22 @@ export default function SettingsPage() {
                   ))}
                 </div>
               </div>
-            );
-          })}
+          );
+        })}
+      </div>
+      <div className="rounded-2xl border border-borderc bg-surface p-4">
+        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-textm">Configuración técnica</p>
+        <div className="mt-3 flex flex-wrap gap-2 text-xs text-texts">
+          {["Permisos", "HealthKit", "EventKit", "Supabase", "Calendar Celeste", "Sync", "Backups"].map((item) => (
+            <span key={item} className="rounded-full border border-borderc bg-surface2 px-3 py-1">
+              {item}
+            </span>
+          ))}
         </div>
+        <p className="mt-3 text-sm text-texts">
+          Toda la configuración técnica del sistema vive aquí. Las superficies principales solo muestran información útil para la vida diaria.
+        </p>
+      </div>
       </section>
 
       <PlatformStatusBadge inMoreMenu />

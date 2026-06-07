@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { PageTitle } from "../../components/layout/PageTitle";
 import { db } from "../../lib/store";
-import { IS_MOCK } from "../../lib/constants";
 import { CalendarViewToggle } from "../../components/calendar/CalendarViewToggle";
 import { EventCard } from "../../components/calendar/EventCard";
+import { QuickAddEventCard } from "../../components/calendar/QuickAddEventCard";
 import { syncCelesteCalendar } from "../../services/githubCalendarSync";
 import { CalendarMonthGrid } from "../../components/calendar/CalendarMonthGrid";
 import { Input } from "../../components/ui/input";
@@ -12,6 +12,9 @@ import { Textarea } from "../../components/ui/textarea";
 import { Button } from "../../components/ui/button";
 import {
   getCalendarDomainState,
+  getNextOwnerEvent,
+  listEventsByOwner,
+  getTodayOwner,
   mergeDomainWithManualEvents,
 } from "../../lib/calendarDomain/calendarDomainSelectors";
 
@@ -44,65 +47,44 @@ export default function CalendarPage() {
   const hasBootSyncedRef = useRef(false);
   const events = db.list("events");
   const domainState = getCalendarDomainState();
-  const mergedEvents = useMemo(
-    () => mergeDomainWithManualEvents(events.filter((event) => event.source !== "github"), domainState),
-    [domainState, events],
-  );
+  const teteEvents = listEventsByOwner("hers", domainState);
+  const todayOwner = getTodayOwner(domainState);
+  const nextTeteEvent = getNextOwnerEvent("hers", domainState);
+  const mergedEvents = mergeDomainWithManualEvents(events.filter((event) => event.source !== "github"), domainState);
 
-  const sorted = useMemo(
-    () => [...mergedEvents].sort((a, b) => +new Date(a.start_time) - +new Date(b.start_time)),
-    [mergedEvents],
-  );
+  const sorted = [...mergedEvents].sort((a, b) => +new Date(a.start_time) - +new Date(b.start_time));
 
-  const windowEvents = useMemo(() => {
-    if (view === "week") {
-      const now = new Date();
-      const start = new Date(now);
-      start.setHours(0, 0, 0, 0);
-      start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
-      const end = new Date(start);
-      end.setDate(end.getDate() + 7);
-      return sorted.filter((e) => {
-        const d = new Date(e.start_time);
-        return d >= start && d < end;
-      });
-    }
-    if (view === "month") {
-      return sorted.filter((e) => {
-        const d = new Date(e.start_time);
-        return d.getMonth() === monthCursor.getMonth() && d.getFullYear() === monthCursor.getFullYear();
-      });
-    }
-    return sorted;
-  }, [sorted, view, monthCursor]);
+  let windowEvents = sorted;
+  if (view === "week") {
+    const now = new Date();
+    const start = new Date(now);
+    start.setHours(0, 0, 0, 0);
+    start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
+    const end = new Date(start);
+    end.setDate(end.getDate() + 7);
+    windowEvents = sorted.filter((e) => {
+      const d = new Date(e.start_time);
+      return d >= start && d < end;
+    });
+  } else if (view === "month") {
+    windowEvents = sorted.filter((e) => {
+      const d = new Date(e.start_time);
+      return d.getMonth() === monthCursor.getMonth() && d.getFullYear() === monthCursor.getFullYear();
+    });
+  }
 
   const manualEvents = sorted
     .filter((e) => e.source === "manual" && inNextDays(e.start_time, 30))
     .slice(0, 12);
   const upcomingEvents = sorted.filter((e) => new Date(e.start_time) >= new Date()).slice(0, 3);
-
-  const doSync = useCallback(async () => {
-    try {
-      setStatus("Sincronizando...");
-      const result = await syncCelesteCalendar();
-      setTick((x) => x + 1);
-
-      if (result.errors > 0) {
-        setStatus(
-          `Sync parcial: ${result.errors} errores, +${result.inserted} nuevos, ${result.updated} actualizados · fuente: ${result.sourcePath}${result.detectedDate ? ` (${result.detectedDate})` : ""}`,
-        );
-        return;
-      }
-
-      if (result.inserted === 0 && result.updated === 0) {
-        setStatus(`Sin cambios (${result.unchanged} intactos)`);
-      } else {
-        setStatus(`Sincronizado: +${result.inserted} nuevos, ${result.updated} actualizados`);
-      }
-    } catch {
-      setStatus("Sincronización en modo degradado. Usando estado local.");
-    }
-  }, []);
+  const teteToday = teteEvents.filter((event) => new Date(event.start_time).toDateString() === new Date().toDateString());
+  const teteWeek = teteEvents.filter((event) => {
+    const start = new Date();
+    const end = new Date();
+    end.setDate(start.getDate() + 7);
+    const date = new Date(event.start_time);
+    return date >= start && date <= end;
+  });
 
   const onDaySelect = (dayIso: string) => {
     setSelectedDay(dayIso);
@@ -152,7 +134,6 @@ export default function CalendarPage() {
     hasBootSyncedRef.current = true;
 
     const boot = async () => {
-      if (IS_MOCK) setStatus("Modo local activo. Carga inmediata.");
       await syncCelesteCalendar();
       setTick((x) => x + 1);
     };
@@ -165,14 +146,39 @@ export default function CalendarPage() {
 
       <section className="card space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <CalendarViewToggle view={view} onChange={setView} />
-          <button className="btn-primary" onClick={doSync}>Sincronizar celeste_calendar</button>
+          <div>
+            <p className="eyebrow">Agenda TETE</p>
+            <h3 className="mt-1 text-base font-semibold text-textp">Resumen contextual</h3>
+            <p className="mt-1 text-sm text-texts">Hoy, esta semana, próximo cambio y próxima actividad.</p>
+          </div>
+          <span className="pill-soft text-primary">{todayOwner === "hers" ? "Con Tete" : "Neutral"}</span>
         </div>
-        {IS_MOCK && (
-          <p className="text-xs text-texts">
-            Mock mode activo: usa datos locales.
-          </p>
-        )}
+        <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="inner-card">
+            <p className="text-xs text-texts">Hoy</p>
+            <p className="mt-1 font-semibold text-textp">{teteToday.length ? teteToday[0].title : "Sin bloque hoy"}</p>
+          </div>
+          <div className="inner-card">
+            <p className="text-xs text-texts">Esta semana</p>
+            <p className="mt-1 font-semibold text-textp">{teteWeek.length} actividades</p>
+          </div>
+          <div className="inner-card">
+            <p className="text-xs text-texts">Próximo cambio</p>
+            <p className="mt-1 font-semibold text-textp">{nextTeteEvent ? new Date(nextTeteEvent.start_time).toLocaleString("es-CL", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "Sin cambio"}</p>
+          </div>
+          <div className="inner-card">
+            <p className="text-xs text-texts">Próxima actividad</p>
+            <p className="mt-1 font-semibold text-textp">{nextTeteEvent?.title ?? "Sin actividad"}</p>
+          </div>
+        </div>
+      </section>
+
+      <QuickAddEventCard onCreated={() => setTick((x) => x + 1)} />
+
+      <section className="card space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <CalendarViewToggle view={view} onChange={setView} />
+        </div>
         {status && <p className="text-xs text-texts">{status}</p>}
       </section>
 
@@ -219,7 +225,6 @@ export default function CalendarPage() {
         <section className="card space-y-3">
           <div className="mb-1 flex items-center justify-between">
             <h3 className="text-sm font-semibold">{view === "week" ? "Semana" : "Lista"}</h3>
-            <button className="btn-ghost" onClick={doSync}>Actualizar</button>
           </div>
           {windowEvents.length === 0 ? (
             <p className="text-sm text-texts">Sin eventos</p>

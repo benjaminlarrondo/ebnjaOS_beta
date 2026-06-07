@@ -19,7 +19,7 @@ const workspaceSections = [
   {
     title: "Notes",
     subtitle: "Notas enlazadas y referencias rápidas.",
-    to: "/notes",
+    to: "/brain",
     icon: NotebookText,
   },
   {

@@ -16,7 +16,7 @@ export function QuickActionsWidget({
   const actionable = [
     { id: "new-task", title: "Nueva tarea", description: "Captura en inbox", to: "/tasks", icon: ClipboardPlus },
     { id: "new-event", title: "Nuevo evento", description: "Agenda rápida", to: "/calendar", icon: CalendarDays },
-    { id: "new-note", title: "Nueva nota", description: "Nota vinculada", to: "/notes", icon: NotebookPen },
+    { id: "new-note", title: "Nueva nota", description: "Captura Brain", to: "/brain", icon: NotebookPen },
     { id: "new-workout", title: "Registrar entrenamiento", description: "Bitácora fitness", to: "/fitness", icon: Dumbbell },
   ];
 
@@ -24,15 +24,15 @@ export function QuickActionsWidget({
     <WidgetCard>
       <WidgetHeader
         eyebrow="Acciones"
-        title="Movimiento rapido"
+        title="Acciones rápidas"
         icon={<CheckCircle2 className="h-5 w-5 text-primary" />}
         action={
           <WidgetAction to="/settings" variant="plain">
-            Mas <ArrowUpRight className="h-3.5 w-3.5" />
+            Más <ArrowUpRight className="h-3.5 w-3.5" />
           </WidgetAction>
         }
       />
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="adaptive-grid">
         {actionable.map((action) => {
           const Icon = action.icon;
           return (

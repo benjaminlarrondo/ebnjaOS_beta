@@ -80,50 +80,46 @@ export function CalendarMonthGrid({
       </div>
 
       <div className="grid grid-cols-7 gap-1">
-        {cells.map((cell) => (
-          (() => {
-            const celesteDay = ownershipByDate?.[cell.key];
-            const isMineDay = celesteDay?.owner === "mine";
-            const isTeteDay = celesteDay?.owner === "hers";
-            const dotColor = isMineDay
-              ? "rgba(214,167,177,.95)"
-              : isTeteDay
-                ? "rgba(231,212,133,.95)"
-                : "";
-            return (
-              <button
-                key={cell.key}
-                type="button"
-                onClick={() => {
-                  onDaySelect?.(cell.key);
-                }}
-                className={`min-h-[62px] rounded-xl border p-1.5 text-left transition ${
-              cell.inMonth ? "" : "opacity-45"
-            } ${
-              cell.key === todayKey ? "border-primary ring-1 ring-primary/60" : "border-borderc"
-            } ${
-              cell.events.length > 0 ? "border-l-4 border-l-primary" : ""
-            } ${
-              selectedDay === cell.key ? "bg-[#151920]" : ""
-            }`}
-              >
-                <p className="flex items-center gap-1 text-[11px] font-medium text-textp">
-                  {cell.date.getDate()}
-                  {dotColor && <span className="h-1.5 w-1.5 rounded-full" style={{ background: dotColor }} />}
-                </p>
-                {cell.events.length > 0 && <p className="mt-1 text-[10px] text-texts">{cell.events.length} ev.</p>}
-              </button>
-            );
-          })()
-        ))}
+        {cells.map((cell) => {
+          const celesteDay = ownershipByDate?.[cell.key];
+          const isMineDay = celesteDay?.owner === "mine";
+          const isTeteDay = celesteDay?.owner === "hers";
+          const dotColor = isMineDay ? "#F87171" : isTeteDay ? "rgba(139,145,155,.95)" : "";
+
+          return (
+            <button
+              key={cell.key}
+              type="button"
+              onClick={() => {
+                onDaySelect?.(cell.key);
+              }}
+              className={`min-h-[62px] rounded-xl border p-1.5 text-left transition ${
+                cell.inMonth ? "" : "opacity-45"
+              } ${
+                cell.key === todayKey ? "border-primary ring-1 ring-primary/60" : "border-borderc"
+              } ${
+                cell.events.length > 0 ? "border-l-4 border-l-primary" : ""
+              } ${
+                selectedDay === cell.key ? "bg-surface2 shadow-[0_0_0_1px_rgba(255,255,255,0.04)]" : ""
+              }`}
+              title={isMineDay ? "Con Tete" : isTeteDay ? "Charo" : undefined}
+            >
+              <p className="flex items-center gap-1 text-[11px] font-medium text-textp">
+                {cell.date.getDate()}
+                {dotColor && <span className="h-1.5 w-1.5 rounded-full" style={{ background: dotColor }} />}
+              </p>
+              {cell.events.length > 0 && <p className="mt-1 text-[10px] text-texts">{cell.events.length} ev.</p>}
+            </button>
+          );
+        })}
       </div>
       <div className="mt-3 flex items-center gap-3 text-xs text-texts">
         <span className="inline-flex items-center gap-1">
-          <span className="h-2.5 w-2.5 rounded-full" style={{ background: "rgba(214,167,177,.95)" }} />
-          Benja
+          <span className="h-2.5 w-2.5 rounded-full" style={{ background: "#F87171" }} title="Con Tete" />
+          Tete
         </span>
         <span className="inline-flex items-center gap-1">
-          <span className="h-2.5 w-2.5 rounded-full" style={{ background: "rgba(231,212,133,.95)" }} />
+          <span className="h-2.5 w-2.5 rounded-full" style={{ background: "rgba(139,145,155,.95)" }} />
           Charo
         </span>
       </div>

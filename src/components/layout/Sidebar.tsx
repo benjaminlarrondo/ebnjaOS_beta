@@ -2,13 +2,16 @@ import { NavLink } from "react-router-dom";
 import { sidebarModules } from "../../lib/navigation";
 
 const groups = [
-  { title: "OPERATION", ids: ["home", "calendar", "tracking", "fitness", "workspace", "settings"] },
+  { title: "OPERATION", ids: ["home", "calendar", "fitness", "tracking", "tasks"] },
+  { title: "KNOWLEDGE", ids: ["brain", "workspace", "resources", "search", "prompts"] },
+  { title: "MANAGEMENT", ids: ["projects", "review", "daily-log", "qa"] },
+  { title: "CONFIGURATION", ids: ["settings"] },
 ];
 
 export function Sidebar({ collapsed = false }: { collapsed?: boolean }) {
   return (
     <aside
-      className={`sticky top-0 hidden h-screen shrink-0 self-start overflow-y-auto border-r border-borderc bg-surface p-4 lg:block ${collapsed ? "w-[72px]" : "w-[220px]"}`}
+      className={`sticky top-0 hidden h-screen shrink-0 self-start overflow-y-auto border-r border-borderc bg-surface p-4 lg:block ${collapsed ? "w-[72px]" : "w-[240px]"}`}
     >
       <p className={`mb-4 text-lg font-semibold text-textp ${collapsed ? "text-center" : ""}`}>{collapsed ? "OS" : "benjaOS"}</p>
       <nav className="space-y-4">

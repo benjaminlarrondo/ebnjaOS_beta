@@ -1,6 +1,305 @@
 # STATUS.md
 
 ## Fecha
+2026-06-07 11:19
+
+## Tarea ejecutada
+Sprint 6.8 — Weekly Feedback Engine: se agregó un motor semanal de feedback, analytics de uso comparativas y exportación del Week Review desde la vista `Review`.
+
+## Archivos modificados
+- src/components/review/WeeklyReviewPanel.tsx
+- src/lib/weeklyReview.ts
+- src/modules/review/page.tsx
+- docs/SPRINT_6_8_WEEKLY_REVIEW.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+- `node` + `playwright` smoke checks sobre `/review`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+- Runtime local: PASS
+- Export Week Review: PASS
+
+## Errores o riesgos
+- La semana actual puede mostrar puntajes bajos si el uso real todavía es escaso; eso es esperado en una app nueva.
+- La exportación es local-first; no hay aún reporting remoto dedicado.
+
+## Próximo paso sugerido
+- Conectar este weekly review con una rutina real de cierre semanal o con una futura capa de insights.
+
+# STATUS.md
+
+## Fecha
+2026-06-07 11:14
+
+## Tarea ejecutada
+Pre-release audit final de BenjaOS antes de push / iPhone deployment: se validó build, navegación, responsive móvil, configuración técnica centralizada, y se documentaron los gaps reales en Brain, EventKit/iPhone físico y Light Mode principal.
+
+## Archivos modificados
+- docs/SUPABASE_PRODUCTION_AUDIT.md
+- docs/OFFLINE_SYNC_AUDIT.md
+- docs/DATA_OWNERSHIP_MATRIX.md
+- docs/SECURITY_RELEASE_AUDIT.md
+- docs/IPHONE_DEPLOYMENT_REPORT.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+- `npm run dev -- --host 127.0.0.1 --port 4173`
+- `playwright` smoke checks en rutas principales y viewport móvil
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+- Runtime web local: PASS
+- Móvil sin overflow horizontal: PASS
+- iPhone físico: PENDING / NOT VERIFIED
+
+## Errores o riesgos
+- Brain aún mezcla persistencia local con partes no migradas a Supabase.
+- La validación real de iPhone físico y EventKit no quedó cerrada en esta sesión.
+- La experiencia actual sigue siendo oscura, por lo que no cumple el objetivo de Light Mode principal del plan maestro de migración.
+
+## Próximo paso sugerido
+- No hacer push todavía; cerrar primero la validación física en iPhone y la homologación visual si se quiere un verdadero GO de release.
+
+# STATUS.md
+
+## Fecha
+2026-06-07 11:48
+
+## Tarea ejecutada
+Sprint 6 — Executive OS inició y quedó alineado: se implementó Executive Home, Daily Coach, Life Score, Agenda Tete, Brain Foundations y Quick Add Event, manteniendo la configuración técnica centralizada en `Más → Configuración`.
+
+## Archivos modificados
+- src/components/calendar/QuickAddEventCard.tsx
+- src/components/dashboard/ExecutiveHomeHero.tsx
+- src/components/dashboard/QuickActionsWidget.tsx
+- src/components/layout/Sidebar.tsx
+- src/lib/executive/executiveEngines.ts
+- src/lib/navigation.ts
+- src/modules/brain/page.tsx
+- src/modules/calendar/page.tsx
+- src/modules/dashboard/page.tsx
+- src/modules/settings/page.tsx
+- src/modules/workspace/page.tsx
+- docs/ARCHITECTURE_REVIEW.md
+- docs/CHANGELOG_AI.md
+- docs/FINAL_AUDIT.md
+- docs/MIGRATION_SCORE.md
+- docs/MODULE_STATUS.md
+- docs/ROADMAP.md
+- docs/ROADMAP_PHASE_2.md
+- docs/RELEASE_READINESS.md
+- docs/STATUS.md
+- docs/TECHNICAL_DEBT.md
+- docs/UI_AUDIT.md
+
+## Comandos ejecutados
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- Executive Home y Agenda Tete están alineados al nuevo sistema, pero todavía falta una validación visual en iPhone físico.
+- Brain Foundations existen como base útil, pero seguirán requiriendo maduración en fases posteriores.
+
+## Próximo paso sugerido
+- Hacer una validación visual rápida y dejar listo el cierre formal de Sprint 6.
+
+## Fecha
+2026-06-07 11:03
+
+## Tarea ejecutada
+Se eliminó la configuración técnica de Home, Fitness y Agenda; el estado de plataforma quedó concentrado en `Más → Configuración`, y se dejó explícita la sección de configuración técnica para Sprint 6.
+
+## Archivos modificados
+- src/components/layout/AppHeader.tsx
+- src/components/dashboard/DayStatusWidget.tsx
+- src/components/dashboard/CalendarWidget.tsx
+- src/modules/dashboard/page.tsx
+- src/modules/fitness/page.tsx
+- src/modules/calendar/page.tsx
+- src/modules/settings/page.tsx
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- `SystemStatus` y `PlatformStatusBadge` siguen existiendo, pero ahora quedan restringidos al hub de configuración.
+- Falta una pasada visual final en iPhone físico antes de Sprint 6.
+
+## Próximo paso sugerido
+- Arrancar Sprint 6 con el hub técnico ya centralizado en `Más → Configuración`.
+
+## Fecha
+2026-06-07 10:40
+
+## Tarea ejecutada
+Sprint 5 — Fitness Consolidation cerrado en la app web: se redujo la navegación a Today / Programs / Progress / PRs, se agregaron la home consolidada, la progresión automática de programas, la capa de analytics de progreso, la persistencia `fitness_progress` y la documentación de auditoría/RC del sprint.
+
+## Archivos modificados
+- src/components/fitness/FitnessHomeConsolidated.tsx
+- src/components/fitness/FitnessProgressAnalytics.tsx
+- src/components/fitness/FitnessProgramProgression.tsx
+- src/components/fitness/FitnessTodayExecution.tsx
+- src/hooks/useFitnessExecution.ts
+- src/lib/fitness/fitnessProgressEngine.ts
+- src/lib/repositories/fitnessExecutionRepository.ts
+- src/modules/fitness/page.tsx
+- supabase/schema.sql
+- supabase/single-user-anon-setup.sql
+- docs/DEVICE_VALIDATION_REPORT.md
+- docs/FITNESS_OS_AUDIT.md
+- docs/FITNESS_RELEASE_RC.md
+- docs/FITNESS_UX_FINAL.md
+- docs/PROGRAM_PROGRESSION_ARCHITECTURE.md
+- docs/ROADMAP.md
+- docs/TREE.md
+- docs/WORKOUT_INTELLIGENCE_RULES.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `npm run typecheck`
+- `npm run lint`
+- `npm run build`
+- `node` + `playwright` capturas locales de Fitness
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+- Capturas locales: PASS
+- Device validation (iPhone físico): PENDING
+
+## Errores o riesgos
+- La validación en iPhone físico sigue pendiente y no se debe confundir con la captura local.
+- La UI del archivo aún conserva ramas legacy de compatibilidad, aunque ya no están en la navegación principal.
+
+## Próximo paso sugerido
+- Cerrar la validación física en iPhone real y, si el comportamiento es correcto, pasar a Sprint 6.
+
+# STATUS.md
+
+## Fecha
+2026-06-07 10:19
+
+## Tarea ejecutada
+Sprint 4.5 — Fitness Execution Layer cerrado: se agregó la librería de rutinas con persistencia Supabase-first, ejecución diaria en `Fitness → Today`, motor automático de PRs, recomendaciones adaptativas, temporizador de sesión y documentación de implementación.
+
+## Archivos modificados
+- src/components/fitness/FitnessAdaptiveRecommendation.tsx
+- src/components/fitness/FitnessPRDashboard.tsx
+- src/components/fitness/FitnessPRTracker.tsx
+- src/components/fitness/FitnessSessionTimer.tsx
+- src/components/fitness/FitnessTodayExecution.tsx
+- src/components/fitness/FitnessWorkoutLibrary.tsx
+- src/hooks/useFitnessExecution.ts
+- src/lib/fitness/fitnessExecutionEngine.ts
+- src/lib/fitness/fitnessExecutionSeed.ts
+- src/lib/fitness/fitnessExecutionTypes.ts
+- src/lib/repositories/fitnessExecutionRepository.ts
+- src/modules/dashboard/page.tsx
+- src/modules/fitness/page.tsx
+- supabase/fitness_execution_layer.sql
+- supabase/schema.sql
+- docs/ROADMAP.md
+- docs/SPRINT_4_5_IMPLEMENTATION.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `npm run typecheck`
+- `npm run lint`
+- `npm run build`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+- Sprint 4.5 execution flow: READY
+
+## Errores o riesgos
+- La experiencia `Fitness` todavía conserva tabs legacy para compatibilidad temporal.
+- Las capturas nuevas no se generaron en esta ronda de cierre.
+- Conviene hacer una pasada visual de `Fitness → Today` en navegador móvil antes de abrir la siguiente capa funcional.
+
+## Próximo paso sugerido
+- Homologar visualmente `Fitness → Today`, registrar capturas y pasar al siguiente bloque del roadmap.
+
+# STATUS.md
+
+## Fecha
+2026-06-06 20:04
+
+## Tarea ejecutada
+Sprint 1.5.2 en curso: homogeneización de layout y navegación con sidebar agrupado, cockpit compacto, calendario Tete y estado de sistema visible en Dashboard/Fitness/Calendar.
+
+## Archivos modificados
+- src/components/dashboard/DayStatusWidget.tsx
+- src/components/dashboard/QuickActionsWidget.tsx
+- src/components/layout/AppHeader.tsx
+- src/components/layout/MobileBottomNav.tsx
+- src/components/layout/Sidebar.tsx
+- src/components/calendar/CalendarMonthGrid.tsx
+- src/lib/navigation.ts
+- src/modules/calendar/page.tsx
+- src/modules/dashboard/page.tsx
+- src/modules/fitness/page.tsx
+- src/styles/design-system.css
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `date '+%Y-%m-%d %H:%M'`
+- `node --input-type=module -e "import('lucide-react').then(m => console.log(Boolean(m.BadgeCheck), Boolean(m.CheckSquare2), Boolean(m.Clock3), Boolean(m.Sparkles)))"`
+- `npm run build` (en ejecución sin cierre concluyente en esta sesión)
+- `npm run lint` (ejecutado por partes; sin cierre concluyente en esta sesión)
+- `npm run typecheck` (en ejecución sin cierre concluyente en esta sesión)
+
+## Validación
+- Build: en curso / sin resultado concluyente en esta sesión
+- Lint: en curso / sin resultado concluyente en esta sesión
+- Typecheck: en curso / sin resultado concluyente en esta sesión
+- Lucide icon exports: READY
+
+## Errores o riesgos
+- La validación global quedó limitada por el tiempo de ejecución y el comportamiento de las herramientas en esta sesión.
+- Conviene revisar visualmente en iPhone SE y en desktop que la nueva densidad de cards se mantiene legible.
+- El calendario ahora resalta Tete con punto rojo y usa leyenda/tooltip; vale la pena confirmar contraste en pantalla real.
+
+## Próximo paso sugerido
+- Ejecutar una pasada visual del Dashboard, Fitness y Calendar en Simulator y luego consolidar Sprint 1.5.3.
+
+# STATUS.md
+
+## Fecha
 2026-06-05 23:09
 
 ## Tarea ejecutada

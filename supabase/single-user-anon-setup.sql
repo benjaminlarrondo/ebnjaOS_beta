@@ -16,6 +16,7 @@ alter table if exists fitness_plans enable row level security;
 alter table if exists fitness_workouts enable row level security;
 alter table if exists fitness_exercises enable row level security;
 alter table if exists fitness_progress_logs enable row level security;
+alter table if exists fitness_progress enable row level security;
 alter table if exists fitness_body_metrics enable row level security;
 alter table if exists fitness_prs enable row level security;
 alter table if exists notes enable row level security;
@@ -33,7 +34,7 @@ declare
 begin
   for t in select unnest(array[
     'profiles','projects','tasks','calendar_events','fitness_plans','fitness_workouts',
-    'fitness_exercises','fitness_progress_logs','fitness_body_metrics','fitness_prs',
+    'fitness_exercises','fitness_progress_logs','fitness_progress','fitness_body_metrics','fitness_prs',
     'notes','prompts','resources','daily_logs','tags','attachments','integrations'
   ])
   loop
@@ -56,7 +57,7 @@ declare
 begin
   for t in select unnest(array[
     'profiles','projects','tasks','calendar_events','fitness_plans','fitness_workouts',
-    'fitness_exercises','fitness_progress_logs','fitness_body_metrics','fitness_prs',
+    'fitness_exercises','fitness_progress_logs','fitness_progress','fitness_body_metrics','fitness_prs',
     'notes','prompts','resources','daily_logs','tags','attachments','integrations'
   ])
   loop
