@@ -13,6 +13,7 @@ export const buildRouter = () =>
           { path: "tasks", lazy: async () => ({ Component: (await import("../modules/tasks/page")).default }) },
           { path: "calendar", lazy: async () => ({ Component: (await import("../modules/calendar/page")).default }) },
           { path: "fitness", lazy: async () => ({ Component: (await import("../modules/fitness/page")).default }) },
+          { path: "brain", lazy: async () => ({ Component: (await import("../modules/brain/page")).default }) },
           { path: "notes", lazy: async () => ({ Component: (await import("../modules/notes/page")).default }) },
           { path: "prompts", lazy: async () => ({ Component: (await import("../modules/prompts/page")).default }) },
           { path: "resources", lazy: async () => ({ Component: (await import("../modules/resources/page")).default }) },

@@ -7,25 +7,31 @@ import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { Button } from "../../components/ui/button";
 import { Select } from "../../components/ui/select";
+import { FitnessAdaptiveRecommendation } from "../../components/fitness/FitnessAdaptiveRecommendation";
+import { FitnessHomeConsolidated } from "../../components/fitness/FitnessHomeConsolidated";
+import { FitnessPRDashboard } from "../../components/fitness/FitnessPRDashboard";
 import { QuickLogCard } from "../../components/fitness/QuickLogCard";
-import { FitnessActivityRings } from "../../components/fitness/FitnessActivityRings";
-import { FitnessPRTracker } from "../../components/fitness/FitnessPRTracker";
 import { RecoveryCard } from "../../components/fitness/RecoveryCard";
 import { StrengthProgressCard } from "../../components/fitness/StrengthProgressCard";
 import { WeeklyConsistencyCard } from "../../components/fitness/WeeklyConsistencyCard";
+import { FitnessProgressAnalytics } from "../../components/fitness/FitnessProgressAnalytics";
+import { FitnessProgramProgression } from "../../components/fitness/FitnessProgramProgression";
+import { FitnessWorkoutLibrary } from "../../components/fitness/FitnessWorkoutLibrary";
+import { FitnessTodayExecution } from "../../components/fitness/FitnessTodayExecution";
 import { WorkoutPlanList } from "../../components/fitness/WorkoutPlanList";
 import { WorkoutTodayCard } from "../../components/fitness/WorkoutTodayCard";
-import { FitnessHomePremium } from "../../components/fitness/FitnessHomePremium";
 import { FitnessConsistencyLayer } from "../../components/fitness/FitnessConsistencyLayer";
 import { FitnessTrendCards } from "../../components/fitness/FitnessTrendCards";
 import { fitnessSessions, progressionPhases, strengthProgress } from "../../data/fitnessPlan";
 import { toDateKey } from "../../lib/health/healthMetrics";
 import { db } from "../../lib/store";
 import { useHealthState } from "../../hooks/useHealthState";
-import { hydrateFitnessPRStateFromRemote } from "../../lib/repositories/fitnessPRRepository";
+import { useFitnessExecution } from "../../hooks/useFitnessExecution";
 import { computeFitnessHealthMetrics, computeRecoveryIntelligence } from "./fitnessMetrics";
 import { computeFitnessConsistencySummary } from "./fitnessConsistency";
 import { buildFitnessTrendCards } from "./fitnessTrends";
+import { computeAdaptiveTrainingRecommendation, selectTodayWorkoutDay } from "../../lib/fitness/fitnessExecutionEngine";
+import { ProgramProgressionEngine } from "../../lib/fitness/fitnessProgressEngine";
 import type { WorkoutSession } from "../../data/fitnessPlan";
 import type { FitnessWorkout } from "../../types/fitness";
 
@@ -88,16 +94,6 @@ function formatDateLabel(dateKey: string) {
   return new Intl.DateTimeFormat("es-CL", { day: "2-digit", month: "short" }).format(date);
 }
 
-function compareRecentWorkouts(a: FitnessWorkout, b: FitnessWorkout) {
-  const dateDiff = b.date.localeCompare(a.date);
-  if (dateDiff !== 0) return dateDiff;
-  return b.updated_at.localeCompare(a.updated_at);
-}
-
-function getMostRecentWorkout(workouts: FitnessWorkout[]) {
-  return [...workouts].sort(compareRecentWorkouts)[0];
-}
-
 function getWorkoutStreak(workouts: FitnessWorkout[]) {
   const uniqueDates = [...new Set(workouts.map((workout) => workout.date))].sort((a, b) => b.localeCompare(a));
   if (!uniqueDates.length) return 0;
@@ -154,7 +150,8 @@ function pctStatus(value: number): "good" | "mid" | "low" {
 
 export default function FitnessPage() {
   const { healthState } = useHealthState();
-  const [fitnessTab, setFitnessTab] = useState<"resumen" | "rutina" | "recovery" | "historial">("rutina");
+  const { executionState, loading: executionLoading, error: executionError, refresh: refreshFitnessExecution, startSession, saveSet, finishSession } = useFitnessExecution();
+  const [fitnessTab, setFitnessTab] = useState<"today" | "programs" | "progress" | "prs" | "resumen" | "rutina" | "recovery" | "historial">("today");
   const [trainingMode, setTrainingMode] = useState<TrainingMode>("Gym");
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"workout" | "weight" | "pr" | "recovery" | "notes" | "weights">("workout");
@@ -166,10 +163,6 @@ export default function FitnessPage() {
   const [monthlyOpen, setMonthlyOpen] = useState(false);
   const [, setTick] = useState(0);
   const [status, setStatus] = useState("");
-  useEffect(() => {
-    void hydrateFitnessPRStateFromRemote().catch(() => undefined);
-  }, []);
-
   const state = db.getFitnessState();
   const workouts = db.list("workouts");
   const recentProgressLogs = getRecentProgressLogCount(state.exerciseWeightLogs);
@@ -201,7 +194,6 @@ export default function FitnessPage() {
   const adherencePct = Math.round((completedThisWeek / WEEK_TARGET) * 100);
   const weekStatus =
     completedThisWeek >= WEEK_TARGET ? "Semana completa" : completedThisWeek >= 4 ? "Muy bien encaminado" : completedThisWeek >= 2 ? "En progreso" : "Arranque pendiente";
-  const mostRecentWorkout = getMostRecentWorkout(workouts);
   const workoutStreak = getWorkoutStreak(workouts);
   const recentWorkoutCount = getRecentWorkoutCount(workouts);
   const nextScheduleEntry = [...state.weeklySchedule]
@@ -230,10 +222,6 @@ export default function FitnessPage() {
     location: nextWorkoutSession?.location ?? "Recovery",
     exerciseCount: nextWorkoutSession?.exercises.length ?? 0,
   };
-  const premiumLastWorkoutLabel = mostRecentWorkout
-    ? `${formatDateLabel(mostRecentWorkout.date)} · ${mostRecentWorkout.duration_minutes} min`
-    : "Sin registro";
-  const premiumLastWorkoutTitle = mostRecentWorkout?.title ?? "Sin entrenamiento";
   const consistencySummary = computeFitnessConsistencySummary(healthState, workouts);
   const recoveryIntelligence = computeRecoveryIntelligence({
     sleepHours: healthMetrics.sleepHours,
@@ -244,15 +232,27 @@ export default function FitnessPage() {
     progressLogsCount: recentProgressLogs,
   });
   const trendCards = buildFitnessTrendCards(healthState, state, todayDateKey);
-  const premiumHero = {
-    fitnessScore: healthMetrics.fitnessScore,
-    streak: workoutStreak,
-    lastWorkoutLabel: premiumLastWorkoutLabel,
-    lastWorkoutTitle: premiumLastWorkoutTitle,
-    totalWorkouts: workouts.length,
-    prsCount: state.prsThisCycle,
-  };
   const compactHeatmap = consistencySummary.days.filter((day) => day.overall > 0).length < 14;
+  const adaptiveRecommendation = computeAdaptiveTrainingRecommendation(healthState, todayDateKey, healthMetrics.recoveryScore);
+  const recommendedWorkoutDay = selectTodayWorkoutDay(executionState.library.workoutDays, adaptiveRecommendation, new Date());
+  const [selectedWorkoutDayId, setSelectedWorkoutDayId] = useState<string | null>(null);
+  const selectedWorkoutDay = selectedWorkoutDayId
+    ? executionState.library.workoutDays.find((day) => day.id === selectedWorkoutDayId) ?? null
+    : null;
+  const effectiveSelectedWorkoutDayId = selectedWorkoutDay?.id ?? recommendedWorkoutDay?.id ?? null;
+  const progressAnalytics = ProgramProgressionEngine.buildAnalytics({
+    healthState,
+    fitnessState: executionState,
+    workouts,
+    legacyRows: [],
+  });
+  const progressionPlan = ProgramProgressionEngine.buildPlan({
+    library: executionState.library,
+    sessionLogs: executionState.sessionLogs,
+    setLogs: executionState.setLogs,
+    selectedWorkoutDayId: effectiveSelectedWorkoutDayId,
+    readiness: adaptiveRecommendation.readiness,
+  });
 
   useEffect(() => {
     if (state.resetMode !== "auto") return;
@@ -559,28 +559,23 @@ export default function FitnessPage() {
   const latestLoadAvg = monthlyWeightProgress[monthlyWeightProgress.length - 1]?.avg ?? 0;
   return (
     <div className="page-shell">
-      <PageTitle title="Fitness" subtitle={`Score ${healthMetrics.fitnessScore}% · Recovery ${healthMetrics.recoveryScore}%`} />
-      <FitnessHomePremium hero={premiumHero} nextWorkout={nextWorkoutSnapshot} />
-      <FitnessActivityRings
-        workoutScore={healthMetrics.workoutScore}
-        nutritionScore={healthMetrics.nutritionScore}
-        recoveryScore={healthMetrics.recoveryScore}
-        consistencyScore={consistencySummary.consistency30d}
+      <PageTitle
+        title="Fitness"
+        subtitle={`Score ${healthMetrics.fitnessScore}% · Recovery ${healthMetrics.recoveryScore}% · Readiness ${adaptiveRecommendation.readiness}%`}
       />
-      <FitnessConsistencyLayer summary={consistencySummary} compactHeatmap={compactHeatmap} />
-      <FitnessTrendCards cards={trendCards} />
+
       <section className="card">
-        <div className="grid grid-cols-4 gap-1">
+        <div className="grid grid-cols-2 gap-1 sm:grid-cols-5">
           {[
-            { id: "resumen", label: "Resumen" },
-            { id: "rutina", label: "Rutina" },
-            { id: "recovery", label: "Recovery" },
-            { id: "historial", label: "Historial" },
+            { id: "today", label: "Today" },
+            { id: "programs", label: "Programs" },
+            { id: "progress", label: "Progress" },
+            { id: "prs", label: "PRs" },
           ].map((tab) => (
             <button
               key={tab.id}
               type="button"
-              onClick={() => setFitnessTab(tab.id as "resumen" | "rutina" | "recovery" | "historial")}
+              onClick={() => setFitnessTab(tab.id as "today" | "programs" | "progress" | "prs")}
               className={`rounded-xl border px-2 py-1.5 text-xs transition ${
                 fitnessTab === tab.id
                   ? "border-primary/35 bg-primary/15 font-medium text-primary"
@@ -592,6 +587,99 @@ export default function FitnessPage() {
           ))}
         </div>
       </section>
+
+      {fitnessTab === "today" && (
+        <div className="space-y-3">
+          <FitnessHomeConsolidated
+            hero={{
+              recoveryScore: healthMetrics.recoveryScore,
+              readinessScore: adaptiveRecommendation.readiness,
+              workoutLabel: selectedWorkoutDay?.name ?? recommendedWorkoutDay?.name ?? "Descanso",
+              workoutStatus: adaptiveRecommendation.recommendation,
+            }}
+            objectives={{
+              nextPrObjective: progressAnalytics.strength[0]?.label
+                ? `${progressAnalytics.strength[0].label} ${progressAnalytics.strength[0].bestPr ? `${Math.round(progressAnalytics.strength[0].bestPr)} kg` : "—"}`
+                : "Sin PR objetivo",
+              bodyWeight: `${(state.weeklyTracking.weight || state.bodyWeightKg || healthState.daily?.[todayDateKey]?.weight_kg || 0).toFixed(1)} kg`,
+              weeklyVolume: `${Math.round(state.weeklyVolume || monthlyWeightProgress[monthlyWeightProgress.length - 1]?.total || 0)} kg`,
+            }}
+            consistency={{
+              streak: workoutStreak,
+              weeklyWorkouts: recentWorkoutCount,
+              adherencePct: consistencySummary.consistency30d,
+            }}
+            nextWorkout={nextWorkoutSnapshot}
+          />
+
+          <div className="grid gap-2.5 xl:grid-cols-[1.2fr_0.8fr]">
+            <FitnessAdaptiveRecommendation recommendation={adaptiveRecommendation} />
+            <FitnessWorkoutLibrary
+              library={executionState.library}
+              selectedWorkoutDayId={effectiveSelectedWorkoutDayId}
+              recommendedWorkoutDayId={recommendedWorkoutDay?.id ?? null}
+              onSelectWorkoutDay={setSelectedWorkoutDayId}
+            />
+          </div>
+
+          {executionError && (
+            <section className="card border-warning/35 bg-warning/5 text-warning">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-sm font-medium">Fitness execution cache</p>
+                  <p className="mt-1 text-xs text-texts">{executionError}</p>
+                </div>
+                <button type="button" className="btn-ghost min-h-0 px-2 py-1 text-xs" onClick={() => void refreshFitnessExecution()}>
+                  Reintentar
+                </button>
+              </div>
+            </section>
+          )}
+
+          <FitnessTodayExecution
+            key={effectiveSelectedWorkoutDayId ?? "no-day"}
+            state={executionState}
+            selectedWorkoutDayId={effectiveSelectedWorkoutDayId}
+            recommendedWorkoutDayId={recommendedWorkoutDay?.id ?? null}
+            readiness={adaptiveRecommendation}
+            loading={executionLoading}
+            onSelectWorkoutDay={setSelectedWorkoutDayId}
+            onStartSession={startSession}
+            onSaveSet={saveSet}
+            onFinishSession={finishSession}
+          />
+
+          <FitnessPRDashboard executionState={executionState} />
+        </div>
+      )}
+
+      {fitnessTab === "programs" && (
+        <div className="space-y-3">
+          <FitnessWorkoutLibrary
+            library={executionState.library}
+            selectedWorkoutDayId={effectiveSelectedWorkoutDayId}
+            recommendedWorkoutDayId={recommendedWorkoutDay?.id ?? null}
+            onSelectWorkoutDay={setSelectedWorkoutDayId}
+          />
+          {progressionPlan && (
+            <FitnessProgramProgression
+              executionState={executionState}
+              selectedWorkoutDayId={effectiveSelectedWorkoutDayId}
+              readiness={adaptiveRecommendation}
+            />
+          )}
+        </div>
+      )}
+
+      {fitnessTab === "progress" && (
+        <div className="space-y-3">
+          <FitnessProgressAnalytics analytics={progressAnalytics} />
+          <FitnessConsistencyLayer summary={consistencySummary} compactHeatmap={compactHeatmap} />
+          <FitnessTrendCards cards={trendCards} />
+        </div>
+      )}
+
+      {fitnessTab === "prs" && <FitnessPRDashboard executionState={executionState} />}
 
       {fitnessTab === "resumen" && <section className="card">
         <div className="mb-3 flex items-start justify-between gap-3">
@@ -965,7 +1053,7 @@ export default function FitnessPage() {
 
       {fitnessTab === "historial" && <WorkoutPlanList sessions={fitnessSessions} highlightedId={suggestedSession?.id} />}
 
-      {fitnessTab === "historial" && <FitnessPRTracker />}
+      {fitnessTab === "historial" && <FitnessPRDashboard executionState={executionState} />}
 
       <Modal open={modalOpen}>
         <h3 className="mb-2 text-sm font-semibold">

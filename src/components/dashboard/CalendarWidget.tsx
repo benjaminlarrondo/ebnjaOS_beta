@@ -12,12 +12,10 @@ export function CalendarWidget({
   todayEvents,
   nextEvent,
   nextWeekEventsCount,
-  lastSyncAt,
 }: {
   todayEvents: CalendarEvent[];
   nextEvent?: CalendarEvent;
   nextWeekEventsCount: number;
-  lastSyncAt: string | null;
 }) {
   const previewEvents = todayEvents.length ? todayEvents : nextEvent ? [nextEvent] : [];
 
@@ -40,7 +38,6 @@ export function CalendarWidget({
         ))}
         {!nextEvent && <p className="rounded-2xl bg-surface2 p-3 text-sm text-texts">Agenda libre.</p>}
       </div>
-      <p className="mt-4 text-xs text-texts">Sync {lastSyncAt ? compactTime(lastSyncAt) : "pendiente"}</p>
     </WidgetCard>
   );
 }

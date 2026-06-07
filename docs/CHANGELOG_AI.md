@@ -1,3 +1,96 @@
+## 2026-06-07 11:19
+
+### Sprint 6.8 — Weekly Feedback Engine
+- Se añadió `WeeklyReviewEngine` para calcular feedback semanal con score, fortalezas, áreas de foco y siguiente paso.
+- La pantalla `Review` ahora muestra analytics semanales comparados contra la semana anterior.
+- Se agregó exportación descargable de `Week Review` en Markdown.
+- Se mantuvo el flujo local-first para la checklist semanal y el análisis de uso.
+
+### Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+- Runtime local: PASS
+
+## 2026-06-07 11:14
+
+### Pre-release audit final
+- Se auditaron las superficies principales de BenjaOS: Home, Fitness, Agenda, Brain y Settings.
+- Se verificó build / lint / typecheck en verde y navegación web local sin errores de runtime.
+- Se documentó que la configuración técnica queda contenida únicamente en `Más → Configuración`.
+- Se publicaron auditorías de Supabase, sincronización offline, ownership de datos, seguridad e iPhone deployment.
+- Se dejó explícito que el release aún no es GO por falta de validación física en iPhone, Brain parcialmente local y Light Mode principal no homologado.
+
+### Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+- Runtime web local: PASS
+- iPhone físico: PENDING / NOT VERIFIED
+
+## 2026-06-07 11:48
+
+### Sprint 6 — Executive OS
+- Se transformó la Home en `Executive Home` con `Life Score`, `Daily Coach`, recuperación, readiness, agenda y Tete context.
+- Se creó `DailyCoachEngine` y `LifeScoreEngine` como capa ejecutiva de recomendación y scoring.
+- Se añadió `Brain` como módulo de foundations con notas, ideas, decisiones, objetivos y proyectos.
+- `Agenda` sumó un resumen contextual de Tete y `Quick Add Event`.
+- La configuración técnica quedó consolidada en `Más → Configuración`.
+
+### Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## 2026-06-07 11:03
+
+### Configuration centralization
+- Se retiró el estado técnico de las superficies operativas `Home`, `Fitness` y `Calendar`.
+- `Más → Configuración` quedó como único hub para configuración técnica visible al usuario.
+- Se agregaron categorías explícitas de configuración: `Permisos`, `HealthKit`, `EventKit`, `Supabase`, `Calendar Celeste`, `Sync` y `Backups`.
+- `AppHeader` dejó de exponer el badge de plataforma y `Dashboard` / `Fitness` / `Calendar` dejaron de mostrar estados internos de sincronización.
+- `Agenda` ya no expone botón de sincronización manual ni mensajes técnicos de sync en la vista pública.
+
+### Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## 2026-06-07 10:40
+
+### Sprint 5 — Fitness Consolidation
+- Se redujo la navegación de Fitness a cuatro superficies: `Today`, `Programs`, `Progress` y `PRs`.
+- Se agregó `FitnessHomeConsolidated` con Recovery, Readiness, workout del día, objetivo PR, peso corporal, volumen semanal y consistencia.
+- Se integró `ProgramProgressionEngine` con `MesocycleManager` y `DeloadManager` para progresión automática.
+- Se agregó `FitnessProgramProgression` para mostrar la progresión por rutina seleccionada.
+- Se agregó `FitnessProgressAnalytics` para fuerza, físico y adherencia, conectando también la nueva persistencia `fitness_progress`.
+- Se generaron las auditorías y documentos de Sprint 5: `FITNESS_OS_AUDIT`, `FITNESS_UX_FINAL`, `FITNESS_RELEASE_RC`, `DEVICE_VALIDATION_REPORT`, `WORKOUT_INTELLIGENCE_RULES` y `PROGRAM_PROGRESSION_ARCHITECTURE`.
+- Se exportaron capturas locales de Fitness en `exports/screenshots/sprint5/`.
+
+### Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+- Capturas locales: PASS
+- Validación en iPhone físico: PENDING
+
+## 2026-06-06 20:04
+
+### Sprint 1.5.2 — UI homogenization pass
+- Se actualizó `AppShell` y el layout global para mejorar el comportamiento responsive y evitar overflow horizontal.
+- Se agruparon los módulos del sidebar en Operación, Conocimiento, Gestión y Configuración, con ancho expandido/compacto más claro.
+- Se compactó el cockpit del Dashboard con más señales accionables visibles al primer vistazo.
+- Se añadió el estado de sistema compacto también en Dashboard, Fitness y Calendar.
+- Se homogeneizó el calendario para resaltar a Tete con punto rojo y leyenda/tooltip dedicados.
+- Se rehízo la barra inferior móvil con icono + texto para mejorar el uso thumb-friendly.
+- Se adaptaron los grids a una estrategia responsive más flexible.
+
+### Validación
+- Build: en curso / sin cierre concluyente en esta sesión
+- Lint: en curso / sin cierre concluyente en esta sesión
+- Typecheck: en curso / sin cierre concluyente en esta sesión
+- Lucide icon exports: READY
+
 ## 2026-06-05 22:47
 
 ### Security + Supabase configuration

@@ -1,7 +1,7 @@
 import { db } from "../../lib/store";
 import { toDateKey } from "../../lib/health/healthMetrics";
 import type { HealthFoundationState } from "../../lib/health/healthTypes";
-import { loadFitnessPRState } from "../../lib/repositories/fitnessPRRepository";
+import { loadFitnessExecutionCache } from "../../lib/repositories/fitnessExecutionRepository";
 
 type FitnessState = ReturnType<typeof db.getFitnessState>;
 
@@ -79,18 +79,42 @@ function getHealthSeries(healthState: HealthFoundationState, key: "weight_kg" | 
   });
 }
 
+const PR_LIFT_SYNONYMS = [
+  ["back squat", "squat"],
+  ["front squat"],
+  ["deadlift"],
+  ["bench press", "db bench press", "barbell bench press"],
+  ["military press", "overhead press", "strict press", "push press"],
+  ["power clean", "clean", "hang clean", "db hang clean", "db clean"],
+];
+
+function selectLiftIndex(name: string) {
+  const normalized = name.toLowerCase();
+  for (let index = 0; index < PR_LIFT_SYNONYMS.length; index += 1) {
+    if (PR_LIFT_SYNONYMS[index].some((variant) => normalized.includes(variant))) return index;
+  }
+  return null;
+}
+
 function buildPrSeries(today = new Date()) {
-  const prState = loadFitnessPRState();
+  const execution = loadFitnessExecutionCache();
   const dates = getDateRange(30, today);
   const movementAverages = dates.map((date) => {
-    const latestValues = Object.values(prState).map((entries) => {
-      if (!entries) return null;
-      const validEntries = entries.filter((entry) => entry.date <= date);
-      return validEntries[validEntries.length - 1]?.value ?? null;
-    }).filter((value): value is number => typeof value === "number" && Number.isFinite(value));
+    const latestValues = new Map<number, number>();
 
-    if (!latestValues.length) return null;
-    return average(latestValues);
+    for (const setLog of execution.setLogs) {
+      if (!setLog.completed || !setLog.weight) continue;
+      const session = execution.sessionLogs.find((item) => item.id === setLog.session_id);
+      if (!session || session.date > date) continue;
+      const liftIndex = selectLiftIndex(setLog.exercise_name);
+      if (liftIndex === null) continue;
+      const current = latestValues.get(liftIndex) ?? 0;
+      if (setLog.weight > current) latestValues.set(liftIndex, setLog.weight);
+    }
+
+    const values = Array.from(latestValues.values()).filter((value) => typeof value === "number" && Number.isFinite(value));
+    if (!values.length) return null;
+    return average(values);
   });
   return movementAverages;
 }
