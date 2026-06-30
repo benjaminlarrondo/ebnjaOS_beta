@@ -1,6 +1,18 @@
 # SUPABASE_PRODUCTION_AUDIT
 
 ## Fecha
+2026-06-07 11:24
+
+## Estado ejecutivo
+🟡 READY WITH GAPS
+
+## Resumen de release
+- Fitness: READY
+- Brain: PARTIAL
+- Agenda: PARTIAL
+- Overall release: NO GO until iPhone validation closes
+
+## Fecha
 2026-06-07 11:14
 
 ## Estado ejecutivo
@@ -70,4 +82,3 @@ Validar el estado real de las tablas críticas y de los flujos de sincronizació
 ## Recomendación
 - No autorizar todavía release final.
 - Sí autorizar push de cambios si el objetivo es avanzar con auditoría, pero no como release cerrada.
-

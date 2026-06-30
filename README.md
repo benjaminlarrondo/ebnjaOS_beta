@@ -1,4 +1,4 @@
-# ebnjaOS Core v0.1
+# ebnjaOS
 
 ebnjaOS es un second brain minimalista, mobile-first, para ordenar y ejecutar día a día en un solo lugar: tareas, calendario, fitness, notas, prompts, recursos y daily log.
 

@@ -24,6 +24,13 @@ final class HealthKitPermissions: ObservableObject {
     }
 
     func refresh() {
+        if ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"] != nil {
+            authorizationStatus = .authorized
+            statusDetail = "Running on Simulator: using mock HealthKit data."
+            manager.refreshAuthorizationState(from: authorizationStatus, detail: statusDetail)
+            return
+        }
+
         guard HKHealthStore.isHealthDataAvailable() else {
             authorizationStatus = .denied
             statusDetail = "Health data is unavailable on this device."
@@ -59,6 +66,14 @@ final class HealthKitPermissions: ObservableObject {
     }
 
     func requestAuthorization() async {
+        if ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"] != nil {
+            authorizationStatus = .authorized
+            statusDetail = "Running on Simulator: using mock HealthKit data."
+            manager.refreshAuthorizationState(from: authorizationStatus, detail: statusDetail)
+            await manager.loadLatestDataIfAuthorized()
+            return
+        }
+
         guard HKHealthStore.isHealthDataAvailable() else {
             authorizationStatus = .denied
             statusDetail = "Health data is unavailable on this device."
@@ -67,8 +82,12 @@ final class HealthKitPermissions: ObservableObject {
         }
 
         do {
+            NSLog("Running on \(ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"] == nil ? "Device" : "Simulator"): requesting HealthKit permissions")
             try await healthStore.requestAuthorization(toShare: [], read: HealthKitTypes.readTypes())
             refresh()
+            if authorizationStatus == .authorized {
+                await manager.loadLatestDataIfAuthorized()
+            }
         } catch {
             authorizationStatus = .denied
             statusDetail = error.localizedDescription

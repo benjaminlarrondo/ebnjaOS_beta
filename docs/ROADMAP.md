@@ -1,5 +1,12 @@
 # ROADMAP
 
+# ROADMAP
+
+## Estado actual
+- Sprint 6.8 Weekly Feedback Engine completado.
+- Branding oficial de `ebnjaOS` alineado en la superficie web.
+- Release candidate todavía en estado **NO GO** hasta validar iPhone físico.
+
 ## Fase 1
 - Persistence Foundation
 - Calendar Domain

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct RootView: View {
+    @EnvironmentObject private var navigation: AppNavigationState
     @EnvironmentObject private var permissions: HealthKitPermissions
     @EnvironmentObject private var manager: HealthKitManager
     @EnvironmentObject private var syncManager: SyncManager
@@ -8,38 +9,51 @@ struct RootView: View {
 
     var body: some View {
         ZStack {
-            TabView {
+            TabView(selection: $navigation.selectedTab) {
                 NavigationStack {
                     DashboardView()
-                        .navigationTitle("Dashboard")
+                        .navigationTitle("Home")
                         .navigationBarTitleDisplayMode(.inline)
                 }
+                .tag(AppTab.home)
                 .tabItem {
-                    Label("Dashboard", systemImage: "house")
+                    Label("Home", systemImage: "house")
                 }
 
                 NavigationStack {
-                    RecoveryView()
-                        .navigationTitle("Recovery")
+                    FitnessView()
+                        .navigationTitle("Fitness")
                 }
+                .tag(AppTab.fitness)
                 .tabItem {
-                    Label("Recovery", systemImage: "heart.fill")
+                    Label("Fitness", systemImage: "figure.strengthtraining.traditional")
                 }
 
                 NavigationStack {
-                    ReadinessView()
-                        .navigationTitle("Readiness")
+                    AgendaView()
+                        .navigationTitle("Agenda")
                 }
+                .tag(AppTab.agenda)
                 .tabItem {
-                    Label("Readiness", systemImage: "checkmark.seal")
+                    Label("Agenda", systemImage: "calendar")
                 }
 
                 NavigationStack {
-                    SyncView()
-                        .navigationTitle("Sync")
+                    BrainView()
+                        .navigationTitle("Brain")
                 }
+                .tag(AppTab.brain)
                 .tabItem {
-                    Label("Sync", systemImage: "arrow.triangle.2.circlepath")
+                    Label("Brain", systemImage: "brain.head.profile")
+                }
+
+                NavigationStack {
+                    MoreView()
+                        .navigationTitle("Más")
+                }
+                .tag(AppTab.more)
+                .tabItem {
+                    Label("Más", systemImage: "ellipsis.circle")
                 }
             }
 

@@ -1,5 +1,19 @@
 # TREE.md
 
+# TREE.md
+
+## Branding / release assets
+```text
+public/
+├── favicon.svg
+└── branding/
+    ├── logo_master.svg
+    ├── logo_master.png
+    ├── logo_transparent.png
+    ├── icon_1024.png
+    └── AppIcon.appiconset/
+```
+
 ## Sprint 6 tree
 ```text
 src/

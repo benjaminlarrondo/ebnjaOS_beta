@@ -1,5 +1,21 @@
 # PERSISTENCE_AUDIT.md
 
+## Fecha
+2026-06-07 11:24
+
+## Estado ejecutivo
+🟡 PARTIAL
+
+## Resumen de release
+- Fitness: READY
+- Brain: PARTIAL
+- Agenda: PARTIAL
+
+## Conclusión
+- Fitness persiste sus entidades principales en Supabase.
+- Brain todavía depende de stores locales para parte de su base.
+- Agenda opera bien a nivel web, pero EventKit/iPhone físico queda pendiente de validación.
+
 ## Objetivo
 Auditar si Tracking y Health persisten realmente en Supabase o solo en localStorage, con traza exacta:
 

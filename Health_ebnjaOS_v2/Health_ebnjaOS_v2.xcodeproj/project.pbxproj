@@ -3,35 +3,55 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		024753E3EE289FA642459425 /* HealthSnapshotService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7199E96F3A57F9F00A1D7CB4 /* HealthSnapshotService.swift */; };
+		099CD940F35BF4256719C689 /* TrackingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8403C5F2A171D498067BF043 /* TrackingStore.swift */; };
+		0BBCF0EB4EA6F36841189445 /* FitnessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76F3A776B2AAF3DBA9417234 /* FitnessView.swift */; };
 		0F221CC4CA530BFAFBD4526F /* HealthKitPermissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D691E33FD3ABA1ACDEB294B /* HealthKitPermissions.swift */; };
 		11A1341561ED3357FB97E7DC /* ReadinessEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6295164532DE872C8723664 /* ReadinessEngine.swift */; };
 		192BA53DFE988582454FFFF8 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C63968DC19CF392C710263C9 /* RootView.swift */; };
+		195CFF4610BCEFDBE4FCD2AD /* LocalCodableStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8FA70E60D4AE2F36EC9C87A /* LocalCodableStore.swift */; };
 		1A0650DD129C114B91515524 /* Date+Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4017A723A9924FFC15FD5A77 /* Date+Formatting.swift */; };
+		1BA3DE3BE109F3A73A733B8B /* CompactComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D67E74C944E00538112D195 /* CompactComponents.swift */; };
+		1EB41F36C144BD1650CDC32A /* TrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141F821AF732913EA340B771 /* TrackingView.swift */; };
 		2A359F8C91D94EF55C59640C /* ReadinessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC45FF3C36E30A2B5F88FD7 /* ReadinessView.swift */; };
 		2AC9E5BBAE67EEE1127B31C3 /* BrandSplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8526952FFF53E80D6D18BB25 /* BrandSplashView.swift */; };
 		2EB4F7F302EADD21FB9CF48E /* HealthKitTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C824F63E3A626F9AEE6F7FB /* HealthKitTypes.swift */; };
 		324536DA2892C9ACA6687037 /* SupabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67451450896E3CBE61AC984C /* SupabaseService.swift */; };
 		3554AC9D38844AAD51F03A0D /* SupabaseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F95A75B558B02BC2C496CE73 /* SupabaseConfig.swift */; };
+		4EFA17467EAF4BD1979DD5BA /* BrainModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1153A5B9EDD4A9907994381C /* BrainModels.swift */; };
+		503F23CC0B38EE6231CBF869 /* AgendaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DF56F12DA95E3894F779CF /* AgendaView.swift */; };
+		5BF76546129E514B134A3751 /* CelesteCalendarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757060DAC26C2FFC2BABEE5A /* CelesteCalendarService.swift */; };
 		62EA42CB1BFC31FEA30DA9FE /* SyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8E11BA03B6BD6E1D94858E /* SyncView.swift */; };
 		69A6010AA81D7CC4AD57BEDA /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F69BCC5F6CE333E8EA5402 /* DashboardView.swift */; };
+		6A66F77836FF6FC263CA5210 /* TeteScheduleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C63C1FEE981D466D7E1F42 /* TeteScheduleProvider.swift */; };
+		6B4A1EB8E4CFB3982EF7E670 /* CelesteCalendarModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7448B3C711933554170BBCAF /* CelesteCalendarModels.swift */; };
 		6BB682D462BC82980B51E402 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB1B8A8FDD6763A43A4D3FC /* SyncManager.swift */; };
 		714366A792A50D395E1F7411 /* HealthModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68ECCB65B9EB2775BA5B08A /* HealthModels.swift */; };
 		81A54676C17009A6865049E9 /* RecoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CC3486D219BAD52C9502A6C /* RecoveryView.swift */; };
+		81C01C829189FB32385364E8 /* TrackingModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 547B34F6DA4C8322AE4B754C /* TrackingModels.swift */; };
+		84C8A7E8DDDFFD22887D8499 /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EEA1E34F2FFCBB61696322 /* MoreView.swift */; };
 		89952402A960FF67D0FD7FB7 /* Health_ebnjaOS_v2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64AAC221D31EFD166226D9F5 /* Health_ebnjaOS_v2Tests.swift */; };
+		8BA663548C5861B6A9387CD8 /* FitnessRoutineModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F7ECA48EB61BFD87874618 /* FitnessRoutineModels.swift */; };
+		90D0C0CC9AA6BD5A76CDD9AD /* FitnessExecutionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DFBBC64C77D51A59B86E954 /* FitnessExecutionStore.swift */; };
 		91C05211FAFE4DD82FB47592 /* HealthRecoveryEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957A14B2EEF083AB26087E82 /* HealthRecoveryEngine.swift */; };
 		95F7F6C95EAF4ABA0E164BB6 /* HealthKitNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35658FDDD0A24F78A218A0C /* HealthKitNormalizer.swift */; };
 		9A2BFE83E864937F6025FFE9 /* HealthUIComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29448B9E99E8D92C36F23EB /* HealthUIComponents.swift */; };
+		A087B17D7A4C92E90F0A64C5 /* BrainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F210C770AEF9D6D15B423BED /* BrainStore.swift */; };
+		AA55406BAC922237F088AC9B /* FitnessRoutineSeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8D6AF7E0EEB787227CAE55 /* FitnessRoutineSeed.swift */; };
 		B5092C321CC3F854930B0153 /* Health_ebnjaOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA249A80EEBF2957B00F271A /* Health_ebnjaOSApp.swift */; };
+		C55400388C8398B2D91CBEE6 /* BrainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979AD4F818C5E7B6A7E57229 /* BrainView.swift */; };
+		CA63B4AC3730FCF05D09EC30 /* TeteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC53BC590FA0E9353DA974B /* TeteView.swift */; };
 		CC0E250582B7DC9419325019 /* HealthSyncNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF4FC2BFE8E8BDB9FB52EDD0 /* HealthSyncNormalizer.swift */; };
 		CD899AF5F86C9800D55938FC /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4635201A3370D4BD5393828D /* Config.swift */; };
 		EC113F713781F58C05AE40DE /* HealthKitQueries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1002C60D541D1A84D798F5 /* HealthKitQueries.swift */; };
+		F05587C9D376EEEFC80D85E3 /* AppNavigationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3127DCE155A5510D1A462AC /* AppNavigationState.swift */; };
 		F22A06131AC9181D106B7772 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C802BC399811757BDECD7CCC /* HealthKitManager.swift */; };
 		FE509A7243D4B3B29B4A5954 /* HealthBaselineEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1501F8C01928A012DB45E6BE /* HealthBaselineEngine.swift */; };
+		FF2E79C44077A6FA0DBA1CD1 /* AgendaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C86F5DEABDD3AD39300DDDA0 /* AgendaService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,44 +65,123 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D67E74C944E00538112D195 /* CompactComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactComponents.swift; sourceTree = "<group>"; };
+		1153A5B9EDD4A9907994381C /* BrainModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrainModels.swift; sourceTree = "<group>"; };
+		141F821AF732913EA340B771 /* TrackingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingView.swift; sourceTree = "<group>"; };
 		1501F8C01928A012DB45E6BE /* HealthBaselineEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthBaselineEngine.swift; sourceTree = "<group>"; };
-		15A95A45300A7CA21D6E4535 /* Health_ebnjaOS_v2Tests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = file; name = Health_ebnjaOS_v2Tests.xctest; path = HealthTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		15A95A45300A7CA21D6E4535 /* Health_ebnjaOS_v2Tests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = Health_ebnjaOS_v2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CC3486D219BAD52C9502A6C /* RecoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryView.swift; sourceTree = "<group>"; };
 		1D691E33FD3ABA1ACDEB294B /* HealthKitPermissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitPermissions.swift; sourceTree = "<group>"; };
+		21EEA1E34F2FFCBB61696322 /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
 		3CC45FF3C36E30A2B5F88FD7 /* ReadinessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadinessView.swift; sourceTree = "<group>"; };
+		3D8D6AF7E0EEB787227CAE55 /* FitnessRoutineSeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessRoutineSeed.swift; sourceTree = "<group>"; };
+		3DC53BC590FA0E9353DA974B /* TeteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeteView.swift; sourceTree = "<group>"; };
 		4017A723A9924FFC15FD5A77 /* Date+Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Formatting.swift"; sourceTree = "<group>"; };
 		4635201A3370D4BD5393828D /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		547B34F6DA4C8322AE4B754C /* TrackingModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingModels.swift; sourceTree = "<group>"; };
 		5DB1B8A8FDD6763A43A4D3FC /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		64AAC221D31EFD166226D9F5 /* Health_ebnjaOS_v2Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Health_ebnjaOS_v2Tests.swift; sourceTree = "<group>"; };
 		67451450896E3CBE61AC984C /* SupabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseService.swift; sourceTree = "<group>"; };
 		6C824F63E3A626F9AEE6F7FB /* HealthKitTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitTypes.swift; sourceTree = "<group>"; };
 		6E8E11BA03B6BD6E1D94858E /* SyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncView.swift; sourceTree = "<group>"; };
 		7199E96F3A57F9F00A1D7CB4 /* HealthSnapshotService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSnapshotService.swift; sourceTree = "<group>"; };
+		7448B3C711933554170BBCAF /* CelesteCalendarModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelesteCalendarModels.swift; sourceTree = "<group>"; };
+		757060DAC26C2FFC2BABEE5A /* CelesteCalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelesteCalendarService.swift; sourceTree = "<group>"; };
+		76F3A776B2AAF3DBA9417234 /* FitnessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessView.swift; sourceTree = "<group>"; };
+		7DFBBC64C77D51A59B86E954 /* FitnessExecutionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessExecutionStore.swift; sourceTree = "<group>"; };
+		8403C5F2A171D498067BF043 /* TrackingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingStore.swift; sourceTree = "<group>"; };
 		8526952FFF53E80D6D18BB25 /* BrandSplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandSplashView.swift; sourceTree = "<group>"; };
 		957A14B2EEF083AB26087E82 /* HealthRecoveryEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthRecoveryEngine.swift; sourceTree = "<group>"; };
+		979AD4F818C5E7B6A7E57229 /* BrainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrainView.swift; sourceTree = "<group>"; };
 		9D1002C60D541D1A84D798F5 /* HealthKitQueries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitQueries.swift; sourceTree = "<group>"; };
 		B35658FDDD0A24F78A218A0C /* HealthKitNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitNormalizer.swift; sourceTree = "<group>"; };
 		B6295164532DE872C8723664 /* ReadinessEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadinessEngine.swift; sourceTree = "<group>"; };
+		B8FA70E60D4AE2F36EC9C87A /* LocalCodableStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalCodableStore.swift; sourceTree = "<group>"; };
 		BE8158B0D86C4804BF36AE05 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		C3F69BCC5F6CE333E8EA5402 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		C4DF56F12DA95E3894F779CF /* AgendaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgendaView.swift; sourceTree = "<group>"; };
 		C63968DC19CF392C710263C9 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		C802BC399811757BDECD7CCC /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
+		C86F5DEABDD3AD39300DDDA0 /* AgendaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgendaService.swift; sourceTree = "<group>"; };
 		CA249A80EEBF2957B00F271A /* Health_ebnjaOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Health_ebnjaOSApp.swift; sourceTree = "<group>"; };
-		D45D602D4D75FD542FE95705 /* Health.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Health.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D45D602D4D75FD542FE95705 /* Health_ebnjaOS_v2.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Health_ebnjaOS_v2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DACFABA7C35FD8519AA14F77 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		DF4FC2BFE8E8BDB9FB52EDD0 /* HealthSyncNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSyncNormalizer.swift; sourceTree = "<group>"; };
+		E3127DCE155A5510D1A462AC /* AppNavigationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNavigationState.swift; sourceTree = "<group>"; };
+		E5C63C1FEE981D466D7E1F42 /* TeteScheduleProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeteScheduleProvider.swift; sourceTree = "<group>"; };
+		E5F7ECA48EB61BFD87874618 /* FitnessRoutineModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessRoutineModels.swift; sourceTree = "<group>"; };
+		F210C770AEF9D6D15B423BED /* BrainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrainStore.swift; sourceTree = "<group>"; };
 		F29448B9E99E8D92C36F23EB /* HealthUIComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthUIComponents.swift; sourceTree = "<group>"; };
 		F68ECCB65B9EB2775BA5B08A /* HealthModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthModels.swift; sourceTree = "<group>"; };
 		F95A75B558B02BC2C496CE73 /* SupabaseConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseConfig.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		02A78E9956ABE1C2A4B3C14A /* App */ = {
+			isa = PBXGroup;
+			children = (
+				E3127DCE155A5510D1A462AC /* AppNavigationState.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		0E64FD4BF50951328DAF3EEA /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				F210C770AEF9D6D15B423BED /* BrainStore.swift */,
+				7DFBBC64C77D51A59B86E954 /* FitnessExecutionStore.swift */,
+				8403C5F2A171D498067BF043 /* TrackingStore.swift */,
+			);
+			path = Stores;
+			sourceTree = "<group>";
+		};
+		1ABB99D80C929BCA84F87AF1 /* Agenda */ = {
+			isa = PBXGroup;
+			children = (
+				C4DF56F12DA95E3894F779CF /* AgendaView.swift */,
+			);
+			path = Agenda;
+			sourceTree = "<group>";
+		};
+		265C5E02E493DC4C862D1AC5 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				2BC5F46B0694EB2D9BEF1565 /* Agenda */,
+				C9E4954B64406CFEEC8F3421 /* CelesteCalendar */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		2BC5F46B0694EB2D9BEF1565 /* Agenda */ = {
+			isa = PBXGroup;
+			children = (
+				C86F5DEABDD3AD39300DDDA0 /* AgendaService.swift */,
+			);
+			path = Agenda;
+			sourceTree = "<group>";
+		};
 		2FF72BFBF24D9EFEC9BCCF68 /* Readiness */ = {
 			isa = PBXGroup;
 			children = (
 				3CC45FF3C36E30A2B5F88FD7 /* ReadinessView.swift */,
 			);
 			path = Readiness;
+			sourceTree = "<group>";
+		};
+		3257B5382A666B3B47169F49 /* More */ = {
+			isa = PBXGroup;
+			children = (
+				21EEA1E34F2FFCBB61696322 /* MoreView.swift */,
+			);
+			path = More;
+			sourceTree = "<group>";
+		};
+		36F08CF82D7E6DE9A33B7270 /* Fitness */ = {
+			isa = PBXGroup;
+			children = (
+				76F3A776B2AAF3DBA9417234 /* FitnessView.swift */,
+			);
+			path = Fitness;
 			sourceTree = "<group>";
 		};
 		43B97B303C24D571DEFC95D6 /* Supabase */ = {
@@ -155,7 +254,11 @@
 		8B21B5210C0E3194AD9E8AD9 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				02A78E9956ABE1C2A4B3C14A /* App */,
 				88DED28866A87C67BDF93C60 /* Extensions */,
+				C0712CC6636CC4DE3FFAF438 /* Models */,
+				265C5E02E493DC4C862D1AC5 /* Services */,
+				0E64FD4BF50951328DAF3EEA /* Stores */,
 				E02D5E2B0E66899985976C41 /* Utilities */,
 			);
 			path = Shared;
@@ -178,6 +281,14 @@
 			path = Recovery;
 			sourceTree = "<group>";
 		};
+		9E80E19C2C94D745E8BA0D10 /* Brain */ = {
+			isa = PBXGroup;
+			children = (
+				979AD4F818C5E7B6A7E57229 /* BrainView.swift */,
+			);
+			path = Brain;
+			sourceTree = "<group>";
+		};
 		9FAB318D9193D3AE111821C2 /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -191,7 +302,7 @@
 		A45A211EE1ED03F6C2368177 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D45D602D4D75FD542FE95705 /* Health.app */,
+				D45D602D4D75FD542FE95705 /* Health_ebnjaOS_v2.app */,
 				15A95A45300A7CA21D6E4535 /* Health_ebnjaOS_v2Tests.xctest */,
 			);
 			name = Products;
@@ -205,13 +316,48 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
+		B5B8F7CBC6E37D3AF6558C5A /* Tete */ = {
+			isa = PBXGroup;
+			children = (
+				3DC53BC590FA0E9353DA974B /* TeteView.swift */,
+			);
+			path = Tete;
+			sourceTree = "<group>";
+		};
+		C0712CC6636CC4DE3FFAF438 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1153A5B9EDD4A9907994381C /* BrainModels.swift */,
+				E5F7ECA48EB61BFD87874618 /* FitnessRoutineModels.swift */,
+				3D8D6AF7E0EEB787227CAE55 /* FitnessRoutineSeed.swift */,
+				547B34F6DA4C8322AE4B754C /* TrackingModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C9E4954B64406CFEEC8F3421 /* CelesteCalendar */ = {
+			isa = PBXGroup;
+			children = (
+				7448B3C711933554170BBCAF /* CelesteCalendarModels.swift */,
+				757060DAC26C2FFC2BABEE5A /* CelesteCalendarService.swift */,
+				E5C63C1FEE981D466D7E1F42 /* TeteScheduleProvider.swift */,
+			);
+			path = CelesteCalendar;
+			sourceTree = "<group>";
+		};
 		D770927BC90EA6631143EF85 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				1ABB99D80C929BCA84F87AF1 /* Agenda */,
+				9E80E19C2C94D745E8BA0D10 /* Brain */,
 				62A6F115D8495A008C7BCC42 /* Dashboard */,
+				36F08CF82D7E6DE9A33B7270 /* Fitness */,
+				3257B5382A666B3B47169F49 /* More */,
 				2FF72BFBF24D9EFEC9BCCF68 /* Readiness */,
 				99F31A77F906DD7EF7E39090 /* Recovery */,
 				F7F7D1E0E2D8852A1BD0DC4F /* Sync */,
+				B5B8F7CBC6E37D3AF6558C5A /* Tete */,
+				FFD178D0C0892B7B65620FD1 /* Tracking */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -219,7 +365,9 @@
 		E02D5E2B0E66899985976C41 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				0D67E74C944E00538112D195 /* CompactComponents.swift */,
 				F29448B9E99E8D92C36F23EB /* HealthUIComponents.swift */,
+				B8FA70E60D4AE2F36EC9C87A /* LocalCodableStore.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -230,6 +378,14 @@
 				6E8E11BA03B6BD6E1D94858E /* SyncView.swift */,
 			);
 			path = Sync;
+			sourceTree = "<group>";
+		};
+		FFD178D0C0892B7B65620FD1 /* Tracking */ = {
+			isa = PBXGroup;
+			children = (
+				141F821AF732913EA340B771 /* TrackingView.swift */,
+			);
+			path = Tracking;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -267,7 +423,7 @@
 			packageProductDependencies = (
 			);
 			productName = Health_ebnjaOS_v2;
-			productReference = D45D602D4D75FD542FE95705 /* Health.app */;
+			productReference = D45D602D4D75FD542FE95705 /* Health_ebnjaOS_v2.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -289,6 +445,7 @@
 			);
 			mainGroup = 7724AA297BE10C21FC3F9283;
 			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -311,10 +468,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF2E79C44077A6FA0DBA1CD1 /* AgendaService.swift in Sources */,
+				503F23CC0B38EE6231CBF869 /* AgendaView.swift in Sources */,
+				F05587C9D376EEEFC80D85E3 /* AppNavigationState.swift in Sources */,
+				4EFA17467EAF4BD1979DD5BA /* BrainModels.swift in Sources */,
+				A087B17D7A4C92E90F0A64C5 /* BrainStore.swift in Sources */,
+				C55400388C8398B2D91CBEE6 /* BrainView.swift in Sources */,
 				2AC9E5BBAE67EEE1127B31C3 /* BrandSplashView.swift in Sources */,
+				6B4A1EB8E4CFB3982EF7E670 /* CelesteCalendarModels.swift in Sources */,
+				5BF76546129E514B134A3751 /* CelesteCalendarService.swift in Sources */,
+				1BA3DE3BE109F3A73A733B8B /* CompactComponents.swift in Sources */,
 				CD899AF5F86C9800D55938FC /* Config.swift in Sources */,
 				69A6010AA81D7CC4AD57BEDA /* DashboardView.swift in Sources */,
 				1A0650DD129C114B91515524 /* Date+Formatting.swift in Sources */,
+				90D0C0CC9AA6BD5A76CDD9AD /* FitnessExecutionStore.swift in Sources */,
+				8BA663548C5861B6A9387CD8 /* FitnessRoutineModels.swift in Sources */,
+				AA55406BAC922237F088AC9B /* FitnessRoutineSeed.swift in Sources */,
+				0BBCF0EB4EA6F36841189445 /* FitnessView.swift in Sources */,
 				FE509A7243D4B3B29B4A5954 /* HealthBaselineEngine.swift in Sources */,
 				F22A06131AC9181D106B7772 /* HealthKitManager.swift in Sources */,
 				95F7F6C95EAF4ABA0E164BB6 /* HealthKitNormalizer.swift in Sources */,
@@ -327,6 +497,8 @@
 				CC0E250582B7DC9419325019 /* HealthSyncNormalizer.swift in Sources */,
 				9A2BFE83E864937F6025FFE9 /* HealthUIComponents.swift in Sources */,
 				B5092C321CC3F854930B0153 /* Health_ebnjaOSApp.swift in Sources */,
+				195CFF4610BCEFDBE4FCD2AD /* LocalCodableStore.swift in Sources */,
+				84C8A7E8DDDFFD22887D8499 /* MoreView.swift in Sources */,
 				11A1341561ED3357FB97E7DC /* ReadinessEngine.swift in Sources */,
 				2A359F8C91D94EF55C59640C /* ReadinessView.swift in Sources */,
 				81A54676C17009A6865049E9 /* RecoveryView.swift in Sources */,
@@ -335,6 +507,11 @@
 				324536DA2892C9ACA6687037 /* SupabaseService.swift in Sources */,
 				6BB682D462BC82980B51E402 /* SyncManager.swift in Sources */,
 				62EA42CB1BFC31FEA30DA9FE /* SyncView.swift in Sources */,
+				6A66F77836FF6FC263CA5210 /* TeteScheduleProvider.swift in Sources */,
+				CA63B4AC3730FCF05D09EC30 /* TeteView.swift in Sources */,
+				81C01C829189FB32385364E8 /* TrackingModels.swift in Sources */,
+				099CD940F35BF4256719C689 /* TrackingStore.swift in Sources */,
+				1EB41F36C144BD1650CDC32A /* TrackingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -357,9 +534,8 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/Health_ebnjaOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RH68AZ79YL;
 				INFOPLIST_FILE = Resources/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Health;
+				INFOPLIST_KEY_CFBundleDisplayName = ebnjaOS;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -367,7 +543,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ebnjaos.health;
-				PRODUCT_NAME = Health;
+				PRODUCT_NAME = ebnjaOS;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -382,9 +558,8 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/Health_ebnjaOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RH68AZ79YL;
 				INFOPLIST_FILE = Resources/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Health;
+				INFOPLIST_KEY_CFBundleDisplayName = ebnjaOS;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -392,7 +567,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ebnjaos.health;
-				PRODUCT_NAME = Health;
+				PRODUCT_NAME = ebnjaOS;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = 1;

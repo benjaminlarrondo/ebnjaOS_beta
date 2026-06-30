@@ -1,3 +1,9 @@
+## 2026-06-07 11:45
+- Se cerró el branding oficial del runtime a `ebnjaOS` y se generó el pack de marca en `public/branding`.
+- Se actualizó el título de la app y los metadatos web para reflejar `ebnjaOS` en navegación, splash y App Library/ajustes.
+- Se documentó el cierre en `docs/BRANDING_CLOSURE.md`.
+- Se mantuvo explícita como pendiente la validación en iPhone físico antes del release final.
+
 ## 2026-06-07 11:19
 
 ### Sprint 6.8 — Weekly Feedback Engine
@@ -1661,3 +1667,12 @@
 - `npm run build`: OK
 - `npm run lint`: OK
 - `npm run typecheck`: OK
+# CHANGELOG_AI.md
+
+## 2026-06-07 11:45
+- Se cerró el branding oficial del runtime a `ebnjaOS` y se generó el pack de marca en `public/branding`.
+- Se actualizó el título de la app y los metadatos web para reflejar `ebnjaOS` en navegación, splash y App Library/ajustes.
+- Se documentó el cierre en `docs/BRANDING_CLOSURE.md`.
+- Se mantuvo explícita como pendiente la validación en iPhone físico antes del release final.
+
+# CHANGELOG_AI.md

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Health</string>
+	<string>ebnjaOS</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -26,14 +26,14 @@
 	<string>Health_ebnjaOS needs permission to store health sync metadata.</string>
 	<key>SUPABASE_ANON_KEY</key>
 	<string>$(SUPABASE_ANON_KEY)</string>
-	<key>SUPABASE_URL</key>
-	<string>$(SUPABASE_URL)</string>
 	<key>SUPABASE_HOST</key>
 	<string>$(SUPABASE_HOST)</string>
 	<key>SUPABASE_PATH</key>
 	<string>$(SUPABASE_PATH)</string>
 	<key>SUPABASE_SCHEME</key>
 	<string>$(SUPABASE_SCHEME)</string>
+	<key>SUPABASE_URL</key>
+	<string>$(SUPABASE_URL)</string>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>

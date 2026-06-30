@@ -15,7 +15,7 @@ struct BrandSplashView: View {
                     .frame(width: 132, height: 132)
                     .shadow(color: Color.blue.opacity(0.22), radius: 18, x: 0, y: 8)
 
-                Text("ebnjaOS Health")
+                Text("ebnjaOS")
                     .font(.system(size: 24, weight: .semibold, design: .rounded))
                     .foregroundStyle(.white.opacity(0.95))
                     .tracking(0.2)

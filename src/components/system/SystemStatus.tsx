@@ -1,16 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { APP_NAME, IS_MOCK } from "../../lib/constants";
+import { APP_NAME, APP_VERSION, IS_MOCK } from "../../lib/constants";
 import { subscribeSyncStatus, type SyncState } from "../../lib/syncStatus";
 import { getLastCalendarSyncAt } from "../../services/githubCalendarSync";
 
 function formatTime(iso: string | null) {
   if (!iso) return "Sin registro";
   return new Date(iso).toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-}
-
-function appVersion() {
-  const parts = APP_NAME.split(" ");
-  return parts[parts.length - 1] || "v0";
 }
 
 export function SystemStatus({ compact = false }: { compact?: boolean }) {
@@ -34,7 +29,7 @@ export function SystemStatus({ compact = false }: { compact?: boolean }) {
       <div className="rounded-2xl border border-borderc bg-surface p-3 text-xs">
         <div className="mb-2 flex items-center justify-between">
           <span className={`status-pill ${statusTone}`}>{status}</span>
-          <span className="text-textm">{appVersion()}</span>
+          <span className="text-textm">{APP_VERSION}</span>
         </div>
         <p className="text-texts">Supabase: {IS_MOCK ? "Mock" : state.connected ? "Conectado" : "Sin conexión"}</p>
         <p className="text-texts">Último sync: {formatTime(state.lastSavedAt)}</p>
@@ -52,7 +47,8 @@ export function SystemStatus({ compact = false }: { compact?: boolean }) {
       <p>Estado Supabase: <strong>{IS_MOCK ? "Mock mode" : state.connected ? "Conectado" : "Sin conexión"}</strong></p>
       <p>Última sincronización: <strong>{formatTime(state.lastSavedAt)}</strong></p>
       <p>Estado Calendar: <strong>{calendarSync ? `Sincronizado (${formatTime(calendarSync)})` : "Pendiente"}</strong></p>
-      <p>Version app: <strong>{appVersion()}</strong></p>
+      <p>Nombre app: <strong>{APP_NAME}</strong></p>
+      <p>Versión app: <strong>{APP_VERSION}</strong></p>
       {state.error && <p className="text-xs text-danger">Error: {state.error}</p>}
     </section>
   );
