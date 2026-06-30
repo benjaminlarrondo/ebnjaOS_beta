@@ -1,5 +1,6 @@
 # Logs
 logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -10,17 +11,23 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
-*.local
+DerivedData/
+*.xcuserstate
+*.app
+*.ipa
+*.xcresult
+.DS_Store
+.env
+.env.local
+.env.production
+**/Secrets.xcconfig
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-.env.production
-Health_ebnjaOS_v2/Config/Secrets.xcconfig
