@@ -60,6 +60,9 @@ final class HealthKitManager: ObservableObject {
     private let recoveryEngine = HealthRecoveryEngine()
     private let readinessEngine = ReadinessEngine()
     private let snapshotService = HealthSnapshotService()
+    private var isSimulator: Bool {
+        ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"] != nil
+    }
 
     init(healthStore: HKHealthStore = HKHealthStore()) {
         self.healthStore = healthStore
@@ -98,6 +101,12 @@ final class HealthKitManager: ObservableObject {
             return
         }
 
+        if isSimulator {
+            authorizationStatusText = HealthKitPermissions.AuthorizationState.authorized.displayName
+            statusDetail = "Running on Simulator: using mock HealthKit data."
+            return
+        }
+
         guard HKHealthStore.isHealthDataAvailable() else {
             authorizationStatusText = HealthKitPermissions.AuthorizationState.denied.displayName
             statusDetail = "Health data is unavailable on this device."
@@ -130,6 +139,11 @@ final class HealthKitManager: ObservableObject {
     }
 
     func loadLatestDataIfAuthorized(days: Int = 30) async {
+        if isSimulator {
+            await loadLatestData(days: days)
+            return
+        }
+
         refreshAuthorizationState()
         guard authorizationStatusText == HealthKitPermissions.AuthorizationState.authorized.displayName else {
             loadState = .idle
@@ -142,6 +156,11 @@ final class HealthKitManager: ObservableObject {
     }
 
     func loadLatestData(days: Int = 30) async {
+        if isSimulator {
+            await loadSimulatorMockData(days: days)
+            return
+        }
+
         guard HKHealthStore.isHealthDataAvailable() else {
             loadState = .failed
             errorMessage = "Health data is unavailable on this device."
@@ -284,6 +303,133 @@ final class HealthKitManager: ObservableObject {
             statusDetail = error.localizedDescription
             logger.error("HealthKit load failed: \(error.localizedDescription, privacy: .public)")
         }
+    }
+
+    private func loadSimulatorMockData(days: Int) async {
+        loadState = .loading
+        errorMessage = nil
+        logger.info("Running on Simulator: using mock HealthKit data")
+
+        let now = Date()
+        let windowStart = Calendar.current.date(byAdding: .day, value: -days, to: now) ?? now
+
+        let metrics = [
+            HealthMetric(id: "mock-weight", kind: .bodyMass, recordedAt: now, value: 79.4, unit: HealthMetricKind.bodyMass.unitSymbol, source: "simulator_mock", externalId: "mock-weight", externalUpdatedAt: now),
+            HealthMetric(id: "mock-steps", kind: .stepCount, recordedAt: now, value: 10432, unit: HealthMetricKind.stepCount.unitSymbol, source: "simulator_mock", externalId: "mock-steps", externalUpdatedAt: now),
+            HealthMetric(id: "mock-sleep", kind: .sleepAnalysis, recordedAt: now, value: 7.2, unit: HealthMetricKind.sleepAnalysis.unitSymbol, source: "simulator_mock", externalId: "mock-sleep", externalUpdatedAt: now),
+            HealthMetric(id: "mock-hrv", kind: .heartRateVariabilitySDNN, recordedAt: now, value: 56.0, unit: HealthMetricKind.heartRateVariabilitySDNN.unitSymbol, source: "simulator_mock", externalId: "mock-hrv", externalUpdatedAt: now),
+            HealthMetric(id: "mock-resting-hr", kind: .restingHeartRate, recordedAt: now, value: 56, unit: HealthMetricKind.restingHeartRate.unitSymbol, source: "simulator_mock", externalId: "mock-resting-hr", externalUpdatedAt: now),
+            HealthMetric(id: "mock-active-energy", kind: .activeEnergyBurned, recordedAt: now, value: 1842, unit: HealthMetricKind.activeEnergyBurned.unitSymbol, source: "simulator_mock", externalId: "mock-active-energy", externalUpdatedAt: now)
+        ]
+
+        let workouts: [WorkoutRecord] = [
+            mockWorkout(id: "mock-workout-1", startedAt: now.addingTimeInterval(-2 * 86400), durationMinutes: 48, type: .traditionalStrengthTraining),
+            mockWorkout(id: "mock-workout-2", startedAt: now.addingTimeInterval(-4 * 86400), durationMinutes: 52, type: .functionalStrengthTraining),
+            mockWorkout(id: "mock-workout-3", startedAt: now.addingTimeInterval(-6 * 86400), durationMinutes: 50, type: .traditionalStrengthTraining),
+            mockWorkout(id: "mock-workout-4", startedAt: now.addingTimeInterval(-8 * 86400), durationMinutes: 46, type: .walking)
+        ]
+
+        let snapshot = HealthSnapshot(
+            id: UUID().uuidString,
+            schemaVersion: 1,
+            capturedAt: now,
+            windowStart: windowStart,
+            windowEnd: now,
+            source: "simulator_mock",
+            metrics: metrics,
+            workouts: workouts
+        )
+
+        let baseline = baselineEngine.buildSnapshot(
+            from: HealthBaselineInputs(
+                currentHrvMs: 56.0,
+                currentRestingHeartRate: 56,
+                currentSleepHours: 7.2,
+                historicalHrvMs: Array(repeating: 55.0, count: max(days, 1)),
+                historicalRestingHeartRate: Array(repeating: 57.0, count: max(days, 1)),
+                historicalSleepHours: Array(repeating: 7.0, count: max(days, 1))
+            )
+        )
+        baselineSnapshot = baseline
+
+        let sleepHistory = Dictionary(uniqueKeysWithValues: (0..<max(days, 1)).map { offset in
+            (Calendar.current.date(byAdding: .day, value: -offset, to: now) ?? now, 7.0 + Double(offset % 3) * 0.1)
+        })
+        let hrvHistory = Dictionary(uniqueKeysWithValues: (0..<max(days, 1)).map { offset in
+            (Calendar.current.date(byAdding: .day, value: -offset, to: now) ?? now, 55.0 + Double(offset % 4))
+        })
+        let restingHistory = Dictionary(uniqueKeysWithValues: (0..<max(days, 1)).map { offset in
+            (Calendar.current.date(byAdding: .day, value: -offset, to: now) ?? now, 57.0 - Double(offset % 2))
+        })
+        let activeHistory = Dictionary(uniqueKeysWithValues: (0..<max(days, 1)).map { offset in
+            (Calendar.current.date(byAdding: .day, value: -offset, to: now) ?? now, 1600.0 + Double(offset * 10))
+        })
+        let workoutHistory = Dictionary(uniqueKeysWithValues: (0..<max(days, 1)).map { offset in
+            (Calendar.current.date(byAdding: .day, value: -offset, to: now) ?? now, Double((offset % 2) == 0 ? 1 : 0))
+        })
+
+        let recovery = recoveryEngine.buildSnapshot(
+            from: HealthRecoveryInputs(
+                sleepHours: 7.2,
+                hrvDeltaPercent: baseline?.hrv?.deltaPercent ?? 0,
+                restingHeartRateDeltaPercent: baseline?.restingHeartRate?.deltaPercent ?? 0,
+                workoutCountLast7Days: workouts.count,
+                activeCaloriesLast7Days: 1842,
+                dailySleepHoursByDay: sleepHistory,
+                dailyHrvMsByDay: hrvHistory,
+                dailyRestingHeartRateByDay: restingHistory,
+                dailyActiveCaloriesByDay: activeHistory,
+                dailyWorkoutCountsByDay: workoutHistory
+            )
+        )
+        recoverySnapshot = recovery
+
+        let readiness = readinessEngine.assess(
+            recoveryScore: recovery?.score ?? 0,
+            sleepHours: 7.2,
+            hrvMs: 56.0,
+            restingHeartRate: 56,
+            trainingLoad: recovery?.trainingLoad ?? 0
+        )
+        readinessAssessment = readiness
+
+        latestSyncSnapshot = HealthSyncSnapshot(
+            syncedAt: now,
+            weight: metrics.first(where: { $0.kind == .bodyMass }),
+            steps: metrics.first(where: { $0.kind == .stepCount }),
+            sleep: metrics.first(where: { $0.kind == .sleepAnalysis }),
+            hrv: metrics.first(where: { $0.kind == .heartRateVariabilitySDNN }),
+            restingHeartRate: metrics.first(where: { $0.kind == .restingHeartRate }),
+            activeEnergy: metrics.first(where: { $0.kind == .activeEnergyBurned }),
+            workoutsSummary: WorkoutSummary(countLast7Days: workouts.count, recordedAt: now),
+            recentWorkouts: workouts,
+            baseline: baseline,
+            recovery: recovery,
+            readiness: readiness
+        )
+
+        self.snapshot = snapshot
+        _ = generateSnapshot()
+        updateDisplayTexts(from: latestSyncSnapshot)
+        latestUpdatedText = now.formatted(date: .abbreviated, time: .shortened)
+        loadState = .ready
+        statusDetail = "Running on Simulator: using mock HealthKit data"
+        authorizationStatusText = HealthKitPermissions.AuthorizationState.authorized.displayName
+        logger.info("HealthKit load completed successfully")
+    }
+
+    private func mockWorkout(id: String, startedAt: Date, durationMinutes: Int, type: WorkoutType) -> WorkoutRecord {
+        WorkoutRecord(
+            id: id,
+            workoutType: type,
+            startedAt: startedAt,
+            endedAt: startedAt.addingTimeInterval(TimeInterval(durationMinutes * 60)),
+            duration: TimeInterval(durationMinutes * 60),
+            energyBurned: nil,
+            source: "simulator_mock",
+            externalId: id,
+            externalUpdatedAt: startedAt.addingTimeInterval(TimeInterval(durationMinutes * 60))
+        )
     }
 
     func generateSnapshot() -> HealthSyncSnapshot? {

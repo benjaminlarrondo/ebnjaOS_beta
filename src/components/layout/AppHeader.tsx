@@ -1,3 +1,4 @@
+import { APP_NAME } from "../../lib/constants";
 import { PanelLeft, Search, Settings2 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { appModules } from "../../lib/navigation";
@@ -15,7 +16,7 @@ export function AppHeader({ onToggleSidebar }: { onToggleSidebar?: () => void })
         <p className="text-xs font-medium capitalize tracking-[0.02em] text-texts">
           {fullDate} · {currentTime}
         </p>
-        <h2 className="text-lg font-semibold leading-tight text-textp lg:text-xl">benjaOS</h2>
+        <h2 className="text-lg font-semibold leading-tight text-textp lg:text-xl">{APP_NAME}</h2>
         <p className="truncate text-xs text-textm">Vista actual: {current?.label ?? "Inicio"}</p>
       </div>
       <div className="flex items-center gap-2">

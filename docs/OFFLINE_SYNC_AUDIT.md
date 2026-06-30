@@ -1,6 +1,17 @@
 # OFFLINE_SYNC_AUDIT
 
 ## Fecha
+2026-06-07 11:24
+
+## Estado ejecutivo
+🟡 PARTIAL
+
+## Resumen
+- La app local carga y navega.
+- Dashboard, Fitness, Agenda, Brain y Settings renderizan sin errores runtime.
+- Falta la prueba física completa de modo avión → reconexión.
+
+## Fecha
 2026-06-07 11:14
 
 ## Estado ejecutivo
@@ -34,4 +45,3 @@ Verificar que la app mantiene lectura útil y comportamiento razonable cuando la
 ## Conclusión
 - El diseño del sync está orientado a cache local + Supabase.
 - La auditoría offline todavía no puede marcarse como PASS sin la prueba de desconexión real.
-

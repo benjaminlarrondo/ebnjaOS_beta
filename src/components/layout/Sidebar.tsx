@@ -1,3 +1,4 @@
+import { APP_NAME } from "../../lib/constants";
 import { NavLink } from "react-router-dom";
 import { sidebarModules } from "../../lib/navigation";
 
@@ -13,7 +14,7 @@ export function Sidebar({ collapsed = false }: { collapsed?: boolean }) {
     <aside
       className={`sticky top-0 hidden h-screen shrink-0 self-start overflow-y-auto border-r border-borderc bg-surface p-4 lg:block ${collapsed ? "w-[72px]" : "w-[240px]"}`}
     >
-      <p className={`mb-4 text-lg font-semibold text-textp ${collapsed ? "text-center" : ""}`}>{collapsed ? "OS" : "benjaOS"}</p>
+      <p className={`mb-4 text-lg font-semibold text-textp ${collapsed ? "text-center" : ""}`}>{collapsed ? "e" : APP_NAME}</p>
       <nav className="space-y-4">
         {groups.map((group) => {
           const modules = group.ids

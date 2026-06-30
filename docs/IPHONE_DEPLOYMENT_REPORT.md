@@ -1,6 +1,17 @@
 # IPHONE_DEPLOYMENT_REPORT
 
 ## Fecha
+2026-06-07 11:24
+
+## Estado ejecutivo
+🔴 NO GO
+
+## Resumen
+- La app web está estable y el layout móvil no presenta overflow horizontal.
+- La validación real en iPhone físico sigue pendiente.
+- El release no puede considerarse cerrado sin hardware.
+
+## Fecha
 2026-06-07 11:14
 
 ## Estado ejecutivo
@@ -27,4 +38,3 @@
 ## Conclusión
 - La app web está estable y navegable.
 - No está lista para marcarse como iPhone deployment final.
-

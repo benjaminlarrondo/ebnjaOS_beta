@@ -18,7 +18,7 @@ type SeedWorkoutDay = {
 
 export const fitnessExecutionSeed = {
   program: {
-    name: "BenjaOS Foundation Cycle",
+    name: "ebnjaOS Foundation Cycle",
     description: "Programa base de fuerza, hipertrofia y recuperación para el ciclo inicial.",
     active: true,
   } satisfies Omit<FitnessProgramRow, "id" | "user_id" | "created_at" | "updated_at">,

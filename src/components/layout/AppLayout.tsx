@@ -6,6 +6,7 @@ import { MobileBottomNav } from "./MobileBottomNav";
 import { GlobalQuickCapture } from "./GlobalQuickCapture";
 import { AppShell } from "../system/AppShell";
 import { CommandPalette } from "./CommandPalette";
+import { APP_NAME } from "../../lib/constants";
 
 export function AppLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
@@ -18,6 +19,10 @@ export function AppLayout() {
   useEffect(() => {
     localStorage.setItem("ebnjaos-sidebar-collapsed", sidebarCollapsed ? "1" : "0");
   }, [sidebarCollapsed]);
+
+  useEffect(() => {
+    document.title = APP_NAME;
+  }, []);
 
   useEffect(() => {
     const onResize = () => {

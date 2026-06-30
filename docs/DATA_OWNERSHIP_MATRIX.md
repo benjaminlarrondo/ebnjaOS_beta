@@ -1,6 +1,23 @@
 # DATA_OWNERSHIP_MATRIX
 
 ## Fecha
+2026-06-07 11:24
+
+## Estado ejecutivo
+🟡 PARTIAL
+
+## Matriz actual
+
+| Dominio | Ownership objetivo | Estado actual |
+|---|---|---|
+| Fitness Data | Supabase | READY |
+| Brain Data | Supabase | PARTIAL |
+| Health Metrics | HealthKit + Supabase snapshots | PARTIAL |
+| Calendar Events | Apple Calendar | PARTIAL |
+| TETE | Calendar Celeste → Supabase | READY |
+| Backups | iCloud | PARTIAL |
+
+## Fecha
 2026-06-07 11:14
 
 ## Regla principal
@@ -22,4 +39,3 @@
 ## Nota de auditoría
 - El sistema web ya presenta una separación razonable entre dominio y UI.
 - La principal deuda de ownership está en Brain y en la verificación física de Calendar / HealthKit.
-

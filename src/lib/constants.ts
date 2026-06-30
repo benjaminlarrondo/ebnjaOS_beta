@@ -1,4 +1,5 @@
-export const APP_NAME = "ebnjaOS Core v0.1";
+export const APP_NAME = "ebnjaOS";
+export const APP_VERSION = "v1";
 
 export const SUPABASE_URL_RAW = String(import.meta.env.VITE_SUPABASE_URL || "").trim();
 export const SUPABASE_ANON_RAW = String(import.meta.env.VITE_SUPABASE_ANON_KEY || "").trim();

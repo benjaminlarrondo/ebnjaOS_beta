@@ -1,0 +1,9 @@
+schemaVersion: 1
+sessionDefaults:
+  projectPath: /Users/benjaminlarrondo/Documents/ebnjaOS_app/ebnjaOS.xcodeproj
+  scheme: ebnjaOS
+  simulatorId: 3DEF8B62-4E9C-43A4-9E83-C32B0A83DDA5
+  simulatorPlatform: iOS Simulator
+  derivedDataPath: /tmp/ebnjaos-sim
+  bundleId: com.ebnjaos.health
+  simulatorName: iPhone 17 Pro Max

@@ -1,16 +1,26 @@
 # STATUS.md
 
 ## Fecha
-2026-06-07 11:19
+2026-06-07 11:45
 
 ## Tarea ejecutada
-Sprint 6.8 — Weekly Feedback Engine: se agregó un motor semanal de feedback, analytics de uso comparativas y exportación del Week Review desde la vista `Review`.
+Branding oficial alineado a `ebnjaOS` en runtime y auditoría de cierre pre-release actualizada. La validación en iPhone físico sigue pendiente como única puerta manual para el GO final.
 
 ## Archivos modificados
-- src/components/review/WeeklyReviewPanel.tsx
-- src/lib/weeklyReview.ts
-- src/modules/review/page.tsx
-- docs/SPRINT_6_8_WEEKLY_REVIEW.md
+- src/lib/constants.ts
+- src/components/layout/AppHeader.tsx
+- src/components/layout/Sidebar.tsx
+- src/components/layout/AppLayout.tsx
+- src/components/system/SystemStatus.tsx
+- src/components/system/PlatformStatusBadge.tsx
+- src/lib/fitness/fitnessExecutionSeed.ts
+- index.html
+- README.md
+- public/favicon.svg
+- public/branding/*
+- docs/BRANDING_CLOSURE.md
+- docs/FINAL_AUDIT.md
+- docs/RELEASE_READINESS.md
 - docs/STATUS.md
 - docs/CHANGELOG_AI.md
 
@@ -18,23 +28,21 @@ Sprint 6.8 — Weekly Feedback Engine: se agregó un motor semanal de feedback, 
 - `npm run build`
 - `npm run lint`
 - `npm run typecheck`
-- `node` + `playwright` smoke checks sobre `/review`
+- `rg -n "BenjaOS|benjaOS|Health_ebnjaOS|Health Companion|Personal OS|ebnjaOS Core" src index.html README.md public --glob '!public/branding/**'`
+- `rg -n "BenjaOS|benjaOS|Health_ebnjaOS|Health Companion|Personal OS|ebnjaOS Core" docs`
 
 ## Validación
 - Build: PASS
 - Lint: PASS
 - Typecheck: PASS
-- Runtime local: PASS
-- Export Week Review: PASS
 
 ## Errores o riesgos
-- La semana actual puede mostrar puntajes bajos si el uso real todavía es escaso; eso es esperado en una app nueva.
-- La exportación es local-first; no hay aún reporting remoto dedicado.
+- La validación en iPhone físico sigue pendiente.
+- Brain continúa con deuda de persistencia histórica en local-first para algunas superficies.
+- Release final sigue condicionado a hardware real.
 
 ## Próximo paso sugerido
-- Conectar este weekly review con una rutina real de cierre semanal o con una futura capa de insights.
-
-# STATUS.md
+- Cerrar la validación en iPhone físico y, si todo responde bien, preparar el release candidate final.
 
 ## Fecha
 2026-06-07 11:14
@@ -2061,3 +2069,50 @@ Se cerró el sprint crítico de Dashboard + Health Sync: se corrigió el overflo
 
 ## Próximo paso sugerido
 - Run the companion on a physical iPhone and verify live HealthKit authorization plus real metric load.
+# STATUS.md
+
+## Fecha
+2026-06-07 11:45
+
+## Tarea ejecutada
+Branding oficial alineado a `ebnjaOS` en runtime y auditoría de cierre pre-release actualizada. La validación en iPhone físico sigue pendiente como única puerta manual para el Go final.
+
+## Archivos modificados
+- src/lib/constants.ts
+- src/components/layout/AppHeader.tsx
+- src/components/layout/Sidebar.tsx
+- src/components/layout/AppLayout.tsx
+- src/components/system/SystemStatus.tsx
+- src/components/system/PlatformStatusBadge.tsx
+- src/lib/fitness/fitnessExecutionSeed.ts
+- index.html
+- README.md
+- public/favicon.svg
+- public/branding/*
+- docs/BRANDING_CLOSURE.md
+- docs/FINAL_AUDIT.md
+- docs/RELEASE_READINESS.md
+- docs/STATUS.md
+- docs/CHANGELOG_AI.md
+
+## Comandos ejecutados
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+- `rg -n "BenjaOS|benjaOS|Health_ebnjaOS|Health Companion|Personal OS|ebnjaOS Core" src index.html README.md public --glob '!public/branding/**'`
+- `rg -n "BenjaOS|benjaOS|Health_ebnjaOS|Health Companion|Personal OS|ebnjaOS Core" docs`
+
+## Validación
+- Build: PASS
+- Lint: PASS
+- Typecheck: PASS
+
+## Errores o riesgos
+- La validación en iPhone físico sigue pendiente.
+- Brain continúa con deuda de persistencia histórica en local-first para algunas superficies.
+- Release final sigue condicionado a hardware real.
+
+## Próximo paso sugerido
+- Cerrar la validación en iPhone físico y, si todo responde bien, preparar el release candidate final.
+
+# STATUS.md

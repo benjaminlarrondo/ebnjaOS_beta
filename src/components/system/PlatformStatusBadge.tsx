@@ -1,16 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { APP_NAME, IS_MOCK } from "../../lib/constants";
+import { APP_NAME, APP_VERSION, IS_MOCK } from "../../lib/constants";
 import { useSyncStatus } from "../../hooks/useSyncStatus";
 import { getLastCalendarSyncAt } from "../../services/githubCalendarSync";
 
 function formatTime(iso: string | null) {
   if (!iso) return "Sin registro";
   return new Date(iso).toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" });
-}
-
-function appVersion() {
-  const parts = APP_NAME.split(" ");
-  return parts[parts.length - 1] || "v0";
 }
 
 export function PlatformStatusBadge({ inMoreMenu = false }: { inMoreMenu?: boolean }) {
@@ -49,7 +44,8 @@ export function PlatformStatusBadge({ inMoreMenu = false }: { inMoreMenu?: boole
         <p className="text-sm text-texts">Supabase {supabaseLabel}</p>
         <p className="text-sm text-texts">Calendario {calendarLabel}</p>
         <p className="text-sm text-texts">Último sync {formatTime(state.lastSavedAt)}</p>
-        <p className="text-sm text-texts">Versión {appVersion()}</p>
+        <p className="text-sm text-texts">Nombre {APP_NAME}</p>
+        <p className="text-sm text-texts">Versión {APP_VERSION}</p>
       </section>
     );
   }
@@ -80,7 +76,8 @@ export function PlatformStatusBadge({ inMoreMenu = false }: { inMoreMenu?: boole
           <p className="mt-2 text-texts">Supabase: {supabaseLabel}</p>
           <p className="text-texts">Calendario: {calendarLabel}</p>
           <p className="text-texts">Último Sync: {formatTime(state.lastSavedAt)}</p>
-          <p className="text-texts">Versión: {appVersion()}</p>
+          <p className="text-texts">Nombre: {APP_NAME}</p>
+          <p className="text-texts">Versión: {APP_VERSION}</p>
         </div>
       )}
     </div>
